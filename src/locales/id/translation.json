@@ -1,0 +1,11 @@
+{
+  "login": {
+    "title": "UDAWA Smart System",
+    "subtitle": "Antarmuka Web Cloud",
+    "email": "Alamat Email",
+    "password": "Kata Sandi",
+    "server": "Server",
+    "signIn": "Masuk",
+    "forgotPassword": "Lupa kata sandi?"
+  }
+}

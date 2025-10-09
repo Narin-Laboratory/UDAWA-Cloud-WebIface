@@ -1,13 +1,28 @@
 import React from 'react';
-import { CssBaseline } from '@mui/material';
-import LoginPage from './pages/LoginPage';
+import {
+  CssBaseline,
+  ThemeProvider,
+  useMediaQuery,
+} from '@mui/material';
+import AuthLayout from './features/auth/layouts/AuthLayout';
+import LoginPage from './features/auth/pages/LoginPage';
+import { lightTheme, darkTheme } from './theme';
 
 const App: React.FC = () => {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const theme = React.useMemo(
+    () => (prefersDarkMode ? darkTheme : lightTheme),
+    [prefersDarkMode]
+  );
+
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
-      <LoginPage />
-    </>
+      <AuthLayout>
+        <LoginPage />
+      </AuthLayout>
+    </ThemeProvider>
   );
 };
 
