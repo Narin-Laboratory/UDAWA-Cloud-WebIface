@@ -1,12 +1,15 @@
 import React from 'react';
 import { CssBaseline } from '@mui/material';
-import LoginPage from './pages/LoginPage';
+import AuthLayout from './features/auth/layouts/AuthLayout';
+import LoginPage from './features/auth/pages/LoginPage';
 
 const App: React.FC = () => {
   return (
     <>
       <CssBaseline />
-      <LoginPage />
+      <AuthLayout>
+        <LoginPage />
+      </AuthLayout>
     </>
   );
 };
