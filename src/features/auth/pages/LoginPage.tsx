@@ -21,8 +21,9 @@ const LoginPage: React.FC = () => {
   const [status, setStatus] = useState('');
 
   const handleLanguageChange = () => {
-    const newLang = i18n.language === 'en' ? 'id' : 'en';
+    const newLang = i18n.language.startsWith('en') ? 'id' : 'en';
     i18n.changeLanguage(newLang);
+    localStorage.setItem('i18nextLng', newLang);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -54,7 +55,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <Grid container component="main" sx={{ height: '100vh' }}>
+    <Grid container component="main" sx={{ flex: '1 0 auto' }}>
       <Grid item xs={12} sm={8} md={5}>
         <Container component="main" maxWidth="xs">
           <Box
@@ -70,7 +71,7 @@ const LoginPage: React.FC = () => {
                 onClick={handleLanguageChange}
                 data-testid="language-switcher"
               >
-                {i18n.language === 'en' ? 'ID' : 'EN'}
+                {i18n.language.startsWith('en') ? 'ID' : 'EN'}
               </Button>
             </Box>
             <Typography component="h1" variant="h5">
@@ -155,7 +156,9 @@ const LoginPage: React.FC = () => {
             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
         }}
       >
-        <AnimatedQuotes />
+        <Box sx={{ width: 500 }} data-testid="quotes-container">
+          <AnimatedQuotes />
+        </Box>
       </Grid>
     </Grid>
   );

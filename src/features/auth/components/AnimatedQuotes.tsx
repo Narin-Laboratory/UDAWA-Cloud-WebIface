@@ -7,6 +7,7 @@ import { quotes } from '../../../assets/quotes';
 const AnimatedQuotes: React.FC = () => {
   const { i18n } = useTranslation();
   const [sequence, setSequence] = useState<(string | number)[]>([]);
+  const [key, setKey] = useState(0);
 
   useEffect(() => {
     const currentLanguage = i18n.language.split('-')[0];
@@ -19,6 +20,7 @@ const AnimatedQuotes: React.FC = () => {
     });
 
     setSequence(newSequence);
+    setKey(prevKey => prevKey + 1);
   }, [i18n.language]);
 
   if (sequence.length === 0) {
@@ -28,6 +30,7 @@ const AnimatedQuotes: React.FC = () => {
   return (
     <Typography variant="h5" component="div" sx={{ textAlign: 'center', fontStyle: 'italic', padding: 2 }}>
       <TypeAnimation
+        key={key}
         sequence={sequence}
         wrapper="span"
         speed={50}

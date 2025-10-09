@@ -7,23 +7,24 @@ interface AuthLayoutProps {
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   return (
-    <Container component="main" maxWidth={false}>
-      <Box
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Container
+        component="main"
+        maxWidth={false}
         sx={{
+          flex: '1 0 auto',
           display: 'flex',
-          justifyContent: 'center',
           alignItems: 'center',
-          minHeight: '100vh',
+          justifyContent: 'center'
         }}
       >
         {children}
-      </Box>
+      </Container>
       <Box
         component="footer"
         sx={{
           py: 3,
           px: 2,
-          mt: 'auto',
           backgroundColor: (theme) =>
             theme.palette.mode === 'light'
               ? theme.palette.grey[200]
@@ -36,7 +37,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
           </Typography>
         </Container>
       </Box>
-    </Container>
+    </Box>
   );
 };
 
