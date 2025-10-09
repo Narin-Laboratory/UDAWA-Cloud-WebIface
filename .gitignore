@@ -1,0 +1,76 @@
+# .gitignore for Vite + Preact
+
+# Dependencies
+# -------------------------------------------------------------------
+# Never commit node_modules. This folder is regenerated on `npm install`.
+/node_modules
+
+# Build output
+# -------------------------------------------------------------------
+# This is the default folder for your compiled application.
+/dist
+/build
+
+# Vite
+# -------------------------------------------------------------------
+# Vite's cache and server-specific files.
+.vite/
+.vite-server-cache
+
+# Environment variables
+# -------------------------------------------------------------------
+# Ignore all local environment variable files. These often contain secrets.
+.env.local
+.env.*.local
+
+# You should commit a .env.example file to show what variables are needed.
+# If you use a general .env file, ignore it too:
+# .env
+
+# Logs
+# -------------------------------------------------------------------
+# Log files from Node package managers.
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# IDE & Editor specific files
+# -------------------------------------------------------------------
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains (WebStorm, etc.)
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+
+# OS-generated files
+# -------------------------------------------------------------------
+# macOS
+.DS_Store
+._*
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Testing
+# -------------------------------------------------------------------
+# Test reports and coverage folders.
+/coverage
+.nyc_output
+
+# TypeScript
+# -------------------------------------------------------------------
+# TypeScript incremental build information.
+*.tsbuildinfo
