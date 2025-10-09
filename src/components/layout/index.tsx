@@ -1,10 +1,10 @@
-import { h, ComponentChildren } from 'preact';
+import { h, ComponentChild } from 'preact';
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
 import './style.css';
 
 type LayoutProps = {
-  children: ComponentChildren;
+  children: ComponentChild;
 };
 
 const Layout = ({ children }: LayoutProps) => {
