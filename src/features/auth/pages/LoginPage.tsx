@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { setItem } from '../../../utils/storage';
+import AnimatedQuotes from '../components/AnimatedQuotes';
 
 const LoginPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -154,16 +155,7 @@ const LoginPage: React.FC = () => {
             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
         }}
       >
-        <Box
-          component="img"
-          sx={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-          alt="A placeholder image"
-          src="/login-placeholder.jpg"
-        />
+        <AnimatedQuotes />
       </Grid>
     </Grid>
   );
