@@ -1,43 +1,50 @@
-import { useState } from 'preact/hooks'
-import preactLogo from './assets/preact.svg'
-import viteLogo from '/vite.svg'
-import './app.css'
+import { h, ComponentChild } from 'preact';
+import { Router, route, RoutableProps } from 'preact-router';
+import { useEffect } from 'preact/hooks';
+import Layout from './components/layout';
+import Login from './routes/login';
+import Home from './routes/home';
+import Profile from './routes/profile';
+import Gadadar from './routes/dashboard/gadadar';
+import Damodar from './routes/dashboard/damodar';
+import Murari from './routes/dashboard/murari';
 
-export function App() {
-  const [count, setCount] = useState(0)
+// A component to handle the main application layout and routing logic
+const Main = (props: RoutableProps) => {
+  useEffect(() => {
+    const token = localStorage.getItem('jwt_token');
+    // If there's no token and we're not on the login page, redirect to login
+    if (!token) {
+      route('/login', true);
+    } else {
+      // If logged in and at the root, navigate to the home dashboard
+      if (props.url === '/') {
+        route('/home', true);
+      }
+    }
+  }, [props.url]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://preactjs.com" target="_blank">
-          <img src={preactLogo} class="logo preact" alt="Preact logo" />
-        </a>
-      </div>
-      <h1>Vite + Preact</h1>
-      <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/app.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p>
-        Check out{' '}
-        <a
-          href="https://preactjs.com/guide/v10/getting-started#create-a-vite-powered-preact-app"
-          target="_blank"
-        >
-          create-preact
-        </a>
-        , the official Preact + Vite starter
-      </p>
-      <p class="read-the-docs">
-        Click on the Vite and Preact logos to learn more
-      </p>
-    </>
-  )
-}
+    <Layout>
+      <Router>
+        <Home path="/home" />
+        <Profile path="/profile" />
+        <Gadadar path="/dashboard/gadadar" />
+        <Damodar path="/dashboard/damodar" />
+        <Murari path="/dashboard/murari" />
+      </Router>
+    </Layout>
+  );
+};
+
+const App = () => {
+  return (
+    <Router>
+      <Login path="/login" />
+      <Main default />
+    </Router>
+  );
+};
+
+// We need to export 'App' as the default
+export default App;
