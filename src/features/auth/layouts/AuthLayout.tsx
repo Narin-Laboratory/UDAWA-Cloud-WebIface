@@ -7,7 +7,7 @@ interface AuthLayoutProps {
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   return (
-    <Container component="main" maxWidth="lg">
+    <Container component="main" maxWidth={false}>
       <Box
         sx={{
           display: 'flex',
