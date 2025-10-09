@@ -162,7 +162,7 @@ const LoginPage: React.FC = () => {
             objectFit: 'cover',
           }}
           alt="A placeholder image"
-          src="/login-placeholder.png"
+          src="/login-placeholder.jpg"
         />
       </Grid>
     </Grid>
