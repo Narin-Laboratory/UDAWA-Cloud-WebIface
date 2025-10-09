@@ -1,0 +1,11 @@
+{
+  "login": {
+    "title": "UDAWA Smart System",
+    "subtitle": "Cloud Web Interface",
+    "email": "Email Address",
+    "password": "Password",
+    "server": "Server",
+    "signIn": "Sign In",
+    "forgotPassword": "Forgot password?"
+  }
+}

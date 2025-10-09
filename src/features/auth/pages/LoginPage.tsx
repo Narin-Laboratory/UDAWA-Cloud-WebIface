@@ -9,13 +9,20 @@ import {
   Alert,
   Grid,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { setItem } from '../../../utils/storage';
 
 const LoginPage: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [server, setServer] = useState('prita.undiknas.ac.id');
   const [status, setStatus] = useState('');
+
+  const handleLanguageChange = () => {
+    const newLang = i18n.language === 'en' ? 'id' : 'en';
+    i18n.changeLanguage(newLang);
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -57,11 +64,19 @@ const LoginPage: React.FC = () => {
               alignItems: 'center',
             }}
           >
+            <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+              <Button
+                onClick={handleLanguageChange}
+                data-testid="language-switcher"
+              >
+                {i18n.language === 'en' ? 'ID' : 'EN'}
+              </Button>
+            </Box>
             <Typography component="h1" variant="h5">
-              UDAWA Smart System
+              {t('login.title')}
             </Typography>
             <Typography component="h2" variant="subtitle1">
-              Cloud Web Interface
+              {t('login.subtitle')}
             </Typography>
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
               <TextField
@@ -69,7 +84,7 @@ const LoginPage: React.FC = () => {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label={t('login.email')}
                 name="email"
                 autoComplete="email"
                 autoFocus
@@ -81,7 +96,7 @@ const LoginPage: React.FC = () => {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label={t('login.password')}
                 type="password"
                 id="password"
                 autoComplete="current-password"
@@ -93,7 +108,7 @@ const LoginPage: React.FC = () => {
                 required
                 fullWidth
                 name="server"
-                label="Server"
+                label={t('login.server')}
                 id="server"
                 value={server}
                 onChange={(e) => setServer(e.target.value)}
@@ -104,10 +119,10 @@ const LoginPage: React.FC = () => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+                {t('login.signIn')}
               </Button>
               <Link href="https://prita.undiknas.ac.id/login/resetPasswordRequest" variant="body2">
-                Forgot password?
+                {t('login.forgotPassword')}
               </Link>
               {status && (
                 <Alert
@@ -142,8 +157,9 @@ const LoginPage: React.FC = () => {
         <Box
           component="img"
           sx={{
-            maxHeight: '100%',
-            maxWidth: '100%',
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
           }}
           alt="A placeholder image"
           src="/login-placeholder.png"
