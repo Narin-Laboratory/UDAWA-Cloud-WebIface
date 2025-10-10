@@ -45,7 +45,14 @@ const DeviceList = forwardRef<DeviceListHandle, {}>((_props, ref) => {
           })
         );
         setDevices(devicesWithInfo);
-        if (toastId.current) toast.dismiss(toastId.current);
+        if (toastId.current) {
+          toast.update(toastId.current, {
+            render: t('deviceList.fetchSuccess', 'Devices loaded successfully!'),
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
+          });
+        }
       } catch {
         if (toastId.current) {
           toast.update(toastId.current, {
