@@ -1,4 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React,
+{
+  useState,
+  useRef,
+  useEffect
+} from 'react';
 import {
   Button,
   TextField,
@@ -21,6 +26,15 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [server, setServer] = useState('prita.undiknas.ac.id');
   const toastId = useRef<Id | null>(null);
+
+  useEffect(() => {
+    // Dismiss any active toast when the component unmounts
+    return () => {
+      if (toastId.current) {
+        toast.dismiss(toastId.current);
+      }
+    };
+  }, []);
 
   const handleLanguageChange = () => {
     const newLang = i18n.language.startsWith('en') ? 'id' : 'en';
