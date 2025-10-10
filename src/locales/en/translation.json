@@ -14,5 +14,12 @@
   },
   "logout": {
     "loggingOut": "Logging out..."
+  },
+  "sidebar": {
+    "assets": "Assets List"
+  },
+  "deviceList": {
+    "fetchError": "Failed to fetch devices. Please try again later.",
+    "loading": "Loading devices..."
   }
 }

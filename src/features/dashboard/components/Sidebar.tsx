@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Drawer,
   Box,
   Toolbar,
   List,
+  Typography,
+  IconButton,
 } from '@mui/material';
+import { Refresh } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
+import DeviceList, { type DeviceListHandle } from './DeviceList';
 
 interface SidebarProps {
   drawerWidth: number;
@@ -19,10 +24,28 @@ const Sidebar: React.FC<SidebarProps> = ({
   onDrawerClose,
   onDrawerTransitionEnd,
 }) => {
+  const { t } = useTranslation();
+  const deviceListRef = useRef<DeviceListHandle>(null);
+
+  const handleReload = () => {
+    if (deviceListRef.current) {
+      deviceListRef.current.reload();
+    }
+  };
+
   const drawerContent = (
     <div>
-      <Toolbar />
-      <List />
+      <Toolbar>
+        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          {t('sidebar.assets')}
+        </Typography>
+        <IconButton onClick={handleReload}>
+          <Refresh />
+        </IconButton>
+      </Toolbar>
+      <List>
+        <DeviceList ref={deviceListRef} />
+      </List>
     </div>
   );
 
