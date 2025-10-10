@@ -70,7 +70,7 @@ const DeviceDashboardPage: React.FC = () => {
               if (telemetry.batt) newDevice.battery = telemetry.batt[0][1];
               if (telemetry.fmVersion) newDevice.firmwareVersion = telemetry.fmVersion[0][1];
               if (telemetry.heap) newDevice.heap = telemetry.heap[0][1];
-              if (telemetry.lastActivityTime) newDevice.lastSeen = new Date(telemetry.lastActivityTime[0][1]).toLocaleString();
+              if (telemetry.lastActivityTime) newDevice.lastSeen = new Date(parseInt(telemetry.lastActivityTime[0][1])).toLocaleString();
 
               return newDevice;
             });
