@@ -4,7 +4,6 @@ import React, {
   useImperativeHandle,
   forwardRef,
   useCallback,
-  useContext,
 } from 'react';
 import {
   ListItem,
@@ -16,13 +15,13 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { Circle } from '@mui/icons-material';
+import { toast } from 'react-toastify';
 import {
   getDevices,
   getDeviceInfo,
   type DeviceInfo,
 } from '../services/deviceService';
 import { useTranslation } from 'react-i18next';
-import { OverlayContext } from '../../../contexts/OverlayContext';
 
 export interface DeviceListHandle {
   reload: () => void;
@@ -32,12 +31,10 @@ const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
   const { t } = useTranslation();
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const overlay = useContext(OverlayContext);
 
   const fetchDevices = useCallback(
     async (force = false) => {
-      try {
-        overlay?.showOverlay(t('deviceList.loading'), true);
+      const fetchPromise = async () => {
         setError(null);
         const deviceList = await getDevices(force);
         const devicesWithInfo = await Promise.all(
@@ -47,13 +44,20 @@ const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
           })
         );
         setDevices(devicesWithInfo);
-      } catch (err) {
-        setError(t('deviceList.fetchError'));
-      } finally {
-        overlay?.hideOverlay();
-      }
+      };
+
+      toast.promise(fetchPromise(), {
+        pending: t('deviceList.loading'),
+        success: t('deviceList.loaded'),
+        error: {
+          render() {
+            setError(t('deviceList.fetchError'));
+            return t('deviceList.fetchError');
+          },
+        },
+      });
     },
-    [t, overlay]
+    [t]
   );
 
   useImperativeHandle(ref, () => ({
