@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
-import ProgressOverlay from '../../../components/ProgressOverlay';
 import { removeItem } from '../../../utils/storage';
+import { useContext } from 'react';
+import { OverlayContext } from '../../../contexts/OverlayContext';
 
 const drawerWidth = 240;
 
@@ -15,11 +16,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
-  const [overlayState, setOverlayState] = React.useState({
-    open: false,
-    message: '',
-    showProgress: false,
-  });
+  const overlay = useContext(OverlayContext);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -37,27 +34,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   const handleLogout = () => {
-    setOverlayState({
-      open: true,
-      message: t('logout.loggingOut'),
-      showProgress: true,
-    });
+    overlay?.showOverlay(t('logout.loggingOut'), true);
 
     setTimeout(() => {
       removeItem('token');
       removeItem('refreshToken');
       removeItem('user');
+      removeItem('server');
       window.location.href = '/';
     }, 1000); // Simulate network delay
   };
 
   return (
     <>
-      <ProgressOverlay
-        open={overlayState.open}
-        message={overlayState.message}
-        showProgress={overlayState.showProgress}
-      />
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         <CssBaseline />
         <Header

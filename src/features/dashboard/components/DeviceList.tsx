@@ -4,12 +4,12 @@ import React, {
   useImperativeHandle,
   forwardRef,
   useCallback,
+  useContext,
 } from 'react';
 import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  CircularProgress,
   Typography,
   Box,
 } from '@mui/material';
@@ -20,6 +20,7 @@ import {
   type DeviceInfo,
 } from '../services/deviceService';
 import { useTranslation } from 'react-i18next';
+import { OverlayContext } from '../../../contexts/OverlayContext';
 
 export interface DeviceListHandle {
   reload: () => void;
@@ -28,13 +29,13 @@ export interface DeviceListHandle {
 const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
   const { t } = useTranslation();
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const overlay = useContext(OverlayContext);
 
   const fetchDevices = useCallback(
     async (force = false) => {
       try {
-        setLoading(true);
+        overlay?.showOverlay(t('deviceList.loading'), true);
         setError(null);
         const deviceList = await getDevices(force);
         const devicesWithInfo = await Promise.all(
@@ -47,10 +48,10 @@ const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
       } catch (err) {
         setError(t('deviceList.fetchError'));
       } finally {
-        setLoading(false);
+        overlay?.hideOverlay();
       }
     },
-    [t]
+    [t, overlay]
   );
 
   useImperativeHandle(ref, () => ({
@@ -62,14 +63,6 @@ const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
   useEffect(() => {
     fetchDevices(false);
   }, [fetchDevices]);
-
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
 
   if (error) {
     return (

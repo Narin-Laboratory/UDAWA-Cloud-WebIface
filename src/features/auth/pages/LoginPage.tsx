@@ -72,6 +72,7 @@ const LoginPage: React.FC = () => {
       });
 
       setItem('user', userResponse.data);
+      setItem('server', server);
 
       // 3. Success and redirect
       setOverlayState({

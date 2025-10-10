@@ -1,6 +1,5 @@
 import { getItem, setItem } from '../../../utils/storage';
 
-const API_URL = import.meta.env.VITE_API_URL;
 const DEVICES_CACHE_KEY = 'devices';
 
 export interface Device {
@@ -26,12 +25,13 @@ export const getDevices = async (force = false): Promise<Device[]> => {
 
   const token = getItem('token');
   const user = getItem('user');
+  const server = getItem('server');
 
-  if (!token || !user) {
-    throw new Error('User not authenticated');
+  if (!token || !user || !server) {
+    throw new Error('User not authenticated or server not set');
   }
 
-  const response = await fetch(`${API_URL}/api/devices`, {
+  const response = await fetch(`https://${server}/api/devices`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -62,12 +62,13 @@ export const getDevices = async (force = false): Promise<Device[]> => {
 
 export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {
   const token = getItem('token');
+  const server = getItem('server');
 
-  if (!token) {
-    throw new Error('User not authenticated');
+  if (!token || !server) {
+    throw new Error('User not authenticated or server not set');
   }
 
-  const response = await fetch(`${API_URL}/api/device/info/${deviceId}`, {
+  const response = await fetch(`https://${server}/api/device/info/${deviceId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
