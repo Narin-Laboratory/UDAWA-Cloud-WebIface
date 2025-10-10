@@ -1,44 +1,42 @@
-import React, {
+import {
   useEffect,
   useState,
   useImperativeHandle,
   forwardRef,
   useCallback,
-  useContext,
+  useRef,
 } from 'react';
 import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Typography,
   Box,
   ListItemButton,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { Circle } from '@mui/icons-material';
+import { toast } from 'react-toastify';
+import type { Id } from 'react-toastify';
 import {
   getDevices,
   getDeviceInfo,
   type DeviceInfo,
 } from '../services/deviceService';
 import { useTranslation } from 'react-i18next';
-import { OverlayContext } from '../../../contexts/OverlayContext';
 
 export interface DeviceListHandle {
   reload: () => void;
 }
 
-const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
+const DeviceList = forwardRef<DeviceListHandle, {}>((_props, ref) => {
   const { t } = useTranslation();
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const overlay = useContext(OverlayContext);
+  const toastId = useRef<Id | null>(null);
 
   const fetchDevices = useCallback(
     async (force = false) => {
+      toastId.current = toast.loading(t('deviceList.loading'));
       try {
-        overlay?.showOverlay(t('deviceList.loading'), true);
-        setError(null);
         const deviceList = await getDevices(force);
         const devicesWithInfo = await Promise.all(
           deviceList.map(async (device) => {
@@ -47,13 +45,21 @@ const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
           })
         );
         setDevices(devicesWithInfo);
-      } catch (err) {
-        setError(t('deviceList.fetchError'));
-      } finally {
-        overlay?.hideOverlay();
+        if (toastId.current) toast.dismiss(toastId.current);
+      } catch {
+        if (toastId.current) {
+          toast.update(toastId.current, {
+            render: t('deviceList.fetchError'),
+            type: 'error',
+            isLoading: false,
+            autoClose: 5000,
+          });
+        } else {
+          toast.error(t('deviceList.fetchError'));
+        }
       }
     },
-    [t, overlay]
+    [t]
   );
 
   useImperativeHandle(ref, () => ({
@@ -65,14 +71,6 @@ const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
   useEffect(() => {
     fetchDevices(false);
   }, [fetchDevices]);
-
-  if (error) {
-    return (
-      <ListItem>
-        <Typography color="error">{error}</Typography>
-      </ListItem>
-    );
-  }
 
   return (
     <>

@@ -7,8 +7,7 @@ import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import { removeItem } from '../../../utils/storage';
-import { useContext } from 'react';
-import { OverlayContext } from '../../../contexts/OverlayContext';
+import { toast } from 'react-toastify';
 
 const drawerWidth = 240;
 
@@ -16,7 +15,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
-  const overlay = useContext(OverlayContext);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -34,15 +32,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   const handleLogout = () => {
-    overlay?.showOverlay(t('logout.loggingOut'), true);
-
-    setTimeout(() => {
-      removeItem('token');
-      removeItem('refreshToken');
-      removeItem('user');
-      removeItem('server');
-      window.location.href = '/';
-    }, 1000); // Simulate network delay
+    toast.info(t('logout.loggingOut'));
+    removeItem('token');
+    removeItem('refreshToken');
+    removeItem('user');
+    removeItem('server');
+    window.location.href = '/';
   };
 
   return (

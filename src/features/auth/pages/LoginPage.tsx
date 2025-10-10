@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Button,
   TextField,
@@ -6,13 +6,13 @@ import {
   Typography,
   Box,
   Link,
-  Grid,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import type { Id } from 'react-toastify';
 import { setItem } from '../../../utils/storage';
-import ProgressOverlay from '../../../components/ProgressOverlay';
 
 const LoginPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -20,12 +20,7 @@ const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [server, setServer] = useState('prita.undiknas.ac.id');
-  const [overlayState, setOverlayState] = useState({
-    open: false,
-    message: '',
-    showProgress: false,
-    showError: false,
-  });
+  const toastId = useRef<Id | null>(null);
 
   const handleLanguageChange = () => {
     const newLang = i18n.language.startsWith('en') ? 'id' : 'en';
@@ -33,18 +28,9 @@ const LoginPage: React.FC = () => {
     localStorage.setItem('i18nextLng', newLang);
   };
 
-  const closeOverlay = () => {
-    setOverlayState({ ...overlayState, open: false });
-  };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setOverlayState({
-      open: true,
-      message: t('login.loggingIn'),
-      showProgress: true,
-      showError: false,
-    });
+    toastId.current = toast.loading(t('login.loggingIn'));
 
     try {
       // 1. Authenticate and get tokens
@@ -58,11 +44,8 @@ const LoginPage: React.FC = () => {
       setItem('refreshToken', refreshToken);
 
       // 2. Fetch user info
-      setOverlayState({
-        open: true,
-        message: t('login.fetchingUser'),
-        showProgress: true,
-        showError: false,
+      toast.update(toastId.current, {
+        render: t('login.fetchingUser'),
       });
 
       const userResponse = await axios.get(`https://${server}/api/auth/user`, {
@@ -75,37 +58,28 @@ const LoginPage: React.FC = () => {
       setItem('server', server);
 
       // 3. Success and redirect
-      setOverlayState({
-        open: false,
-        message: '',
-        showProgress: false,
-        showError: false,
-      });
-
+      toast.dismiss(toastId.current);
       navigate('/');
 
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message || t('login.unexpectedError');
-      setOverlayState({
-        open: true,
-        message: `${t('login.failed')}: ${errorMessage}`,
-        showProgress: false,
-        showError: true,
-      });
+    } catch (error: unknown) {
+      let errorMessage = t('login.unexpectedError');
+      if (axios.isAxiosError(error) && error.response) {
+        errorMessage = error.response.data.message || errorMessage;
+      }
+
+      if (toastId.current) {
+        toast.update(toastId.current, {
+          render: `${t('login.failed')}: ${errorMessage}`,
+          type: 'error',
+          isLoading: false,
+          autoClose: 5000,
+        });
+      }
     }
   };
 
   return (
-    <>
-      <ProgressOverlay
-        open={overlayState.open}
-        message={overlayState.message}
-        showProgress={overlayState.showProgress}
-        showError={overlayState.showError}
-        onClose={closeOverlay}
-      />
-      <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs">
         <Box
           sx={{
             marginTop: 8,
@@ -185,7 +159,6 @@ const LoginPage: React.FC = () => {
           </Box>
         </Box>
       </Container>
-    </>
   );
 };
 
