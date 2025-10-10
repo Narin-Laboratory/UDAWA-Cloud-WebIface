@@ -53,9 +53,9 @@ const LoginPage: React.FC = () => {
       pending: t('login.loggingIn'),
       success: {
         render() {
-          navigate('/');
           return t('login.loginSuccess');
         },
+        onClose: () => navigate('/'),
       },
       error: {
         render({ data }: any) {
