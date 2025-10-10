@@ -4,8 +4,8 @@ import {
   ThemeProvider,
   useMediaQuery,
 } from '@mui/material';
-import AuthLayout from './features/auth/layouts/AuthLayout';
-import LoginPage from './features/auth/pages/LoginPage';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRouter from './router/AppRouter';
 import { lightTheme, darkTheme } from './theme';
 
 const App: React.FC = () => {
@@ -19,9 +19,9 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AuthLayout>
-        <LoginPage />
-      </AuthLayout>
+      <Router>
+        <AppRouter />
+      </Router>
     </ThemeProvider>
   );
 };
