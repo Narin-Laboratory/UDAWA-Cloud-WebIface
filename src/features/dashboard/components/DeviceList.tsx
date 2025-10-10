@@ -12,7 +12,9 @@ import {
   ListItemIcon,
   Typography,
   Box,
+  ListItemButton,
 } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import { Circle } from '@mui/icons-material';
 import {
   getDevices,
@@ -75,18 +77,23 @@ const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
   return (
     <>
       {devices.map((device) => (
-        <ListItem key={device.id.id}>
-          <ListItemText primary={device.label} secondary={device.type} />
-          <ListItemIcon>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Circle
-                sx={{
-                  color: device.active ? 'green' : 'red',
-                  fontSize: 'small',
-                }}
-              />
-            </Box>
-          </ListItemIcon>
+        <ListItem key={device.id.id} disablePadding>
+          <ListItemButton
+            component={RouterLink}
+            to={`/dashboard/device/${device.id.id}`}
+          >
+            <ListItemText primary={device.label} secondary={device.type} />
+            <ListItemIcon>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Circle
+                  sx={{
+                    color: device.active ? 'green' : 'red',
+                    fontSize: 'small',
+                  }}
+                />
+              </Box>
+            </ListItemIcon>
+          </ListItemButton>
         </ListItem>
       ))}
     </>
