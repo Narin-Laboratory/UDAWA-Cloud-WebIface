@@ -3,12 +3,11 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import { removeItem } from '../../../utils/storage';
-import { useContext } from 'react';
-import { OverlayContext } from '../../../contexts/OverlayContext';
 
 const drawerWidth = 240;
 
@@ -16,7 +15,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
-  const overlay = useContext(OverlayContext);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -34,15 +32,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   const handleLogout = () => {
-    overlay?.showOverlay(t('logout.loggingOut'), true);
+    const logoutPromise = new Promise<void>((resolve) => {
+      setTimeout(() => {
+        removeItem('token');
+        removeItem('refreshToken');
+        removeItem('user');
+        removeItem('server');
+        resolve();
+      }, 1000); // Simulate network delay
+    });
 
-    setTimeout(() => {
-      removeItem('token');
-      removeItem('refreshToken');
-      removeItem('user');
-      removeItem('server');
-      window.location.href = '/';
-    }, 1000); // Simulate network delay
+    toast.promise(logoutPromise, {
+      pending: t('logout.loggingOut'),
+      success: {
+        render() {
+          window.location.href = '/';
+          return t('logout.logoutSuccess');
+        },
+      },
+      error: t('logout.logoutFailed'),
+    });
   };
 
   return (
