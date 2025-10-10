@@ -4,6 +4,7 @@ import AuthLayout from '../features/auth/layouts/AuthLayout';
 import LoginPage from '../features/auth/pages/LoginPage';
 import DashboardLayout from '../features/dashboard/layouts/DashboardLayout';
 import DashboardPage from '../features/dashboard/pages/DashboardPage';
+import DeviceDashboardPage from '../features/dashboard/pages/DeviceDashboardPage';
 import UserProfilePage from '../features/user/pages/UserProfilePage';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -24,6 +25,14 @@ const AppRouter: React.FC = () => {
           element={
             <DashboardLayout>
               <DashboardPage />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/dashboard/device/:deviceId"
+          element={
+            <DashboardLayout>
+              <DeviceDashboardPage />
             </DashboardLayout>
           }
         />
