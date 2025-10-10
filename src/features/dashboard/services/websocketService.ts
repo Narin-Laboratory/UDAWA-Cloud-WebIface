@@ -29,6 +29,7 @@ export const connectWebSocket = (
   lastDeviceId = deviceId;
 
   websocket.onopen = () => {
+    console.log('WebSocket connection opened');
     const authCmd = {
       authCmd: {
         cmdId: 10,
@@ -44,19 +45,23 @@ export const connectWebSocket = (
         },
       ],
     };
+    console.log('Sending auth command:', authCmd);
     websocket?.send(JSON.stringify(authCmd));
   };
 
   websocket.onmessage = (event) => {
     const data = JSON.parse(event.data);
+    console.log('Received message:', data);
     onMessage(data);
   };
 
   websocket.onerror = (error) => {
+    console.error('WebSocket error:', error);
     onError(error);
   };
 
-  websocket.onclose = () => {
+  websocket.onclose = (event) => {
+    console.log('WebSocket connection closed:', event);
     lastDeviceId = null;
   };
 };

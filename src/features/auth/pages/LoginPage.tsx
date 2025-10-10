@@ -49,22 +49,23 @@ const LoginPage: React.FC = () => {
       setItem('server', server);
     };
 
-    toast.promise(loginPromise(), {
-      pending: t('login.loggingIn'),
-      success: {
-        render() {
-          return t('login.loginSuccess');
+    toast.promise(
+      loginPromise(),
+      {
+        pending: t('login.loggingIn'),
+        success: t('login.loginSuccess'),
+        error: {
+          render({ data }: any) {
+            const errorMessage =
+              data.response?.data?.message || t('login.unexpectedError');
+            return `${t('login.failed')}: ${errorMessage}`;
+          },
         },
+      },
+      {
         onClose: () => navigate('/'),
-      },
-      error: {
-        render({ data }: any) {
-          const errorMessage =
-            data.response?.data?.message || t('login.unexpectedError');
-          return `${t('login.failed')}: ${errorMessage}`;
-        },
-      },
-    });
+      }
+    );
   };
 
   return (
