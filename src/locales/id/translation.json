@@ -14,5 +14,11 @@
   },
   "logout": {
     "loggingOut": "Keluar..."
+  },
+  "sidebar": {
+    "assets": "Daftar Aset"
+  },
+  "deviceList": {
+    "fetchError": "Gagal mengambil data perangkat. Silakan coba lagi nanti."
   }
 }
