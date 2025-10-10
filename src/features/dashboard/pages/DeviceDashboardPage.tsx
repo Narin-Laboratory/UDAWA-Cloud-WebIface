@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Tab, Tabs, Typography, CircularProgress } from '@mui/material';
 import DeviceDetailsCard from '../components/DeviceDetailsCard';
 import { getDeviceInfo } from '../services/deviceService';
-import type { DeviceInfo } from '../services/deviceService';
+import { useDevice } from '../contexts/DeviceContext';
+import {
+  connectWebSocket,
+  disconnectWebSocket,
+} from '../services/websocketService';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -33,20 +37,16 @@ function TabPanel(props: TabPanelProps) {
 
 const DeviceDashboardPage: React.FC = () => {
   const { deviceId } = useParams<{ deviceId: string }>();
-  const [device, setDevice] = useState<DeviceInfo | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [tabValue, setTabValue] = useState(0);
+  const { device, setDevice } = useDevice();
+  const [loading, setLoading] = React.useState(true);
+  const [tabValue, setTabValue] = React.useState(0);
 
   useEffect(() => {
     if (deviceId) {
       setLoading(true);
       getDeviceInfo(deviceId)
         .then((data) => {
-          if (data) {
-            setDevice(data);
-          } else {
-            setDevice(null);
-          }
+          setDevice(data);
         })
         .catch(() => {
           setDevice(null);
@@ -54,7 +54,37 @@ const DeviceDashboardPage: React.FC = () => {
         .finally(() => {
           setLoading(false);
         });
+
+      connectWebSocket(
+        deviceId,
+        (data) => {
+          if (data.data) {
+            setDevice((prevDevice) => {
+              if (!prevDevice) return null;
+              const newDevice = { ...prevDevice };
+              const telemetry = data.data;
+
+              if (telemetry.wssid) newDevice.ssid = telemetry.wssid[0][1];
+              if (telemetry.ipad) newDevice.ipAddress = telemetry.ipad[0][1];
+              if (telemetry.rssi) newDevice.signal = telemetry.rssi[0][1];
+              if (telemetry.batt) newDevice.battery = telemetry.batt[0][1];
+              if (telemetry.fmVersion) newDevice.firmwareVersion = telemetry.fmVersion[0][1];
+              if (telemetry.heap) newDevice.heap = telemetry.heap[0][1];
+              if (telemetry.lastActivityTime) newDevice.lastSeen = new Date(parseInt(telemetry.lastActivityTime[0][1])).toLocaleString();
+
+              return newDevice;
+            });
+          }
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
     }
+
+    return () => {
+      disconnectWebSocket();
+    };
   }, [deviceId]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -71,7 +101,7 @@ const DeviceDashboardPage: React.FC = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <DeviceDetailsCard device={device} />
+      <DeviceDetailsCard />
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={tabValue} onChange={handleTabChange} aria-label="device dashboard tabs">
           <Tab label="Monitor" />

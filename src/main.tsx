@@ -10,7 +10,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Suspense fallback="loading">
       <App />
-      <ToastContainer />
+      <ToastContainer autoClose={3000} />
     </Suspense>
   </StrictMode>,
 )

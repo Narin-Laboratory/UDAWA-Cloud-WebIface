@@ -5,6 +5,7 @@ import LoginPage from '../features/auth/pages/LoginPage';
 import DashboardLayout from '../features/dashboard/layouts/DashboardLayout';
 import DashboardPage from '../features/dashboard/pages/DashboardPage';
 import DeviceDashboardPage from '../features/dashboard/pages/DeviceDashboardPage';
+import { DeviceProvider } from '../features/dashboard/contexts/DeviceContext';
 import UserProfilePage from '../features/user/pages/UserProfilePage';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -32,7 +33,9 @@ const AppRouter: React.FC = () => {
           path="/dashboard/device/:deviceId"
           element={
             <DashboardLayout>
-              <DeviceDashboardPage />
+              <DeviceProvider>
+                <DeviceDashboardPage />
+              </DeviceProvider>
             </DashboardLayout>
           }
         />

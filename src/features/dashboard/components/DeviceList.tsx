@@ -48,7 +48,7 @@ const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
 
       toast.promise(fetchPromise(), {
         pending: t('deviceList.loading'),
-        success: t('deviceList.loaded'),
+        success: t('deviceList.loadSuccess'),
         error: {
           render() {
             setError(t('deviceList.fetchError'));

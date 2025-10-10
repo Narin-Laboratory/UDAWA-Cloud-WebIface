@@ -1,0 +1,96 @@
+import { getItem } from '../../../utils/storage';
+
+let websocket: WebSocket | null = null;
+let lastDeviceId: string | null = null;
+
+export const connectWebSocket = (
+  deviceId: string,
+  onMessage: (data: any) => void,
+  onError: (error: any) => void
+) => {
+  if (websocket && lastDeviceId === deviceId) {
+    return;
+  }
+
+  if (websocket) {
+    websocket.close();
+  }
+
+  const token = getItem('token');
+  const server = getItem('server');
+
+  if (!token || !server) {
+    onError(new Error('User not authenticated or server not set'));
+    return;
+  }
+
+  const wsUrl = `wss://${server}/api/ws`;
+  websocket = new WebSocket(wsUrl);
+  lastDeviceId = deviceId;
+
+  websocket.onopen = () => {
+    console.log('WebSocket connection opened');
+    const authCmd = {
+      authCmd: {
+        cmdId: 10,
+        token: token,
+      },
+      cmds: [
+        {
+          entityType: 'DEVICE',
+          entityId: deviceId,
+          scope: 'SERVER_SCOPE',
+          cmdId: 1,
+          type: 'ATTRIBUTES',
+        },
+        {
+          entityType: 'DEVICE',
+          entityId: deviceId,
+          scope: 'CLIENT_SCOPE',
+          cmdId: 2,
+          type: 'ATTRIBUTES',
+        },
+        {
+          entityType: 'DEVICE',
+          entityId: deviceId,
+          scope: 'SHARED_SCOPE',
+          cmdId: 3,
+          type: 'ATTRIBUTES',
+        },
+        {
+          entityType: 'DEVICE',
+          entityId: deviceId,
+          scope: 'LATEST_TELEMETRY',
+          cmdId: 4,
+          type: 'TIMESERIES',
+        },
+      ],
+    };
+    console.log('Sending auth command:', authCmd);
+    websocket?.send(JSON.stringify(authCmd));
+  };
+
+  websocket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    console.log('Received message:', data);
+    onMessage(data);
+  };
+
+  websocket.onerror = (error) => {
+    console.error('WebSocket error:', error);
+    onError(error);
+  };
+
+  websocket.onclose = (event) => {
+    console.log('WebSocket connection closed:', event);
+    lastDeviceId = null;
+  };
+};
+
+export const disconnectWebSocket = () => {
+  if (websocket) {
+    websocket.close();
+    websocket = null;
+    lastDeviceId = null;
+  }
+};

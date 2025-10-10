@@ -1,12 +1,13 @@
 import React from 'react';
 import { Card, CardContent, Typography, Grid, Divider, Chip } from '@mui/material';
-import type { DeviceInfo } from '../services/deviceService';
+import { useDevice } from '../contexts/DeviceContext';
 
-interface DeviceDetailsCardProps {
-  device: DeviceInfo;
-}
+const DeviceDetailsCard: React.FC = () => {
+  const { device } = useDevice();
 
-const DeviceDetailsCard: React.FC<DeviceDetailsCardProps> = ({ device }) => {
+  if (!device) {
+    return null;
+  }
   return (
     <Card variant="outlined" sx={{ width: '100%', mb: 2 }}>
       <CardContent>
@@ -35,11 +36,11 @@ const DeviceDetailsCard: React.FC<DeviceDetailsCardProps> = ({ device }) => {
             <Grid container spacing={1}>
               <Grid item xs={6} sm={4}>
                 <Typography variant="body2"><strong>IP Address:</strong></Typography>
-                <Typography variant="body2">{device.ipAddress || 'N/A'}</Typography>
+                <Typography variant="body2">{device.ipAddress ?? 'N/A'}</Typography>
               </Grid>
               <Grid item xs={6} sm={4}>
                 <Typography variant="body2"><strong>SSID:</strong></Typography>
-                <Typography variant="body2">{device.ssid || 'N/A'}</Typography>
+                <Typography variant="body2">{device.ssid ?? 'N/A'}</Typography>
               </Grid>
               <Grid item xs={6} sm={4}>
                 <Typography variant="body2"><strong>Signal:</strong></Typography>
@@ -51,7 +52,7 @@ const DeviceDetailsCard: React.FC<DeviceDetailsCardProps> = ({ device }) => {
               </Grid>
               <Grid item xs={6} sm={4}>
                 <Typography variant="body2"><strong>Firmware Ver.:</strong></Typography>
-                <Typography variant="body2">{device.firmwareVersion || 'N/A'}</Typography>
+                <Typography variant="body2">{device.firmwareVersion ?? 'N/A'}</Typography>
               </Grid>
               <Grid item xs={6} sm={4}>
                 <Typography variant="body2"><strong>Heap:</strong></Typography>
@@ -59,7 +60,7 @@ const DeviceDetailsCard: React.FC<DeviceDetailsCardProps> = ({ device }) => {
               </Grid>
               <Grid item xs={6} sm={4}>
                 <Typography variant="body2"><strong>Last Seen:</strong></Typography>
-                <Typography variant="body2">{device.lastSeen ? new Date(device.lastSeen).toLocaleString() : 'N/A'}</Typography>
+                <Typography variant="body2">{device.lastSeen ?? 'N/A'}</Typography>
               </Grid>
             </Grid>
           </Grid>
