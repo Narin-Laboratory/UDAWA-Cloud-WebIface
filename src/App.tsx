@@ -4,8 +4,8 @@ import {
   ThemeProvider,
   useMediaQuery,
 } from '@mui/material';
-import DashboardLayout from './features/dashboard/layouts/DashboardLayout';
-import DashboardPage from './features/dashboard/pages/DashboardPage';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRouter from './router/AppRouter';
 import { lightTheme, darkTheme } from './theme';
 
 const App: React.FC = () => {
@@ -19,9 +19,9 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <DashboardLayout>
-        <DashboardPage />
-      </DashboardLayout>
+      <Router>
+        <AppRouter />
+      </Router>
     </ThemeProvider>
   );
 };

@@ -6,6 +6,13 @@
     "password": "Kata Sandi",
     "server": "Server",
     "signIn": "Masuk",
-    "forgotPassword": "Lupa kata sandi?"
+    "forgotPassword": "Lupa kata sandi?",
+    "loggingIn": "Masuk...",
+    "fetchingUser": "Mengambil data pengguna...",
+    "failed": "Gagal",
+    "unexpectedError": "Terjadi kesalahan tak terduga."
+  },
+  "logout": {
+    "loggingOut": "Keluar..."
   }
 }

@@ -6,6 +6,13 @@
     "password": "Password",
     "server": "Server",
     "signIn": "Sign In",
-    "forgotPassword": "Forgot password?"
+    "forgotPassword": "Forgot password?",
+    "loggingIn": "Logging in...",
+    "fetchingUser": "Fetching user data...",
+    "failed": "Failed",
+    "unexpectedError": "An unexpected error occurred."
+  },
+  "logout": {
+    "loggingOut": "Logging out..."
   }
 }

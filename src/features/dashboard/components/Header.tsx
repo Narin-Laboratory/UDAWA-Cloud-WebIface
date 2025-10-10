@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -11,13 +11,28 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LanguageSwitcher from '../../../components/LanguageSwitcher';
+import { getItem } from '../../../utils/storage';
 
 interface HeaderProps {
   drawerWidth: number;
   onDrawerToggle: () => void;
+  onLogout: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ drawerWidth, onDrawerToggle }) => {
+const Header: React.FC<HeaderProps> = ({
+  drawerWidth,
+  onDrawerToggle,
+  onLogout,
+}) => {
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    const user = getItem('user');
+    if (user && user.firstName && user.lastName) {
+      setUserName(`${user.firstName} ${user.lastName}`);
+    }
+  }, []);
+
   return (
     <AppBar
       position="fixed"
@@ -45,9 +60,14 @@ const Header: React.FC<HeaderProps> = ({ drawerWidth, onDrawerToggle }) => {
             <AccountCircle />
           </IconButton>
           <Typography variant="body1" sx={{ ml: 1 }}>
-            User
+            {userName || 'User'}
           </Typography>
-          <Button color="inherit" startIcon={<LogoutIcon />} sx={{ ml: 2 }}>
+          <Button
+            color="inherit"
+            startIcon={<LogoutIcon />}
+            sx={{ ml: 2 }}
+            onClick={onLogout}
+          >
             Logout
           </Button>
         </Box>
