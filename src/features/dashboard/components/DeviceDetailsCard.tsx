@@ -1,12 +1,13 @@
 import React from 'react';
 import { Card, CardContent, Typography, Grid, Divider, Chip } from '@mui/material';
-import type { DeviceInfo } from '../services/deviceService';
+import { useDevice } from '../contexts/DeviceContext';
 
-interface DeviceDetailsCardProps {
-  device: DeviceInfo;
-}
+const DeviceDetailsCard: React.FC = () => {
+  const { device } = useDevice();
 
-const DeviceDetailsCard: React.FC<DeviceDetailsCardProps> = ({ device }) => {
+  if (!device) {
+    return null;
+  }
   return (
     <Card variant="outlined" sx={{ width: '100%', mb: 2 }}>
       <CardContent>
