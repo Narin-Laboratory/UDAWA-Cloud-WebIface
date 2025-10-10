@@ -62,9 +62,16 @@ const DeviceDashboardPage: React.FC = () => {
             setDevice((prevDevice) => {
               if (!prevDevice) return null;
               const newDevice = { ...prevDevice };
-              Object.keys(data.data).forEach((key) => {
-                newDevice[key] = data.data[key][0][1];
-              });
+              const telemetry = data.data;
+
+              if (telemetry.wssid) newDevice.ssid = telemetry.wssid[0][1];
+              if (telemetry.ipad) newDevice.ipAddress = telemetry.ipad[0][1];
+              if (telemetry.rssi) newDevice.signal = telemetry.rssi[0][1];
+              if (telemetry.batt) newDevice.battery = telemetry.batt[0][1];
+              if (telemetry.fmVersion) newDevice.firmwareVersion = telemetry.fmVersion[0][1];
+              if (telemetry.heap) newDevice.heap = telemetry.heap[0][1];
+              if (telemetry.lastActivityTime) newDevice.lastSeen = new Date(telemetry.lastActivityTime[0][1]).toLocaleString();
+
               return newDevice;
             });
           }
