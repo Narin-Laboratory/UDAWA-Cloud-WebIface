@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { setItem } from '../../../utils/storage';
-import AnimatedQuotes from '../components/AnimatedQuotes';
 import ProgressOverlay from '../../../components/ProgressOverlay';
 
 const LoginPage: React.FC = () => {
@@ -105,109 +104,86 @@ const LoginPage: React.FC = () => {
         showError={overlayState.showError}
         onClose={closeOverlay}
       />
-      <Grid container component="main" sx={{ flex: '1 0 auto' }}>
-        <Grid item xs={12} sm={8} md={5}>
-          <Container component="main" maxWidth="xs">
-            <Box
-              sx={{
-                marginTop: 8,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
-                <Button
-                  onClick={handleLanguageChange}
-                  data-testid="language-switcher"
-                >
-                  {i18n.language.startsWith('en') ? 'ID' : 'EN'}
-                </Button>
-              </Box>
-              <Typography component="h1" variant="h5">
-                {t('login.title')}
-              </Typography>
-              <Typography component="h2" variant="subtitle1">
-                {t('login.subtitle')}
-              </Typography>
-              <Box
-                component="form"
-                onSubmit={handleSubmit}
-                noValidate
-                sx={{ mt: 1 }}
-              >
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label={t('login.email')}
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label={t('login.password')}
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="server"
-                  label={t('login.server')}
-                  id="server"
-                  value={server}
-                  onChange={(e) => setServer(e.target.value)}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  {t('login.signIn')}
-                </Button>
-                <Link
-                  href="https://prita.undiknas.ac.id/login/resetPasswordRequest"
-                  variant="body2"
-                >
-                  {t('login.forgotPassword')}
-                </Link>
-              </Box>
-            </Box>
-          </Container>
-        </Grid>
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
+      <Container component="main" maxWidth="xs">
+        <Box
           sx={{
-            display: { xs: 'none', sm: 'flex' },
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light'
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
           }}
         >
-          <Box sx={{ width: 500 }} data-testid="quotes-container">
-            <AnimatedQuotes />
+          <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+            <Button
+              onClick={handleLanguageChange}
+              data-testid="language-switcher"
+            >
+              {i18n.language.startsWith('en') ? 'ID' : 'EN'}
+            </Button>
           </Box>
-        </Grid>
-      </Grid>
+          <Typography component="h1" variant="h5">
+            {t('login.title')}
+          </Typography>
+          <Typography component="h2" variant="subtitle1">
+            {t('login.subtitle')}
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label={t('login.email')}
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label={t('login.password')}
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="server"
+              label={t('login.server')}
+              id="server"
+              value={server}
+              onChange={(e) => setServer(e.target.value)}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              {t('login.signIn')}
+            </Button>
+            <Link
+              href="https://prita.undiknas.ac.id/login/resetPasswordRequest"
+              variant="body2"
+            >
+              {t('login.forgotPassword')}
+            </Link>
+          </Box>
+        </Box>
+      </Container>
     </>
   );
 };
