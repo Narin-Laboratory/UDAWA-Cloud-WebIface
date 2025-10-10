@@ -17,7 +17,7 @@ import { Circle } from '@mui/icons-material';
 import {
   getDevices,
   getDeviceInfo,
-  DeviceInfo,
+  type DeviceInfo,
 } from '../services/deviceService';
 import { useTranslation } from 'react-i18next';
 
