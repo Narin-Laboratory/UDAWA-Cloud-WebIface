@@ -6,17 +6,18 @@ import {
   Typography,
   Box,
   Link,
-  Grid,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { setItem } from '../../../utils/storage';
 import ProgressOverlay from '../../../components/ProgressOverlay';
+import { useAuth } from '../../../contexts/AuthContext';
+import { toast } from 'react-toastify';
 
 const LoginPage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const auth = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [server, setServer] = useState('prita.undiknas.ac.id');
@@ -24,7 +25,6 @@ const LoginPage: React.FC = () => {
     open: false,
     message: '',
     showProgress: false,
-    showError: false,
   });
 
   const handleLanguageChange = () => {
@@ -43,7 +43,6 @@ const LoginPage: React.FC = () => {
       open: true,
       message: t('login.loggingIn'),
       showProgress: true,
-      showError: false,
     });
 
     try {
@@ -54,15 +53,12 @@ const LoginPage: React.FC = () => {
       );
 
       const { token, refreshToken } = loginResponse.data;
-      setItem('token', token);
-      setItem('refreshToken', refreshToken);
 
       // 2. Fetch user info
       setOverlayState({
         open: true,
         message: t('login.fetchingUser'),
         showProgress: true,
-        showError: false,
       });
 
       const userResponse = await axios.get(`https://${server}/api/auth/user`, {
@@ -71,15 +67,13 @@ const LoginPage: React.FC = () => {
         },
       });
 
-      setItem('user', userResponse.data);
-      setItem('server', server);
+      // 3. Update auth context and redirect
+      auth.login(token, refreshToken, userResponse.data, server);
 
-      // 3. Success and redirect
       setOverlayState({
         open: false,
         message: '',
         showProgress: false,
-        showError: false,
       });
 
       navigate('/');
@@ -87,11 +81,11 @@ const LoginPage: React.FC = () => {
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message || t('login.unexpectedError');
+      toast.error(`${t('login.failed')}: ${errorMessage}`);
       setOverlayState({
-        open: true,
-        message: `${t('login.failed')}: ${errorMessage}`,
+        open: false,
+        message: '',
         showProgress: false,
-        showError: true,
       });
     }
   };
@@ -102,7 +96,6 @@ const LoginPage: React.FC = () => {
         open={overlayState.open}
         message={overlayState.message}
         showProgress={overlayState.showProgress}
-        showError={overlayState.showError}
         onClose={closeOverlay}
       />
       <Container component="main" maxWidth="xs">

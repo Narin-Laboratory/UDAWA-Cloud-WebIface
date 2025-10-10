@@ -101,3 +101,59 @@ export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {
     lastSeen: new Date().toISOString(),
   };
 };
+
+export const getTelemetryKeys = async (
+  deviceId: string,
+  force = false
+): Promise<{ attributes: string[]; timeseries: string[] }> => {
+  const TELEMETRY_KEYS_CACHE_KEY = `telemetry_keys_${deviceId}`;
+  const cachedKeys = getItem(TELEMETRY_KEYS_CACHE_KEY);
+
+  if (cachedKeys && !force) {
+    return cachedKeys;
+  }
+
+  const token = getItem('token');
+  const server = getItem('server');
+
+  if (!token || !server) {
+    throw new Error('User not authenticated or server not set');
+  }
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-Authorization': `Bearer ${token}`,
+  };
+
+  const entityType = 'DEVICE';
+
+  try {
+    // Fetch attribute keys
+    const attributeScopes = ['SERVER_SCOPE', 'CLIENT_SCOPE', 'SHARED_SCOPE'];
+    const attributePromises = attributeScopes.map((scope) =>
+      fetch(
+        `https://${server}/api/plugins/telemetry/${entityType}/${deviceId}/keys/attributes/${scope}`,
+        { headers }
+      ).then((res) => (res.ok ? res.json() : []))
+    );
+
+    // Fetch timeseries keys
+    const timeseriesPromise = fetch(
+      `https://${server}/api/plugins/telemetry/${entityType}/${deviceId}/keys/timeseries`,
+      { headers }
+    ).then((res) => (res.ok ? res.json() : []));
+
+    const [serverAttrs, clientAttrs, sharedAttrs, timeseries] =
+      await Promise.all([...attributePromises, timeseriesPromise]);
+
+    const attributes = [...new Set([...serverAttrs, ...clientAttrs, ...sharedAttrs])];
+
+    const telemetryKeys = { attributes, timeseries };
+    setItem(TELEMETRY_KEYS_CACHE_KEY, telemetryKeys);
+
+    return telemetryKeys;
+  } catch (error) {
+    console.error('Failed to fetch telemetry keys:', error);
+    return { attributes: [], timeseries: [] };
+  }
+};

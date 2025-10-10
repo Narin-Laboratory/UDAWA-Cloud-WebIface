@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Tab, Tabs, Typography, CircularProgress } from '@mui/material';
 import DeviceDetailsCard from '../components/DeviceDetailsCard';
-import { getDeviceInfo } from '../services/deviceService';
+import { getDeviceInfo, getTelemetryKeys } from '../services/deviceService';
 import type { DeviceInfo } from '../services/deviceService';
 
 interface TabPanelProps {
@@ -40,24 +40,31 @@ const DeviceDashboardPage: React.FC = () => {
   useEffect(() => {
     if (deviceId) {
       setLoading(true);
-      getDeviceInfo(deviceId)
-        .then((data) => {
-          if (data) {
-            setDevice(data);
+      const fetchDeviceData = async () => {
+        try {
+          const [deviceInfo] = await Promise.all([
+            getDeviceInfo(deviceId),
+            getTelemetryKeys(deviceId),
+          ]);
+
+          if (deviceInfo) {
+            setDevice(deviceInfo);
           } else {
             setDevice(null);
           }
-        })
-        .catch(() => {
+        } catch (error) {
+          console.error('Failed to fetch device data:', error);
           setDevice(null);
-        })
-        .finally(() => {
+        } finally {
           setLoading(false);
-        });
+        }
+      };
+
+      fetchDeviceData();
     }
   }, [deviceId]);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
