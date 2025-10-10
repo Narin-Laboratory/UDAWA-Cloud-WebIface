@@ -31,7 +31,7 @@ export const connectWebSocket = (
   websocket.onopen = () => {
     const authCmd = {
       authCmd: {
-        cmdId: 1,
+        cmdId: 10,
         token: token,
       },
       cmds: [
@@ -39,16 +39,9 @@ export const connectWebSocket = (
           entityType: 'DEVICE',
           entityId: deviceId,
           scope: 'LATEST_TELEMETRY',
-          cmdId: 2,
+          cmdId: 10,
           type: 'TIMESERIES',
         },
-        {
-            entityType: 'DEVICE',
-            entityId: deviceId,
-            scope: 'CLIENT_SCOPE',
-            cmdId: 3,
-            type: 'ATTRIBUTES'
-        }
       ],
     };
     websocket?.send(JSON.stringify(authCmd));

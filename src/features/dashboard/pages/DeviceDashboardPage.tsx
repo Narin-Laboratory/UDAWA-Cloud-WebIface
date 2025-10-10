@@ -78,7 +78,7 @@ const DeviceDashboardPage: React.FC = () => {
     return () => {
       disconnectWebSocket();
     };
-  }, [deviceId, setDevice]);
+  }, [deviceId]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
