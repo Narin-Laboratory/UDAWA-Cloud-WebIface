@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import DeviceList, { DeviceListHandle } from './DeviceList';
+import DeviceList, { type DeviceListHandle } from './DeviceList';
 
 interface SidebarProps {
   drawerWidth: number;
