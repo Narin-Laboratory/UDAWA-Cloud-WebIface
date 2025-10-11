@@ -1,8 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import DeviceDashboard, {
-  TabInfo,
-} from '../../components/DeviceDashboard';
+import type { TabInfo } from '../../components/DeviceDashboard';
+import DeviceDashboard from '../../components/DeviceDashboard';
 
 const MurariDashboard: React.FC = () => {
   const { t } = useTranslation();
