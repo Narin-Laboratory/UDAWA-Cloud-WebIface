@@ -153,7 +153,7 @@ export const rpcV2 = async (
   );
 
   if (!response.ok) {
-    console.log(`Failed to execute rpcv2 ${method}: ${response.statusText} - ${JSON.stringify(payload)} - https://${server}/api/rpc/twoway/${entityId}`);
+    console.log(`Failed to execute rpcv2 ${method}: ${JSON.stringify(response.statusText)} - ${JSON.stringify(payload)} - https://${server}/api/rpc/twoway/${entityId}`);
     throw new Error('Failed to execute rpcv2');
   }
 };
