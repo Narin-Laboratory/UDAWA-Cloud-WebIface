@@ -153,6 +153,7 @@ export const rpcV2 = async (
   );
 
   if (!response.ok) {
+    console.log(`Failed to execute rpcv2 ${method}: ${response.text}`);
     throw new Error('Failed to execute rpcv2');
   }
 };
