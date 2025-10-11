@@ -63,7 +63,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
       );
 
       await toast.promise(
-        rpcV2("test", "saveConfig", {}),
+        rpcV2(device.id.id, "saveConfig", {}),
         {
           pending: `${t('rpcv2.process')}: saveConfig`,
           success: `${t('rpcv2.success')}: saveConfig`,
