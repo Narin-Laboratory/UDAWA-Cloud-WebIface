@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <div>
       <Toolbar>
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-          {t('sidebar.assets')}
+          {t('sidebar.agents')}
         </Typography>
         <IconButton onClick={handleReload}>
           <Refresh />

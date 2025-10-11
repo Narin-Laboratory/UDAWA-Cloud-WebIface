@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Tab, Tabs, Typography, CircularProgress } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import DeviceDetailsCard from '../components/DeviceDetailsCard';
 import { getDeviceInfo } from '../services/deviceService';
 import { useDevice } from '../contexts/DeviceContext';
@@ -38,6 +39,7 @@ function TabPanel(props: TabPanelProps) {
 const DeviceDashboardPage: React.FC = () => {
   const { deviceId } = useParams<{ deviceId: string }>();
   const { device, setDevice } = useDevice();
+  const { t } = useTranslation();
   const [loading, setLoading] = React.useState(true);
   const [tabValue, setTabValue] = React.useState(0);
 
@@ -71,7 +73,7 @@ const DeviceDashboardPage: React.FC = () => {
               if (telemetry.fmVersion) newDevice.firmwareVersion = telemetry.fmVersion[0][1];
               if (telemetry.heap) newDevice.heap = telemetry.heap[0][1];
               if (telemetry.lastActivityTime) newDevice.lastSeen = new Date(parseInt(telemetry.lastActivityTime[0][1])).toLocaleString();
-
+              if (telemetry.fw_state) newDevice.fw_state = telemetry.fw_state[0][1];
               return newDevice;
             });
           }
@@ -96,27 +98,27 @@ const DeviceDashboardPage: React.FC = () => {
   }
 
   if (!device) {
-    return <Typography>Device not found</Typography>;
+    return <Typography>{t('device.notFound')}</Typography>;
   }
 
   return (
     <Box sx={{ width: '100%' }}>
       <DeviceDetailsCard />
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={tabValue} onChange={handleTabChange} aria-label="device dashboard tabs">
-          <Tab label="Monitor" />
-          <Tab label="Control" />
-          <Tab label="Config" />
+        <Tabs value={tabValue} onChange={handleTabChange} aria-label={t('device.dashboardTabs.ariaLabel')}>
+          <Tab label={t('device.dashboardTabs.monitor')} />
+          <Tab label={t('device.dashboardTabs.control')} />
+          <Tab label={t('device.dashboardTabs.config')} />
         </Tabs>
       </Box>
       <TabPanel value={tabValue} index={0}>
-        Monitor content goes here.
+        {t('device.dashboardTabs.monitorContent')}
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
-        Control content goes here.
+        {t('device.dashboardTabs.controlContent')}
       </TabPanel>
       <TabPanel value={tabValue} index={2}>
-        Config content goes here.
+        {t('device.dashboardTabs.configContent')}
       </TabPanel>
     </Box>
   );

@@ -21,6 +21,7 @@ export interface DeviceInfo extends Device {
   firmwareVersion?: string;
   heap?: number;
   lastSeen?: string;
+  fw_state?: string;
 }
 
 export const getDevices = async (force = false): Promise<Device[]> => {
@@ -98,6 +99,7 @@ export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {
     battery: 95,
     firmwareVersion: '1.0.0',
     heap: 12345,
+    fw_state: 'N/A',
     lastSeen: new Date().toISOString(),
   };
 };

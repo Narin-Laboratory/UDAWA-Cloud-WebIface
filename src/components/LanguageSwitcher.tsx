@@ -4,7 +4,7 @@ import { Button, Menu, MenuItem } from '@mui/material';
 import LanguageIcon from '@mui/icons-material/Language';
 
 const LanguageSwitcher: React.FC = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleLanguageMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -34,8 +34,8 @@ const LanguageSwitcher: React.FC = () => {
         open={Boolean(anchorEl)}
         onClose={handleLanguageMenuClose}
       >
-        <MenuItem onClick={() => changeLanguage('en')}>English</MenuItem>
-        <MenuItem onClick={() => changeLanguage('id')}>Indonesia</MenuItem>
+        <MenuItem onClick={() => changeLanguage('en')}>{t('header.english')}</MenuItem>
+        <MenuItem onClick={() => changeLanguage('id')}>{t('header.indonesia')}</MenuItem>
       </Menu>
     </div>
   );
