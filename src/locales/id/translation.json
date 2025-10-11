@@ -2,7 +2,7 @@
   "rpcv2": {
     "success": "Berhasil menjalankan RPC",
     "process": "Menjalankan RPC",
-    "error": "Gagal menjalankan RPC",
+    "error": "Gagal menjalankan RPC"
   },
   "login": {
     "title": "UDAWA Smart System",

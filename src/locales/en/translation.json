@@ -2,7 +2,7 @@
   "rpcv2": {
     "success": "Successfully called RPC",
     "process": "Executing RPC",
-    "error": "Failed to execute RPC",
+    "error": "Failed to execute RPC"
   },
   "login": {
     "title": "UDAWA Smart System",
