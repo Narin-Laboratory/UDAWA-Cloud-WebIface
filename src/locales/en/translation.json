@@ -39,7 +39,7 @@
       "ssid": "SSID",
       "signal": "Signal",
       "battery": "Battery",
-      "firmware": "Firmware Ver.",
+      "firmware": "Fw Ver.",
       "heap": "Heap",
       "lastSeen": "Last Seen",
       "fwState": "Fw State"

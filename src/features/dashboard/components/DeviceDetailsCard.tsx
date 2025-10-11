@@ -51,13 +51,13 @@ const DeviceDetailsCard: React.FC = () => {
               <Grid item xs={6} sm={4}>
               <Typography variant="body2"><strong>{t('device.properties.signal')}:</strong></Typography>
               <Typography variant="body2">
-                {device?.attributesClientScope?.rssi?.[0]?.[1] ?? 'N/A'} %
+                {device?.attributesClientScope?.rssi?.[0]?.[1] ?? 'N/A'}%
               </Typography>
               </Grid>
               <Grid item xs={6} sm={4}>
               <Typography variant="body2"><strong>{t('device.properties.battery')}:</strong></Typography>
               <Typography variant="body2">
-                {device?.attributesClientScope?.batt?.[0]?.[1] ?? 'N/A'} %
+                {device?.attributesClientScope?.batt?.[0]?.[1] ?? 'N/A'}%
               </Typography>
               </Grid>
               <Grid item xs={6} sm={4}>
