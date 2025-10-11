@@ -48,7 +48,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
     }
 
     try {
-      /*await toast.promise(
+      await toast.promise(
         saveDeviceAttributes(
           device.id.entityType,
           device.id.id,
@@ -60,7 +60,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
           success: t('device.genericConfig.saveSuccess'),
           error: t('device.genericConfig.saveError'),
         },
-      );*/
+      );
 
       await toast.promise(
         rpcV2(device.id.id, "saveConfig", {}),
