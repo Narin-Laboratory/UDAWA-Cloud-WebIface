@@ -64,6 +64,10 @@ const DeviceDetailsCard: React.FC = () => {
                 <Typography variant="body2"><strong>{t('device.properties.lastSeen')}:</strong></Typography>
                 <Typography variant="body2">{device.lastSeen ?? 'N/A'}</Typography>
               </Grid>
+              <Grid item xs={6} sm={4}>
+                <Typography variant="body2"><strong>{t('device.properties.fwState')}:</strong></Typography>
+                <Typography variant="body2">{device.fw_state ?? 'N/A'}</Typography>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

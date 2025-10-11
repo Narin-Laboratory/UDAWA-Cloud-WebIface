@@ -36,7 +36,8 @@
       "battery": "Battery",
       "firmware": "Firmware Ver.",
       "heap": "Heap",
-      "lastSeen": "Last Seen"
+      "lastSeen": "Last Seen",
+      "fwState": "Fw State"
     },
     "notFound": "Device not found",
     "dashboardTabs": {

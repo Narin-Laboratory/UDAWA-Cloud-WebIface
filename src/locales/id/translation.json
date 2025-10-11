@@ -36,7 +36,8 @@
       "battery": "Baterai",
       "firmware": "Versi Firmware",
       "heap": "Heap",
-      "lastSeen": "Terakhir Dilihat"
+      "lastSeen": "Terakhir Dilihat",
+      "fwState": "Status Fw"
     },
     "notFound": "Perangkat tidak ditemukan",
     "dashboardTabs": {
