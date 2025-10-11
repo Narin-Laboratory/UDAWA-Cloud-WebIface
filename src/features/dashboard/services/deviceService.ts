@@ -141,7 +141,7 @@ export const rpcV2 = async (
   };
 
   const response = await fetch(
-    `https://${server}/api/rpc/twoway/${entityId}`,
+    `https://${server}/api/rpc/oneway/${entityId}`,
     {
       method: 'POST',
       headers: {
