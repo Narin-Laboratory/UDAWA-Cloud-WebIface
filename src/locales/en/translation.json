@@ -55,7 +55,13 @@
       "title": "Generic Configuration",
       "wifiSSID": "WiFi SSID",
       "wifiPassword": "WiFi Password",
-      "hostName": "Host Name"
+      "hostName": "Host Name",
+      "saving": "Saving...",
+      "saveSuccess": "Configuration saved successfully",
+      "saveError": "Failed to save configuration",
+      "reset": "Reset",
+      "save": "Save",
+      "noChanges": "No changes to save"
     },
     "unsupported": "Unsupported device type"
   },

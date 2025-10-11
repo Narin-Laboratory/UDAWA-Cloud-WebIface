@@ -55,7 +55,13 @@
       "title": "Konfigurasi Generik",
       "wifiSSID": "SSID WiFi",
       "wifiPassword": "Kata Sandi WiFi",
-      "hostName": "Nama Host"
+      "hostName": "Nama Host",
+      "saving": "Menyimpan...",
+      "saveSuccess": "Konfigurasi berhasil disimpan",
+      "saveError": "Gagal menyimpan konfigurasi",
+      "reset": "Atur Ulang",
+      "save": "Simpan",
+      "noChanges": "Tidak ada perubahan untuk disimpan"
     },
     "unsupported": "Tipe perangkat tidak didukung"
   },

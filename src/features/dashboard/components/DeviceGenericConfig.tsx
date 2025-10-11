@@ -24,29 +24,35 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
   const [wpass, setWpass] = useState('');
   const [hname, setHname] = useState('');
 
-  useEffect(() => {
-    if (device) {
-      setWssid(device.attributesClientScope?.wssid?.[0]?.[1] || '');
-      setWpass(device.attributesClientScope?.wpass?.[0]?.[1] || '');
-      setHname(device.attributesClientScope?.hname?.[0]?.[1] || '');
-    }
-  }, [device]);
+  const defaultWssid = device?.attributesClientScope?.wssid?.[0]?.[1] || '';
+  const defaultWpass = device?.attributesClientScope?.wpass?.[0]?.[1] || '';
+  const defaultHname = device?.attributesClientScope?.hname?.[0]?.[1] || '';
 
   const handleSave = async () => {
     if (!device) return;
 
-    const attributes = {
-      wssid: wssid,
-      wpass: wpass,
-      hname: hname,
-    };
+    const attributes: { [key: string]: string } = {};
+    if (wssid && wssid !== defaultWssid) {
+      attributes.wssid = wssid;
+    }
+    if (wpass && wpass !== defaultWpass) {
+      attributes.wpass = wpass;
+    }
+    if (hname && hname !== defaultHname) {
+      attributes.hname = hname;
+    }
+
+    if (Object.keys(attributes).length === 0) {
+      toast.info(t('device.genericConfig.noChanges'));
+      return;
+    }
 
     try {
       await toast.promise(
         saveDeviceAttributes(
           device.id.entityType,
           device.id.id,
-          'CLIENT_SCOPE',
+          'SHARED_SCOPE',
           attributes,
         ),
         {
@@ -61,11 +67,9 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
   };
 
   const handleReset = () => {
-    if (device) {
-      setWssid(device.attributesClientScope?.wssid?.[0]?.[1] || '');
-      setWpass(device.attributesClientScope?.wpass?.[0]?.[1] || '');
-      setHname(device.attributesClientScope?.hname?.[0]?.[1] || '');
-    }
+    setWssid('');
+    setWpass('');
+    setHname('');
   };
 
   return (
@@ -77,6 +81,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
         <TextField
           label={t('device.genericConfig.wifiSSID')}
           value={wssid}
+          placeholder={defaultWssid}
           onChange={e => setWssid(e.target.value)}
           fullWidth
           margin="normal"
@@ -84,6 +89,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
         <TextField
           label={t('device.genericConfig.wifiPassword')}
           value={wpass}
+          placeholder={defaultWpass}
           onChange={e => setWpass(e.target.value)}
           fullWidth
           margin="normal"
@@ -91,6 +97,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
         <TextField
           label={t('device.genericConfig.hostName')}
           value={hname}
+          placeholder={defaultHname}
           onChange={e => setHname(e.target.value)}
           fullWidth
           margin="normal"
