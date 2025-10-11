@@ -30,14 +30,6 @@ const DeviceDetailsCard: React.FC = () => {
               size="small"
               sx={{ mt: 1 }}
             />
-            <Grid item xs={6} sm={4}>
-              <Typography variant="body2"><strong>{t('device.properties.lastSeen')}:</strong></Typography>
-              <Typography variant="body2">
-                {device?.attributesServerScope?.lastActivityTime?.[0]?.[1]
-                ? new Date(Number(device.attributesServerScope.lastActivityTime[0][1])).toLocaleString()
-                : 'N/A'}
-              </Typography>
-            </Grid>
           </Grid>
           <Grid item sm={1} sx={{ display: { xs: 'none', sm: 'block' } }}>
             <Divider orientation="vertical" flexItem />
@@ -85,6 +77,14 @@ const DeviceDetailsCard: React.FC = () => {
               <Typography variant="body2">
                 {device?.timeseries?.fw_state?.[0]?.[1] ?? 'N/A'}
               </Typography>
+              </Grid>
+              <Grid item xs={6} sm={4}>
+                <Typography variant="body2"><strong>{t('device.properties.lastSeen')}:</strong></Typography>
+                <Typography variant="body2">
+                  {device?.attributesServerScope?.lastActivityTime?.[0]?.[1]
+                  ? new Date(Number(device.attributesServerScope.lastActivityTime[0][1])).toLocaleString()
+                  : 'N/A'}
+                </Typography>
               </Grid>
             </Grid>
             </Grid>
