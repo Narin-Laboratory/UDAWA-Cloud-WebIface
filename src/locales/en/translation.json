@@ -51,6 +51,12 @@
       "analyticContent": "Analytic content goes here.",
       "configContent": "Config content goes here."
     },
+    "genericConfig": {
+      "title": "Generic Configuration",
+      "wifiSSID": "WiFi SSID",
+      "wifiPassword": "WiFi Password",
+      "hostName": "Host Name"
+    },
     "unsupported": "Unsupported device type"
   },
   "footer": {

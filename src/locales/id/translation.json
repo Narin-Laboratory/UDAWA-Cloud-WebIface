@@ -51,6 +51,12 @@
       "analyticContent": "Konten analitik ada di sini.",
       "configContent": "Konten konfigurasi ada di sini."
     },
+    "genericConfig": {
+      "title": "Konfigurasi Generik",
+      "wifiSSID": "SSID WiFi",
+      "wifiPassword": "Kata Sandi WiFi",
+      "hostName": "Nama Host"
+    },
     "unsupported": "Tipe perangkat tidak didukung"
   },
   "footer": {

@@ -2,9 +2,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TabInfo } from '../../components/DeviceDashboard';
 import DeviceDashboard from '../../components/DeviceDashboard';
+import DeviceGenericConfig from '../../components/DeviceGenericConfig';
+import { useDevice } from '../../contexts/DeviceContext';
 
 const GadadarDashboard: React.FC = () => {
   const { t } = useTranslation();
+  const { device } = useDevice();
 
   const tabs: TabInfo[] = [
     {
@@ -21,7 +24,7 @@ const GadadarDashboard: React.FC = () => {
     },
     {
       label: t('device.dashboardTabs.config'),
-      content: t('device.dashboardTabs.configContent'),
+      content: <DeviceGenericConfig device={device} />,
     },
   ];
 
