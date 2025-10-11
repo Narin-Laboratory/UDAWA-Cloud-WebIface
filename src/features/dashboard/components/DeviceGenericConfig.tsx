@@ -10,7 +10,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import type { DeviceInfo } from '@/features/dashboard/services/deviceService';
-import { saveDeviceAttributes } from '@/features/dashboard/services/deviceService';
+import { rpcV2, saveDeviceAttributes } from '@/features/dashboard/services/deviceService';
 
 interface DeviceGenericConfigProps {
   device: DeviceInfo | null;
@@ -59,6 +59,24 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
           pending: t('device.genericConfig.saving'),
           success: t('device.genericConfig.saveSuccess'),
           error: t('device.genericConfig.saveError'),
+        },
+      );
+
+      await toast.promise(
+        rpcV2(device.id.id, "saveConfig", {}),
+        {
+          pending: `${t('rpcv2.process')}: saveConfig`,
+          success: `${t('rpcv2.success')}: saveConfig`,
+          error: `${t('rpcv2.error')}: saveConfig`,
+        },
+      );
+
+      await toast.promise(
+        rpcV2(device.id.id, "syncAttribute", {}),
+        {
+          pending: `${t('rpcv2.process')}: syncAttribute`,
+          success: `${t('rpcv2.success')}: syncAttribute`,
+          error: `${t('rpcv2.error')}: syncAttribute`,
         },
       );
     } catch (error) {

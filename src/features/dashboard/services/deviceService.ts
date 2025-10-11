@@ -120,3 +120,39 @@ export const saveDeviceAttributes = async (
     throw new Error('Failed to save device attributes');
   }
 };
+
+export const rpcV2 = async (
+  entityId: string,
+  method: string,
+  params: object,
+): Promise<void> => {
+  const token = getItem('token');
+  const server = getItem('server');
+
+  if (!token || !server) {
+    throw new Error('User not authenticated or server not set');
+  }
+
+  const payload = {
+    "method": method,
+    "params": params,
+    "persistent": false,
+    "timeout": 5000
+  };
+
+  const response = await fetch(
+    `https://${server}/api/rpc/twoway/${entityId}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to execute rpcv2');
+  }
+};
