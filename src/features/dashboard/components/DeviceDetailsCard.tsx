@@ -67,16 +67,16 @@ const DeviceDetailsCard: React.FC = () => {
               </Typography>
               </Grid>
               <Grid item xs={6} sm={4}>
-              <Typography variant="body2"><strong>{t('device.properties.heap')}:</strong></Typography>
-              <Typography variant="body2">
-                {device?.attributesClientScope?.heap?.[0]?.[1] ?? 'N/A'}
-              </Typography>
-              </Grid>
-              <Grid item xs={6} sm={4}>
               <Typography variant="body2"><strong>{t('device.properties.fwState')}:</strong></Typography>
               <Typography variant="body2">
                 {device?.timeseries?.fw_state?.[0]?.[1] ?? 'N/A'}
               </Typography>
+              </Grid>
+              <Grid item xs={6} sm={4}>
+                <Typography variant="body2"><strong>{t('device.properties.heap')}:</strong></Typography>
+                <Typography variant="body2">
+                  {device?.attributesClientScope?.heap?.[0]?.[1] ?? 'N/A'}
+                </Typography>
               </Grid>
               <Grid item xs={6} sm={4}>
                 <Typography variant="body2"><strong>{t('device.properties.lastSeen')}:</strong></Typography>
