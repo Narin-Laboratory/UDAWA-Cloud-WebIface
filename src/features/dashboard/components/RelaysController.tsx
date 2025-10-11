@@ -9,8 +9,7 @@ import {
   IconButton,
   InputAdornment,
 } from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import type { DeviceInfo } from '@/features/dashboard/services/deviceService';
@@ -88,14 +87,48 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
         <Typography variant="h6" gutterBottom>
           {t('device.genericConfig.title')}
         </Typography>
-        
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-          <Button onClick={handleReset} sx={{ mr: 1 }}>
-            {t('device.genericConfig.reset')}
-          </Button>
-          <Button onClick={handleSave} variant="contained">
-            {t('device.genericConfig.save')}
-          </Button>
+
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          {/* Left container: 50% */}
+          <Box sx={{ flex: '1 1 50%', minWidth: 0 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <TextField
+                fullWidth
+                label="Relays"
+                value={relays || defaultRelays}
+                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setRelays(e.target.value)}
+                placeholder='[{"pin":1,"name":"R1"}]'
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Button size="small" variant="outlined">Adjust</Button>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
+          </Box>
+
+          {/* Right container: 50% */}
+          <Box sx={{ flex: '1 1 50%', minWidth: 0 }}>
+            <Box sx={{ border: '1px dashed', borderColor: 'divider', borderRadius: 1, p: 2, height: '100%' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <IconButton aria-label="tips" size="small" disabled>
+                  <LightbulbIcon fontSize="small" />
+                </IconButton>
+                <Typography variant="subtitle1">{t('device.dashboardTabs.control')}</Typography>
+              </Box>
+
+              <Typography variant="body2" sx={{ mt: 1 }}>
+                Tips: Try editing the JSON for relay mapping here and press Save to apply.
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
+          <Button variant="outlined" onClick={handleReset}>{t('device.genericConfig.reset')}</Button>
+          <Button variant="contained" onClick={handleSave}>{t('device.genericConfig.save')}</Button>
         </Box>
       </CardContent>
     </Card>
