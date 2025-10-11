@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -6,7 +6,11 @@ import {
   Typography,
   Button,
   Box,
+  IconButton,
+  InputAdornment,
 } from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import type { DeviceInfo } from '@/features/dashboard/services/deviceService';
@@ -16,17 +20,22 @@ interface DeviceGenericConfigProps {
   device: DeviceInfo | null;
 }
 
-const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
-  device,
-}) => {
+const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: DeviceGenericConfigProps) => {
   const { t } = useTranslation();
   const [wssid, setWssid] = useState('');
   const [wpass, setWpass] = useState('');
+  const [showWpass, setShowWpass] = useState(false);
+  const [provDK, setProvDK] = useState('');
+  const [provDS, setProvDS] = useState('');
+  const [showProvDS, setShowProvDS] = useState(false);
   const [hname, setHname] = useState('');
+  const attrs: any = device?.attributesClientScope;
 
-  const defaultWssid = device?.attributesClientScope?.wssid?.[0]?.[1] || '';
-  const defaultWpass = device?.attributesClientScope?.wpass?.[0]?.[1] || '';
-  const defaultHname = device?.attributesClientScope?.hname?.[0]?.[1] || '';
+  const defaultWssid = attrs?.wssid?.[0]?.[1] || '';
+  const defaultWpass = attrs?.wpass?.[0]?.[1] || '';
+  const defaultProvDK = attrs?.provDK?.[0]?.[1] || '';
+  const defaultProvDS = attrs?.provDS?.[0]?.[1] || '';
+  const defaultHname = attrs?.hname?.[0]?.[1] || '';
 
   const handleSave = async () => {
     if (!device) return;
@@ -37,6 +46,12 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
     }
     if (wpass && wpass !== defaultWpass) {
       attributes.wpass = wpass;
+    }
+    if (provDK && provDK !== defaultProvDK) {
+      attributes.provDK = provDK;
+    }
+    if (provDS && provDS !== defaultProvDS) {
+      attributes.provDS = provDS;
     }
     if (hname && hname !== defaultHname) {
       attributes.hname = hname;
@@ -88,6 +103,8 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
   const handleReset = () => {
     setWssid('');
     setWpass('');
+    setProvDK('');
+    setProvDS('');
     setHname('');
   };
 
@@ -101,7 +118,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
           label={t('device.genericConfig.wifiSSID')}
           value={wssid}
           placeholder={defaultWssid}
-          onChange={e => setWssid(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setWssid(e.target.value)}
           fullWidth
           margin="normal"
         />
@@ -109,15 +126,59 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
           label={t('device.genericConfig.wifiPassword')}
           value={wpass}
           placeholder={defaultWpass}
-          onChange={e => setWpass(e.target.value)}
+          type={showWpass ? 'text' : 'password'}
+          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setWpass(e.target.value)}
           fullWidth
           margin="normal"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label={showWpass ? 'Hide password' : 'Show password'}
+                  onClick={() => setShowWpass((s: boolean) => !s)}
+                  edge="end"
+                >
+                  {showWpass ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <TextField
+          label={t('device.genericConfig.provDK')}
+          value={provDK}
+          placeholder={defaultProvDK}
+          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setProvDK(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label={t('device.genericConfig.provDS')}
+          type={showProvDS ? 'text' : 'password'}
+          value={provDS}
+          placeholder={defaultProvDS}
+          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setProvDS(e.target.value)}
+          fullWidth
+          margin="normal"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label={showProvDS ? 'Hide provisioning secret' : 'Show provisioning secret'}
+                  onClick={() => setShowProvDS((s: boolean) => !s)}
+                  edge="end"
+                >
+                  {showProvDS ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         <TextField
           label={t('device.genericConfig.hostName')}
           value={hname}
           placeholder={defaultHname}
-          onChange={e => setHname(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setHname(e.target.value)}
           fullWidth
           margin="normal"
         />
