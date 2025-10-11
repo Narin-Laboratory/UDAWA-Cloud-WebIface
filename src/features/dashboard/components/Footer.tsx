@@ -1,7 +1,9 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <Box
       component="footer"
@@ -16,9 +18,7 @@ const Footer: React.FC = () => {
       }}
     >
       <Typography variant="body2" color="text.secondary" align="center">
-        {'© '}
-        {new Date().getFullYear()}{' '}
-        {'PSTI Undiknas - Narin Laboratory. All Rights Reserved.'}
+        {t('footer.copyright', { year: new Date().getFullYear() })}
       </Typography>
     </Box>
   );

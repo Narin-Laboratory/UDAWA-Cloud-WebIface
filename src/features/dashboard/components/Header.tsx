@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({
   onDrawerToggle,
   onLogout,
 }) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [user, setUser] = useState({ name: '', authority: '' });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [langAnchorEl, setLangAnchorEl] = useState<null | HTMLElement>(null);
@@ -90,11 +90,11 @@ const Header: React.FC<HeaderProps> = ({
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <MenuItem component={Link} to="/profile" onClick={handleMenuClose}>
-          Profile
+          {t('header.profile')}
         </MenuItem>
         <MenuItem onClick={() => { onLogout(); handleMenuClose(); }}>
           <LogoutIcon sx={{ mr: 1 }} />
-          Logout
+          {t('header.logout')}
         </MenuItem>
       </Menu>
     </Box>
@@ -102,7 +102,7 @@ const Header: React.FC<HeaderProps> = ({
 
   const renderMobileMenu = () => (
     <Box>
-      <IconButton color="inherit" onClick={handleMenuOpen} aria-label="More actions">
+      <IconButton color="inherit" onClick={handleMenuOpen} aria-label={t('header.moreActions')}>
         <MoreVertIcon />
       </IconButton>
       <Menu
@@ -113,11 +113,11 @@ const Header: React.FC<HeaderProps> = ({
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <MenuItem component={Link} to="/profile" onClick={handleMenuClose}>
-          Profile
+        {t('header.profile')}
         </MenuItem>
-        <MenuItem onClick={handleLangMenuOpen}>Language</MenuItem>
+        <MenuItem onClick={handleLangMenuOpen}>{t('header.language')}</MenuItem>
         <MenuItem onClick={() => { onLogout(); handleMenuClose(); }}>
-          Logout
+        {t('header.logout')}
         </MenuItem>
       </Menu>
       <Menu
@@ -127,8 +127,8 @@ const Header: React.FC<HeaderProps> = ({
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem onClick={() => handleLanguageChange('en')}>English</MenuItem>
-        <MenuItem onClick={() => handleLanguageChange('id')}>Indonesia</MenuItem>
+        <MenuItem onClick={() => handleLanguageChange('en')}>{t('header.english')}</MenuItem>
+        <MenuItem onClick={() => handleLanguageChange('id')}>{t('header.indonesia')}</MenuItem>
       </Menu>
     </Box>
   );
@@ -152,7 +152,7 @@ const Header: React.FC<HeaderProps> = ({
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-          UDAWA Smart System
+          {t('login.title')}
         </Typography>
         {isMobile ? renderMobileMenu() : renderDesktopMenu()}
       </Toolbar>

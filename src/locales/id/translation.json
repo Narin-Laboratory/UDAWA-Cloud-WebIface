@@ -21,5 +21,49 @@
   "deviceList": {
     "fetchError": "Gagal mengambil data perangkat. Silakan coba lagi nanti.",
     "loading": "Memuat perangkat..."
+  },
+  "device": {
+    "status": {
+      "active": "Aktif",
+      "inactive": "Tidak Aktif"
+    },
+    "properties": {
+      "ipAddress": "Alamat IP",
+      "ssid": "SSID",
+      "signal": "Sinyal",
+      "battery": "Baterai",
+      "firmware": "Versi Firmware",
+      "heap": "Heap",
+      "lastSeen": "Terakhir Dilihat"
+    },
+    "notFound": "Perangkat tidak ditemukan",
+    "dashboardTabs": {
+      "ariaLabel": "tab dasbor perangkat",
+      "monitor": "Monitor",
+      "control": "Kontrol",
+      "config": "Konfigurasi",
+      "monitorContent": "Konten monitor ada di sini.",
+      "controlContent": "Konten kontrol ada di sini.",
+      "configContent": "Konten konfigurasi ada di sini."
+    }
+  },
+  "footer": {
+    "copyright": "© {{year}} PSTI Undiknas - Narin Laboratory. Hak Cipta Dilindungi."
+  },
+  "header": {
+    "profile": "Profil",
+    "logout": "Keluar",
+    "language": "Bahasa",
+    "english": "Bahasa Inggris",
+    "indonesia": "Bahasa Indonesia",
+    "moreActions": "Aksi lainnya"
+  },
+  "dashboard": {
+    "welcome": "Selamat Datang di Dasbor",
+    "placeholder": "Ini adalah halaman dasbor kosong. Konten akan ditambahkan di sini nanti."
+  },
+  "userProfile": {
+    "title": "Profil Pengguna",
+    "placeholder": "Ini adalah halaman placeholder untuk profil pengguna."
   }
 }

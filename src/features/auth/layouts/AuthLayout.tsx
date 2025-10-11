@@ -1,11 +1,13 @@
 import React from 'react';
 import { Container, Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 interface AuthLayoutProps {
   children: React.ReactNode;
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
+  const { t } = useTranslation();
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Container
@@ -33,7 +35,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
       >
         <Container maxWidth="sm">
           <Typography variant="body2" color="text.secondary" align="center">
-            © 2025 PSTI Undiknas - Narin Laboratory
+            {t('footer.copyright', { year: 2025 })}
           </Typography>
         </Container>
       </Box>

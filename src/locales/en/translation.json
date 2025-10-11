@@ -21,5 +21,49 @@
   "deviceList": {
     "fetchError": "Failed to fetch devices. Please try again later.",
     "loading": "Loading devices..."
+  },
+  "device": {
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "properties": {
+      "ipAddress": "IP Address",
+      "ssid": "SSID",
+      "signal": "Signal",
+      "battery": "Battery",
+      "firmware": "Firmware Ver.",
+      "heap": "Heap",
+      "lastSeen": "Last Seen"
+    },
+    "notFound": "Device not found",
+    "dashboardTabs": {
+      "ariaLabel": "device dashboard tabs",
+      "monitor": "Monitor",
+      "control": "Control",
+      "config": "Config",
+      "monitorContent": "Monitor content goes here.",
+      "controlContent": "Control content goes here.",
+      "configContent": "Config content goes here."
+    }
+  },
+  "footer": {
+    "copyright": "© {{year}} PSTI Undiknas - Narin Laboratory. All Rights Reserved."
+  },
+  "header": {
+    "profile": "Profile",
+    "logout": "Logout",
+    "language": "Language",
+    "english": "English",
+    "indonesia": "Indonesia",
+    "moreActions": "More actions"
+  },
+  "dashboard": {
+    "welcome": "Welcome to the Dashboard",
+    "placeholder": "This is a blank dashboard page. Content will be added here later."
+  },
+  "userProfile": {
+    "title": "User Profile",
+    "placeholder": "This is a placeholder page for the user profile."
   }
 }
