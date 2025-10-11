@@ -38,7 +38,7 @@ const DeviceDetailsCard: React.FC = () => {
             <Grid container spacing={1}>
               <Grid item xs={6} sm={4}>
                 <Typography variant="body2"><strong>{t('device.properties.ipAddress')}:</strong></Typography>
-                <Typography variant="body2">{device.ipAddress ?? 'N/A'}</Typography>
+                <Typography variant="body2">{device.attributesSharedScope.ipad ?? 'N/A'}</Typography>
               </Grid>
               <Grid item xs={6} sm={4}>
                 <Typography variant="body2"><strong>{t('device.properties.ssid')}:</strong></Typography>

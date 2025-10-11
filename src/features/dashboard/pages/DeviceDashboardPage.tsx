@@ -52,19 +52,31 @@ const DeviceDashboardPage: React.FC = () => {
 
           switch (data.subscriptionId) {
             case 1:
-          newDevice.attributesServerScope = data.data;
-          break;
+              newDevice.attributesServerScope = {
+              ...newDevice.attributesServerScope,
+              ...data.data,
+              };
+              break;
             case 2:
-          newDevice.attributesClientScope = data.data;
-          break;
+              newDevice.attributesClientScope = {
+              ...newDevice.attributesClientScope,
+              ...data.data,
+              };
+              break;
             case 3:
-          newDevice.attributesSharedScope = data.data;
-          break;
+              newDevice.attributesSharedScope = {
+              ...newDevice.attributesSharedScope,
+              ...data.data,
+              };
+              break;
             case 4:
-          newDevice.timeseries = data.data;
-          break;
+              newDevice.timeseries = {
+              ...newDevice.timeseries,
+              ...data.data,
+              };
+              break;
             default:
-          break;
+              break;
           }
           console.log(newDevice);
 
