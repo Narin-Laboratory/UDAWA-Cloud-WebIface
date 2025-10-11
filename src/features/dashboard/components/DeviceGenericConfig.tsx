@@ -63,7 +63,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
       );
 
       await toast.promise(
-        rpcV2(device.id.id, "saveConfig", {}),
+        rpcV2("test", "saveConfig", {}),
         {
           pending: `${t('rpcv2.process')}: saveConfig`,
           success: `${t('rpcv2.success')}: saveConfig`,
@@ -71,14 +71,15 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({
         },
       );
 
-      await toast.promise(
+      /*await toast.promise(
         rpcV2(device.id.id, "syncAttribute", {}),
         {
           pending: `${t('rpcv2.process')}: syncAttribute`,
           success: `${t('rpcv2.success')}: syncAttribute`,
           error: `${t('rpcv2.error')}: syncAttribute`,
         },
-      );
+      );*/
+
     } catch (error) {
       // Error is already handled by toast.promise
     }

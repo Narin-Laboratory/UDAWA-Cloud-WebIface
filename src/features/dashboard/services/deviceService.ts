@@ -122,10 +122,10 @@ export const saveDeviceAttributes = async (
 };
 
 export const rpcV2 = async (
-  entityId: string,
-  method: string,
-  params: object,
-): Promise<void> => {
+    entityId: string,
+    method: string,
+    params: object,
+  ): Promise<void> => {
   const token = getItem('token');
   const server = getItem('server');
 
@@ -153,7 +153,7 @@ export const rpcV2 = async (
   );
 
   if (!response.ok) {
-    console.log(`Failed to execute rpcv2 ${method}: ${response.text}`);
+    console.log(`Failed to execute rpcv2 ${method}: ${response.statusText}`);
     throw new Error('Failed to execute rpcv2');
   }
 };
