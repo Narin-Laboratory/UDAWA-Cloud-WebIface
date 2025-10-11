@@ -137,11 +137,11 @@ export const rpcV2 = async (
     "method": method,
     "params": params,
     "persistent": false,
-    "timeout": 5000
+    "timeout": 15000
   };
 
   const response = await fetch(
-    `https://${server}/api/rpc/oneway/${entityId}`,
+    `https://${server}/api/rpc/twoway/${entityId}`,
     {
       method: 'POST',
       headers: {
