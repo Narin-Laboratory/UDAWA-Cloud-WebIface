@@ -25,7 +25,7 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
   const [relays, setRelays] = useState('');
   const attrs: any = device?.attributesClientScope;
 
-  const defaultRelays = attrs?.relays>.[0]?.[1] || '[]';
+  const defaultRelays = attrs?.relays?.[0]?.[1] || '[]';
 
   const handleSave = async () => {
     if (!device) return;
