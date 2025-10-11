@@ -90,3 +90,33 @@ export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {
     ...deviceInfo
   };
 };
+
+export const saveDeviceAttributes = async (
+  entityType: string,
+  entityId: string,
+  scope: string,
+  attributes: object,
+): Promise<void> => {
+  const token = getItem('token');
+  const server = getItem('server');
+
+  if (!token || !server) {
+    throw new Error('User not authenticated or server not set');
+  }
+
+  const response = await fetch(
+    `https://${server}/api/plugins/telemetry/${entityType}/${entityId}/attributes/${scope}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(attributes),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to save device attributes');
+  }
+};
