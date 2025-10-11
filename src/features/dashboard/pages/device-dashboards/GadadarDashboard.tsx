@@ -4,6 +4,7 @@ import type { TabInfo } from '../../components/DeviceDashboard';
 import DeviceDashboard from '../../components/DeviceDashboard';
 import DeviceGenericConfig from '../../components/DeviceGenericConfig';
 import { useDevice } from '../../contexts/DeviceContext';
+import RelaysController from '../../components/RelaysController';
 
 const GadadarDashboard: React.FC = () => {
   const { t } = useTranslation();
@@ -16,7 +17,7 @@ const GadadarDashboard: React.FC = () => {
     },
     {
       label: t('device.dashboardTabs.control'),
-      content: t('device.dashboardTabs.controlContent'),
+      content: <RelaysController device={device} />,
     },
     {
       label: t('device.dashboardTabs.analytic'),
