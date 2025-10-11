@@ -28,6 +28,8 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: Dev
   const [provDK, setProvDK] = useState('');
   const [provDS, setProvDS] = useState('');
   const [showProvDS, setShowProvDS] = useState(false);
+  const [tbAddr, setTbAddr] = useState('');
+  const [tbPort, setTbPort] = useState('');
   const [hname, setHname] = useState('');
   const attrs: any = device?.attributesClientScope;
 
@@ -35,6 +37,8 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: Dev
   const defaultWpass = attrs?.wpass?.[0]?.[1] || '';
   const defaultProvDK = attrs?.provDK?.[0]?.[1] || '';
   const defaultProvDS = attrs?.provDS?.[0]?.[1] || '';
+  const defaultTbAddr = attrs?.tbAddr?.[0]?.[1] || '';
+  const defaultTbPort = attrs?.tbPort?.[0]?.[1] || '';
   const defaultHname = attrs?.hname?.[0]?.[1] || '';
 
   const handleSave = async () => {
@@ -52,6 +56,12 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: Dev
     }
     if (provDS && provDS !== defaultProvDS) {
       attributes.provDS = provDS;
+    }
+    if (tbAddr && tbAddr !== defaultTbAddr) {
+      attributes.tbAddr = tbAddr;
+    }
+    if (tbPort && tbPort !== defaultTbPort) {
+      attributes.tbPort = tbPort;
     }
     if (hname && hname !== defaultHname) {
       attributes.hname = hname;
@@ -105,6 +115,8 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: Dev
     setWpass('');
     setProvDK('');
     setProvDS('');
+    setTbAddr('');
+    setTbPort('');
     setHname('');
   };
 
@@ -173,6 +185,23 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: Dev
               </InputAdornment>
             ),
           }}
+        />
+        <TextField
+          label={t('device.genericConfig.tbAddr')}
+          value={tbAddr}
+          placeholder={defaultTbAddr}
+          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTbAddr(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label={t('device.genericConfig.tbPort')}
+          value={tbPort}
+          placeholder={defaultTbPort}
+          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTbPort(e.target.value)}
+          fullWidth
+          margin="normal"
+          type="number"
         />
         <TextField
           label={t('device.genericConfig.hostName')}
