@@ -14,14 +14,10 @@ export interface Device {
 
 export interface DeviceInfo extends Device {
   active: boolean;
-  ipAddress?: string;
-  ssid?: string;
-  signal?: number;
-  battery?: number;
-  firmwareVersion?: string;
-  heap?: number;
-  lastSeen?: string;
-  fw_state?: string;
+  attributesServerScope: object;
+  attributesClientScope: object;
+  attributesSharedScope: object;
+  timeseries: object;
 }
 
 export const getDevices = async (force = false): Promise<Device[]> => {
@@ -90,16 +86,7 @@ export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {
 
   const deviceInfo = await response.json();
 
-  // Add mock data for additional fields as the API doesn't provide them yet
   return {
-    ...deviceInfo,
-    ipAddress: '192.168.1.10',
-    ssid: 'MyWiFi',
-    signal: 85,
-    battery: 95,
-    firmwareVersion: '1.0.0',
-    heap: 12345,
-    fw_state: 'N/A',
-    lastSeen: new Date().toISOString(),
+    ...deviceInfo
   };
 };

@@ -32,7 +32,7 @@ export const connectWebSocket = (
     console.log('WebSocket connection opened');
     const authCmd = {
       authCmd: {
-        cmdId: 10,
+        cmdId: 0,
         token: token,
       },
       cmds: [
