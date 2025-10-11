@@ -1,4 +1,4 @@
-import React, {
+import {
   useEffect,
   useState,
   useImperativeHandle,
@@ -27,7 +27,7 @@ export interface DeviceListHandle {
   reload: () => void;
 }
 
-const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
+const DeviceList = forwardRef<DeviceListHandle, {}>((_props, ref) => {
   const { t } = useTranslation();
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
   const [error, setError] = useState<string | null>(null);

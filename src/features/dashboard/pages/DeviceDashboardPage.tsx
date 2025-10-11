@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Box, Tab, Tabs, Typography, CircularProgress } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import DeviceDetailsCard from '../components/DeviceDetailsCard';
+import GenericDeviceConfig from '../components/config/GenericDeviceConfig';
 import { getDeviceInfo } from '../services/deviceService';
 import { useDevice } from '../contexts/DeviceContext';
 import {
@@ -60,22 +61,19 @@ const DeviceDashboardPage: React.FC = () => {
       connectWebSocket(
         deviceId,
         (data) => {
-          if (data.data) {
-            setDevice((prevDevice) => {
-              if (!prevDevice) return null;
-              const newDevice = { ...prevDevice };
-              const telemetry = data.data;
+          if (data.data && device) {
+            const newDevice = { ...device };
+            const telemetry = data.data;
 
-              if (telemetry.wssid) newDevice.ssid = telemetry.wssid[0][1];
-              if (telemetry.ipad) newDevice.ipAddress = telemetry.ipad[0][1];
-              if (telemetry.rssi) newDevice.signal = telemetry.rssi[0][1];
-              if (telemetry.batt) newDevice.battery = telemetry.batt[0][1];
-              if (telemetry.fmVersion) newDevice.firmwareVersion = telemetry.fmVersion[0][1];
-              if (telemetry.heap) newDevice.heap = telemetry.heap[0][1];
-              if (telemetry.lastActivityTime) newDevice.lastSeen = new Date(parseInt(telemetry.lastActivityTime[0][1])).toLocaleString();
-              if (telemetry.fw_state) newDevice.fw_state = telemetry.fw_state[0][1];
-              return newDevice;
-            });
+            if (telemetry.wssid) newDevice.ssid = telemetry.wssid[0][1];
+            if (telemetry.ipad) newDevice.ipAddress = telemetry.ipad[0][1];
+            if (telemetry.rssi) newDevice.signal = telemetry.rssi[0][1];
+            if (telemetry.batt) newDevice.battery = telemetry.batt[0][1];
+            if (telemetry.fmVersion) newDevice.firmwareVersion = telemetry.fmVersion[0][1];
+            if (telemetry.heap) newDevice.heap = telemetry.heap[0][1];
+            if (telemetry.lastActivityTime) newDevice.lastSeen = new Date(parseInt(telemetry.lastActivityTime[0][1])).toLocaleString();
+            if (telemetry.fw_state) newDevice.fw_state = telemetry.fw_state[0][1];
+            setDevice(newDevice);
           }
         },
         (error) => {
@@ -87,9 +85,9 @@ const DeviceDashboardPage: React.FC = () => {
     return () => {
       disconnectWebSocket();
     };
-  }, [deviceId]);
+  }, [deviceId, setDevice]);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
@@ -107,7 +105,6 @@ const DeviceDashboardPage: React.FC = () => {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={tabValue} onChange={handleTabChange} aria-label={t('device.dashboardTabs.ariaLabel')}>
           <Tab label={t('device.dashboardTabs.monitor')} />
-          <Tab label={t('device.dashboardTabs.control')} />
           <Tab label={t('device.dashboardTabs.config')} />
         </Tabs>
       </Box>
@@ -115,10 +112,7 @@ const DeviceDashboardPage: React.FC = () => {
         {t('device.dashboardTabs.monitorContent')}
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
-        {t('device.dashboardTabs.controlContent')}
-      </TabPanel>
-      <TabPanel value={tabValue} index={2}>
-        {t('device.dashboardTabs.configContent')}
+        <GenericDeviceConfig />
       </TabPanel>
     </Box>
   );
