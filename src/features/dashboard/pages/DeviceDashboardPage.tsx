@@ -46,26 +46,40 @@ const DeviceDashboardPage: React.FC = () => {
         deviceId,
         (data) => {
           if (data.data) {
-            setDevice((prevDevice) => {
-              if (!prevDevice) return null;
-              const newDevice = { ...prevDevice };
-              const telemetry = data.data;
+        setDevice((prevDevice) => {
+          if (!prevDevice) return null;
+          const newDevice = { ...prevDevice };
 
-              if (telemetry.wssid) newDevice.ssid = telemetry.wssid[0][1];
-              if (telemetry.ipad) newDevice.ipAddress = telemetry.ipad[0][1];
-              if (telemetry.rssi) newDevice.signal = telemetry.rssi[0][1];
-              if (telemetry.batt) newDevice.battery = telemetry.batt[0][1];
-              if (telemetry.fmVersion)
-                newDevice.firmwareVersion = telemetry.fmVersion[0][1];
-              if (telemetry.heap) newDevice.heap = telemetry.heap[0][1];
-              if (telemetry.lastActivityTime)
-                newDevice.lastSeen = new Date(
-                  parseInt(telemetry.lastActivityTime[0][1])
-                ).toLocaleString();
-              if (telemetry.fw_state)
-                newDevice.fw_state = telemetry.fw_state[0][1];
-              return newDevice;
-            });
+          switch (data.subscriptionId) {
+            case 1:
+              newDevice.attributesServerScope = {
+              ...newDevice.attributesServerScope,
+              ...data.data,
+              };
+              break;
+            case 2:
+              newDevice.attributesClientScope = {
+              ...newDevice.attributesClientScope,
+              ...data.data,
+              };
+              break;
+            case 3:
+              newDevice.attributesSharedScope = {
+              ...newDevice.attributesSharedScope,
+              ...data.data,
+              };
+              break;
+            case 4:
+              newDevice.timeseries = {
+              ...newDevice.timeseries,
+              ...data.data,
+              };
+              break;
+            default:
+              break;
+          }
+          return newDevice;
+        });
           }
         },
         (error) => {

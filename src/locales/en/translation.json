@@ -1,4 +1,9 @@
 {
+  "rpcv2": {
+    "success": "Successfully called RPC",
+    "process": "Executing RPC",
+    "error": "Failed to execute RPC"
+  },
   "login": {
     "title": "UDAWA Smart System",
     "subtitle": "Cloud Web Interface",
@@ -34,7 +39,7 @@
       "ssid": "SSID",
       "signal": "Signal",
       "battery": "Battery",
-      "firmware": "Firmware Ver.",
+      "firmware": "Fw Ver.",
       "heap": "Heap",
       "lastSeen": "Last Seen",
       "fwState": "Fw State"
@@ -50,6 +55,22 @@
       "controlContent": "Control content goes here.",
       "analyticContent": "Analytic content goes here.",
       "configContent": "Config content goes here."
+    },
+    "genericConfig": {
+      "title": "Generic Configuration",
+      "wifiSSID": "WiFi SSID",
+      "wifiPassword": "WiFi Password",
+      "provDK": "Provisioning Device Key",
+      "provDS": "Provisioning Device Secret",
+      "tbAddr": "ThingsBoard Address",
+      "tbPort": "ThingsBoard Port",
+      "hostName": "Host Name",
+      "saving": "Saving...",
+      "saveSuccess": "Configuration saved successfully",
+      "saveError": "Failed to save configuration",
+      "reset": "Reset",
+      "save": "Save",
+      "noChanges": "No changes to save"
     },
     "unsupported": "Unsupported device type"
   },

@@ -1,4 +1,9 @@
 {
+  "rpcv2": {
+    "success": "Berhasil menjalankan RPC",
+    "process": "Menjalankan RPC",
+    "error": "Gagal menjalankan RPC"
+  },
   "login": {
     "title": "UDAWA Smart System",
     "subtitle": "Antarmuka Web Cloud",
@@ -34,7 +39,7 @@
       "ssid": "SSID",
       "signal": "Sinyal",
       "battery": "Baterai",
-      "firmware": "Versi Firmware",
+      "firmware": "Ver. Fw",
       "heap": "Heap",
       "lastSeen": "Terakhir Dilihat",
       "fwState": "Status Fw"
@@ -50,6 +55,22 @@
       "controlContent": "Konten kontrol ada di sini.",
       "analyticContent": "Konten analitik ada di sini.",
       "configContent": "Konten konfigurasi ada di sini."
+    },
+    "genericConfig": {
+      "title": "Konfigurasi Generik",
+      "wifiSSID": "SSID WiFi",
+      "wifiPassword": "Kata Sandi WiFi",
+      "provDK": "Kunci Provisioning Perangkat",
+      "provDS": "Rahasia Provisioning Perangkat",
+      "tbAddr": "Alamat ThingsBoard",
+      "tbPort": "Port ThingsBoard",
+      "hostName": "Nama Host",
+      "saving": "Menyimpan...",
+      "saveSuccess": "Konfigurasi berhasil disimpan",
+      "saveError": "Gagal menyimpan konfigurasi",
+      "reset": "Atur Ulang",
+      "save": "Simpan",
+      "noChanges": "Tidak ada perubahan untuk disimpan"
     },
     "unsupported": "Tipe perangkat tidak didukung"
   },

@@ -14,14 +14,10 @@ export interface Device {
 
 export interface DeviceInfo extends Device {
   active: boolean;
-  ipAddress?: string;
-  ssid?: string;
-  signal?: number;
-  battery?: number;
-  firmwareVersion?: string;
-  heap?: number;
-  lastSeen?: string;
-  fw_state?: string;
+  attributesServerScope: object;
+  attributesClientScope: object;
+  attributesSharedScope: object;
+  timeseries: object;
 }
 
 export const getDevices = async (force = false): Promise<Device[]> => {
@@ -90,16 +86,74 @@ export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {
 
   const deviceInfo = await response.json();
 
-  // Add mock data for additional fields as the API doesn't provide them yet
   return {
-    ...deviceInfo,
-    ipAddress: '192.168.1.10',
-    ssid: 'MyWiFi',
-    signal: 85,
-    battery: 95,
-    firmwareVersion: '1.0.0',
-    heap: 12345,
-    fw_state: 'N/A',
-    lastSeen: new Date().toISOString(),
+    ...deviceInfo
   };
+};
+
+export const saveDeviceAttributes = async (
+  entityType: string,
+  entityId: string,
+  scope: string,
+  attributes: object,
+): Promise<void> => {
+  const token = getItem('token');
+  const server = getItem('server');
+
+  if (!token || !server) {
+    throw new Error('User not authenticated or server not set');
+  }
+
+  const response = await fetch(
+    `https://${server}/api/plugins/telemetry/${entityType}/${entityId}/attributes/${scope}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(attributes),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to save device attributes');
+  }
+};
+
+export const rpcV2 = async (
+    entityId: string,
+    method: string,
+    params: object,
+  ): Promise<void> => {
+  const token = getItem('token');
+  const server = getItem('server');
+
+  if (!token || !server) {
+    throw new Error('User not authenticated or server not set');
+  }
+
+  const payload = {
+    "method": method,
+    "params": params,
+    "persistent": false,
+    "timeout": 15000
+  };
+
+  const response = await fetch(
+    `https://${server}/api/rpc/twoway/${entityId}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    },
+  );
+
+  if (!response.ok) {
+    console.log(`Failed to execute rpcv2 ${method}: ${JSON.stringify(response.statusText)} - ${JSON.stringify(payload)} - https://${server}/api/rpc/twoway/${entityId}`);
+    throw new Error('Failed to execute rpcv2');
+  }
 };
