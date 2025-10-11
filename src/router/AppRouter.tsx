@@ -30,7 +30,7 @@ const AppRouter: React.FC = () => {
           }
         />
         <Route
-          path="/dashboard/device/:deviceId"
+          path="/dashboard/device/:deviceType/:deviceId"
           element={
             <DashboardLayout>
               <DeviceProvider>

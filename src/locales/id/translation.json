@@ -44,11 +44,14 @@
       "ariaLabel": "tab dasbor perangkat",
       "monitor": "Monitor",
       "control": "Kontrol",
+      "analytic": "Analitik",
       "config": "Konfigurasi",
       "monitorContent": "Konten monitor ada di sini.",
       "controlContent": "Konten kontrol ada di sini.",
+      "analyticContent": "Konten analitik ada di sini.",
       "configContent": "Konten konfigurasi ada di sini."
-    }
+    },
+    "unsupported": "Tipe perangkat tidak didukung"
   },
   "footer": {
     "copyright": "© {{year}} PSTI Undiknas - Narin Laboratory. Hak Cipta Dilindungi."

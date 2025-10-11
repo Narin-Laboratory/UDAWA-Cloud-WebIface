@@ -44,11 +44,14 @@
       "ariaLabel": "device dashboard tabs",
       "monitor": "Monitor",
       "control": "Control",
+      "analytic": "Analytic",
       "config": "Config",
       "monitorContent": "Monitor content goes here.",
       "controlContent": "Control content goes here.",
+      "analyticContent": "Analytic content goes here.",
       "configContent": "Config content goes here."
-    }
+    },
+    "unsupported": "Unsupported device type"
   },
   "footer": {
     "copyright": "© {{year}} PSTI Undiknas - Narin Laboratory. All Rights Reserved."
