@@ -8,6 +8,7 @@
     "signIn": "Masuk",
     "forgotPassword": "Lupa kata sandi?",
     "loggingIn": "Masuk...",
+    "loginSuccess": "Berhasil masuk",
     "fetchingUser": "Mengambil data pengguna...",
     "failed": "Gagal",
     "unexpectedError": "Terjadi kesalahan tak terduga."
@@ -16,11 +17,12 @@
     "loggingOut": "Keluar..."
   },
   "sidebar": {
-    "assets": "Daftar Aset"
+    "agents": "Daftar Agen"
   },
   "deviceList": {
     "fetchError": "Gagal mengambil data perangkat. Silakan coba lagi nanti.",
-    "loading": "Memuat perangkat..."
+    "loading": "Memuat daftar perangkat...",
+    "loadSuccess": "Sukses memuat daftar perangkat"
   },
   "device": {
     "status": {

@@ -8,6 +8,7 @@
     "signIn": "Sign In",
     "forgotPassword": "Forgot password?",
     "loggingIn": "Logging in...",
+    "loginSuccess": "Login success",
     "fetchingUser": "Fetching user data...",
     "failed": "Failed",
     "unexpectedError": "An unexpected error occurred."
@@ -16,11 +17,12 @@
     "loggingOut": "Logging out..."
   },
   "sidebar": {
-    "assets": "Assets List"
+    "agents": "Agents List"
   },
   "deviceList": {
     "fetchError": "Failed to fetch devices. Please try again later.",
-    "loading": "Loading devices..."
+    "loading": "Loading devices...",
+    "loadSuccess": "Device loading success"
   },
   "device": {
     "status": {
