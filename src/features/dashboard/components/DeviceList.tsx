@@ -22,6 +22,7 @@ import {
   type DeviceInfo,
 } from '../services/deviceService';
 import { useTranslation } from 'react-i18next';
+import slugify from '../../../utils/slugify';
 
 export interface DeviceListHandle {
   reload: () => void;
@@ -84,7 +85,7 @@ const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
         <ListItem key={device.id.id} disablePadding>
           <ListItemButton
             component={RouterLink}
-            to={`/dashboard/device/${device.type}/${device.id.id}`}
+            to={`/dashboard/device/${slugify(device.type)}/${device.id.id}`}
           >
             <ListItemText primary={device.label} secondary={device.type} />
             <ListItemIcon>

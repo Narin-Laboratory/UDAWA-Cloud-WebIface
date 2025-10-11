@@ -82,11 +82,11 @@ const DeviceDashboardPage: React.FC = () => {
   const DeviceDashboardComponent = useMemo(() => {
     if (!deviceType) return null;
     switch (deviceType.toLowerCase()) {
-      case 'gadadar':
+      case 'udawa-gadadar':
         return GadadarDashboard;
-      case 'damodar':
+      case 'udawa-damodar':
         return DamodarDashboard;
-      case 'murari':
+      case 'udawa-murari':
         return MurariDashboard;
       default:
         return null;
