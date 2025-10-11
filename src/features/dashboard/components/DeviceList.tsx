@@ -84,7 +84,7 @@ const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
         <ListItem key={device.id.id} disablePadding>
           <ListItemButton
             component={RouterLink}
-            to={`/dashboard/device/${device.id.id}`}
+            to={`/dashboard/device/${device.type}/${device.id.id}`}
           >
             <ListItemText primary={device.label} secondary={device.type} />
             <ListItemIcon>

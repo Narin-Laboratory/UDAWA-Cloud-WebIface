@@ -11,7 +11,7 @@ const DeviceDetailsCard: React.FC = () => {
     return null;
   }
   return (
-    <Card variant="outlined" sx={{ width: '100%', mb: 2 }}>
+    <Card variant="outlined" sx={{ width: '100%', mb: 2 }} data-testid="device-details-card">
       <CardContent>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} sm={4}>
