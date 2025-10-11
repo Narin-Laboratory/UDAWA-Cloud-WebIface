@@ -66,13 +66,13 @@ export const connectWebSocket = (
         },
       ],
     };
-    console.log('Sending auth command:', authCmd);
+    //console.log('Sending auth command:', authCmd);
     websocket?.send(JSON.stringify(authCmd));
   };
 
   websocket.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    console.log('Received message:', data);
+    //console.log('Received message:', data);
     onMessage(data);
   };
 

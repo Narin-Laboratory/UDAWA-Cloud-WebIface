@@ -78,7 +78,6 @@ const DeviceDashboardPage: React.FC = () => {
             default:
               break;
           }
-          console.log(newDevice);
 
           // Uncomment and adapt telemetry mapping if needed
           /*
