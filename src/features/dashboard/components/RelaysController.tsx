@@ -118,7 +118,7 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
     if (isRelayAdjustModalVisible) {
       setAdjustForm({ ...relays[selectedRelayIndex] });
     }
-  }, [isRelayAdjustModalVisible, selectedRelayIndex, relays]);
+  }, [isRelayAdjustModalVisible, selectedRelayIndex]);
 
   const handleToggleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newState = event.target.checked;
