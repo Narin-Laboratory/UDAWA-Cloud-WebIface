@@ -131,5 +131,14 @@
   "duration_helper": "Set the duration in seconds",
   "cancel": "Cancel",
   "saved_button": "Saved",
-  "save_button": "Save"
+  "save_button": "Save",
+  "powerSensor": {
+    "title": "Power Sensor",
+    "_amp": "Current",
+    "_ener": "Energy",
+    "_freq": "Frequency",
+    "_pf": "Power Factor",
+    "_volt": "Voltage",
+    "_watt": "Power"
+  }
 }

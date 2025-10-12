@@ -131,5 +131,14 @@
   "duration_helper": "Atur durasi dalam detik",
   "cancel": "Batal",
   "saved_button": "Tersimpan",
-  "save_button": "Simpan"
+  "save_button": "Simpan",
+  "powerSensor": {
+    "title": "Sensor Daya",
+    "_amp": "Arus",
+    "_ener": "Energi",
+    "_freq": "Frekuensi",
+    "_pf": "Faktor Daya",
+    "_volt": "Tegangan",
+    "_watt": "Daya"
+  }
 }
