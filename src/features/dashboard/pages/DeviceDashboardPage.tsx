@@ -91,7 +91,8 @@ const DeviceDashboardPage: React.FC = () => {
     return () => {
       disconnectWebSocket();
     };
-  }, [deviceId, setDevice]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deviceId]);
 
   const DeviceDashboardComponent = useMemo(() => {
     if (!deviceType) return null;
