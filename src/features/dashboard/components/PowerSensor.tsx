@@ -2,22 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, Typography, Grid, Box, Divider, useTheme, useMediaQuery } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import type { Device } from '../services/deviceService';
+interface PowerSensorProps {
+  attributes: {
+    [key: string]: [number, any][];
+  } | undefined;
+}
 
 const MAX_DATA_POINTS = 720;
 
-const PowerSensor: React.FC<{ device: Device | null }> = ({ device }) => {
+const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
   const { t } = useTranslation();
   const [chartData, setChartData] = useState<any[]>([]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    if (device?.attributesClientScope) {
-      const amp = device.attributesClientScope['_amp']?.[0]?.[1];
-      const volt = device.attributesClientScope['_volt']?.[0]?.[1];
-      const watt = device.attributesClientScope['_watt']?.[0]?.[1];
-      const pf = device.attributesClientScope['_pf']?.[0]?.[1];
+    if (attributes) {
+      const amp = attributes['_amp']?.[0]?.[1];
+      const volt = attributes['_volt']?.[0]?.[1];
+      const watt = attributes['_watt']?.[0]?.[1];
+      const pf = attributes['_pf']?.[0]?.[1];
 
       if (amp !== undefined || volt !== undefined || watt !== undefined || pf !== undefined) {
         const newEntry = {
@@ -42,10 +46,10 @@ const PowerSensor: React.FC<{ device: Device | null }> = ({ device }) => {
         });
       }
     }
-  }, [device]);
+  }, [attributes]);
 
   const getAttribute = (key: string, toFixed?: number) => {
-    const value = device?.attributesClientScope?.[key]?.[0]?.[1];
+    const value = attributes?.[key]?.[0]?.[1];
     if (value) {
       const num = parseFloat(value);
       if (isNaN(num)) {
@@ -131,6 +135,6 @@ const PowerSensor: React.FC<{ device: Device | null }> = ({ device }) => {
       </Box>
     </Box>
   );
-};
+});
 
 export default PowerSensor;

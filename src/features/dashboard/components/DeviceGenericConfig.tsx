@@ -13,14 +13,17 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import type { DeviceInfo } from '@/features/dashboard/services/deviceService';
 import { rpcV2, saveDeviceAttributes } from '@/features/dashboard/services/deviceService';
 
 interface DeviceGenericConfigProps {
-  device: DeviceInfo | null;
+  attributes: {
+    [key: string]: [number, any][];
+  } | undefined;
+  deviceId: string | undefined;
+  entityType: string | undefined;
 }
 
-const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: DeviceGenericConfigProps) => {
+const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ attributes, deviceId, entityType }) => {
   const { t } = useTranslation();
   const [wssid, setWssid] = useState('');
   const [wpass, setWpass] = useState('');
@@ -31,7 +34,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: Dev
   const [tbAddr, setTbAddr] = useState('');
   const [tbPort, setTbPort] = useState('');
   const [hname, setHname] = useState('');
-  const attrs: any = device?.attributesClientScope;
+  const attrs: any = attributes;
 
   const defaultWssid = attrs?.wssid?.[0]?.[1] || '';
   const defaultWpass = attrs?.wpass?.[0]?.[1] || '';
@@ -42,7 +45,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: Dev
   const defaultHname = attrs?.hname?.[0]?.[1] || '';
 
   const handleSave = async () => {
-    if (!device) return;
+    if (!deviceId || !entityType) return;
 
     const attributes: { [key: string]: string } = {};
     if (wssid && wssid !== defaultWssid) {
@@ -75,8 +78,8 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: Dev
     try {
       await toast.promise(
         saveDeviceAttributes(
-          device.id.entityType,
-          device.id.id,
+          entityType,
+          deviceId,
           'SHARED_SCOPE',
           attributes,
         ),
@@ -88,7 +91,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: Dev
       );
 
       await toast.promise(
-        rpcV2(device.id.id, "stateSave", {}),
+        rpcV2(deviceId, "stateSave", {}),
         {
           pending: `${t('rpcv2.process')}: saveConfig`,
           success: `${t('rpcv2.success')}: saveConfig`,
@@ -97,7 +100,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: Dev
       );
 
       await toast.promise(
-        rpcV2(device.id.id, "syncAttribute", {}),
+        rpcV2(deviceId, "syncAttribute", {}),
         {
           pending: `${t('rpcv2.process')}: syncAttribute`,
           success: `${t('rpcv2.success')}: syncAttribute`,
@@ -222,6 +225,6 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = ({ device }: Dev
       </CardContent>
     </Card>
   );
-};
+});
 
 export default DeviceGenericConfig;
