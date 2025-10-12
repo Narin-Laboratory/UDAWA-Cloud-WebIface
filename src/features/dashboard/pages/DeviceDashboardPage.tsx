@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +28,56 @@ const DeviceDashboardPage: React.FC = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = React.useState(true);
 
+  const onWebSocketMessage = useCallback(
+    (data: {
+      data?: { [key: string]: [number, unknown] };
+      subscriptionId?: number;
+    }) => {
+      if (data.data) {
+        setDevice((prevDevice) => {
+          if (!prevDevice) return null;
+          const newDevice = { ...prevDevice };
+
+          switch (data.subscriptionId) {
+            case 1:
+              newDevice.attributesServerScope = {
+                ...newDevice.attributesServerScope,
+                ...data.data,
+              };
+              break;
+            case 2:
+              newDevice.attributesClientScope = {
+                ...newDevice.attributesClientScope,
+                ...data.data,
+              };
+              break;
+            case 3:
+              newDevice.attributesSharedScope = {
+                ...newDevice.attributesSharedScope,
+                ...data.data,
+              };
+              break;
+            case 4:
+              newDevice.timeseries = {
+                ...newDevice.timeseries,
+                ...data.data,
+              };
+              break;
+            default:
+              break;
+          }
+          return newDevice;
+        });
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const onWebSocketError = useCallback((error: Error) => {
+    console.error(error);
+  }, []);
+
   useEffect(() => {
     if (deviceId) {
       setLoading(true);
@@ -42,56 +92,14 @@ const DeviceDashboardPage: React.FC = () => {
           setLoading(false);
         });
 
-      connectWebSocket(
-        deviceId,
-        (data) => {
-          if (data.data) {
-        setDevice((prevDevice) => {
-          if (!prevDevice) return null;
-          const newDevice = { ...prevDevice };
-
-          switch (data.subscriptionId) {
-            case 1:
-              newDevice.attributesServerScope = {
-              ...newDevice.attributesServerScope,
-              ...data.data,
-              };
-              break;
-            case 2:
-              newDevice.attributesClientScope = {
-              ...newDevice.attributesClientScope,
-              ...data.data,
-              };
-              break;
-            case 3:
-              newDevice.attributesSharedScope = {
-              ...newDevice.attributesSharedScope,
-              ...data.data,
-              };
-              break;
-            case 4:
-              newDevice.timeseries = {
-              ...newDevice.timeseries,
-              ...data.data,
-              };
-              break;
-            default:
-              break;
-          }
-          return newDevice;
-        });
-          }
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
+      connectWebSocket(deviceId, onWebSocketMessage, onWebSocketError);
     }
 
     return () => {
       disconnectWebSocket();
     };
-  }, [deviceId, setDevice]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deviceId, onWebSocketMessage, onWebSocketError]);
 
   const DeviceDashboardComponent = useMemo(() => {
     if (!deviceType) return null;

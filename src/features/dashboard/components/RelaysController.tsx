@@ -22,15 +22,16 @@ import {
   Slider,
 } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
-import type { SelectChangeEvent } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import type { DeviceInfo } from '@/features/dashboard/services/deviceService';
 import { rpcV2, saveDeviceAttributes } from '@/features/dashboard/services/deviceService';
-import { connectWebSocket, disconnectWebSocket } from '@/features/dashboard/services/websocketService';
 
 interface RelaysControllerProps {
-  device: DeviceInfo | null;
+  attributes: {
+    [key: string]: [number, unknown][];
+  } | undefined;
+  deviceId: string | undefined;
+  entityType: string | undefined;
 }
 
 interface Timer {
@@ -56,19 +57,19 @@ interface Relay {
   duration: number;
 }
 
-const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysControllerProps) => {
+const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attributes, deviceId, entityType }) => {
   const { t } = useTranslation();
-  const attrs: any = device?.attributesClientScope;
+  const attrs = attributes;
 
   const defaultRelays = attrs?.relays?.[0]?.[1] || '[]';
 
-  const parseRelays = (input: any): Relay[] => {
+  const parseRelays = (input: string | Relay[]): Relay[] => {
     try {
       const parsed = typeof input === 'string' ? JSON.parse(input) : input;
       if (Array.isArray(parsed) && parsed.length > 0) {
         return parsed;
       }
-    } catch (e) {
+    } catch {
       // ignore error
     }
     return [{
@@ -80,7 +81,7 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
   };
 
   const [relays, setRelays] = useState<Relay[]>(() => parseRelays(defaultRelays));
-  const [availableRelayMode, setAvailableRelayMode] = useState<string[]>(['Manual', 'Auto', 'Timer', 'Schedule']);
+  const [availableRelayMode] = useState<string[]>(['Manual', 'Auto', 'Timer', 'Schedule']);
   const [selectedRelayIndex, setSelectedRelayIndex] = useState<number>(0);
   const [isRelayAdjustModalVisible, setIsRelayAdjustModalVisible] = useState<boolean>(false);
   const [disableSubmitButton, setDisableSubmitButton] = useState<boolean>(true);
@@ -91,34 +92,12 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
     setRelays(parsed);
   }, [defaultRelays]);
 
-  useEffect(() => {
-    if (device) {
-      const handleMessage = (data: any) => {
-        if (data.subscriptionId && data.data) {
-            const newRelays = data.data.relays?.[0]?.[1];
-            if(newRelays) {
-                setRelays(parseRelays(newRelays));
-            }
-        }
-      };
-
-      const handleError = (error: any) => {
-        console.error("WebSocket error:", error);
-      };
-
-      connectWebSocket(device.id.id, handleMessage, handleError);
-
-      return () => {
-        disconnectWebSocket();
-      };
-    }
-  }, [device]);
 
   useEffect(() => {
     if (isRelayAdjustModalVisible) {
       setAdjustForm({ ...relays[selectedRelayIndex] });
     }
-  }, [isRelayAdjustModalVisible, selectedRelayIndex]);
+  }, [isRelayAdjustModalVisible, selectedRelayIndex, relays]);
 
   const handleToggleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newState = event.target.checked;
@@ -128,26 +107,26 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
     updatedRelays[selectedRelayIndex].state = newState;
     setRelays(updatedRelays);
 
-    if (device) {
+    if (deviceId) {
       const params = {
         pin: selectedRelay.pin,
         state: newState,
       };
-      rpcV2(device.id.id, 'setRelayState', params);
+      rpcV2(deviceId, 'setRelayState', params);
     }
   };
 
-  const handleRelayAdjustFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type } = e.target;
+  const handleRelayAdjustFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = event.target;
     let processedValue: string | number = value;
 
     if (type === 'number') {
-        processedValue = parseInt(value, 10);
-        if (isNaN(processedValue)) {
-            processedValue = 0;
-        }
-    } else if (name === "datetime") {
-        processedValue = new Date(value).getTime() / 1000;
+      processedValue = parseInt(value, 10);
+      if (isNaN(processedValue)) {
+        processedValue = 0;
+      }
+    } else if (name === 'datetime') {
+      processedValue = new Date(value).getTime() / 1000;
     }
 
     setAdjustForm(prev => ({...prev, [name]: processedValue}));
@@ -166,31 +145,24 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
     setDisableSubmitButton(false);
   };
 
-  const handleSelectedRelayIndexChange = (event: SelectChangeEvent<any>) => {
-    setSelectedRelayIndex(parseInt(event.target.value));
-  };
 
 
   const handleRelayAdjustFormSubmit = async () => {
-    if (!device) return;
+    if (!deviceId || !entityType) return;
 
     const updatedRelays = [...relays];
     updatedRelays[selectedRelayIndex] = { ...updatedRelays[selectedRelayIndex], ...adjustForm };
     setRelays(updatedRelays);
     setDisableSubmitButton(true);
 
-    try {
-        await toast.promise(
-          saveDeviceAttributes(device.id.entityType, device.id.id, 'SHARED_SCOPE', { relays: updatedRelays }),
-          {
-            pending: t('device.genericConfig.saving'),
-            success: t('device.genericConfig.saveSuccess'),
-            error: t('device.genericConfig.saveError'),
-          },
-        );
-    } catch (error) {
-        // Error is already handled by toast.promise
-    }
+    toast.promise(
+      saveDeviceAttributes(entityType, deviceId, 'CLIENT_SCOPE', { relays: updatedRelays }),
+      {
+        pending: t('device.genericConfig.saving'),
+        success: t('device.genericConfig.saveSuccess'),
+        error: t('device.genericConfig.saveError'),
+      },
+    );
     setIsRelayAdjustModalVisible(false);
   };
 
@@ -231,7 +203,7 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
                   labelId="relay-select-label"
                   value={selectedRelayIndex}
                   label={t('select_relay_to_control') as string}
-                  onChange={(e: SelectChangeEvent<any>) => setSelectedRelayIndex(Number(e.target.value))}
+                  onChange={(e) => setSelectedRelayIndex(Number(e.target.value))}
                 >
                   {relays.map((relay, index) => (
                     <MenuItem key={relay.pin} value={index}>
@@ -348,7 +320,7 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
                         <Slider
                             name="dutyCycle"
                             value={adjustForm.dutyCycle || 0}
-                            onChange={(_, value) => {
+                            onChange={(_event, value) => {
                                 setAdjustForm(prev => ({...prev, dutyCycle: value as number}));
                                 setDisableSubmitButton(false);
                             }}
@@ -377,10 +349,10 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
                         <Typography variant="caption">{t('timer_configuration_helper')}</Typography>
                         {(adjustForm.timers || []).map((timer, index) => (
                             <Stack direction="row" spacing={1} key={index}>
-                                <TextField name="h" type="number" value={timer.h} placeholder={t('hour_placeholder')} onChange={(e) => handleTimerChange(index, e as React.ChangeEvent<HTMLInputElement>)} size="small"/>
-                                <TextField name="i" type="number" value={timer.i} placeholder={t('minute_placeholder')} onChange={(e) => handleTimerChange(index, e as React.ChangeEvent<HTMLInputElement>)} size="small"/>
-                                <TextField name="s" type="number" value={timer.s} placeholder={t('second_placeholder')} onChange={(e) => handleTimerChange(index, e as React.ChangeEvent<HTMLInputElement>)} size="small"/>
-                                <TextField name="d" type="number" value={timer.d} placeholder={t('duration_placeholder')} onChange={(e) => handleTimerChange(index, e as React.ChangeEvent<HTMLInputElement>)} size="small"/>
+                                <TextField name="h" type="number" value={timer.h} placeholder={t('hour_placeholder')} onChange={(e) => handleTimerChange(index, e)} size="small"/>
+                                <TextField name="i" type="number" value={timer.i} placeholder={t('minute_placeholder')} onChange={(e) => handleTimerChange(index, e)} size="small"/>
+                                <TextField name="s" type="number" value={timer.s} placeholder={t('second_placeholder')} onChange={(e) => handleTimerChange(index, e)} size="small"/>
+                                <TextField name="d" type="number" value={timer.d} placeholder={t('duration_placeholder')} onChange={(e) => handleTimerChange(index, e)} size="small"/>
                             </Stack>
                         ))}
                     </Stack>
@@ -414,7 +386,7 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
           <DialogActions>
             <Button onClick={() => setIsRelayAdjustModalVisible(false)}>{t('cancel')}</Button>
             <Button onClick={handleRelayAdjustFormSubmit} variant="contained" disabled={disableSubmitButton}>
-              {disableSubmitButton ? t('saved_button') : t('save_button')}
+              {t('save_button')}
             </Button>
           </DialogActions>
         </Dialog>
@@ -422,6 +394,6 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
       </CardContent>
     </Card>
   );
-};
+});
 
 export default RelaysController;

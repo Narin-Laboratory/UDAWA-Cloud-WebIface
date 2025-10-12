@@ -14,11 +14,11 @@ const GadadarDashboard: React.FC = () => {
   const tabs: TabInfo[] = [
     {
       label: t('device.dashboardTabs.monitor'),
-      content: <PowerSensor device={device} />,
+      content: <PowerSensor attributes={device?.attributesClientScope} />,
     },
     {
       label: t('device.dashboardTabs.control'),
-      content: <RelaysController device={device} />,
+      content: <RelaysController attributes={device?.attributesClientScope} deviceId={device?.id.id} entityType={device?.id.entityType} />,
     },
     {
       label: t('device.dashboardTabs.analytic'),
@@ -26,7 +26,7 @@ const GadadarDashboard: React.FC = () => {
     },
     {
       label: t('device.dashboardTabs.config'),
-      content: <DeviceGenericConfig device={device} />,
+      content: <DeviceGenericConfig attributes={device?.attributesClientScope} deviceId={device?.id.id} entityType={device?.id.entityType} />,
     },
   ];
 
