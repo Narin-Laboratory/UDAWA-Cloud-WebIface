@@ -129,13 +129,11 @@ const RelaysController: React.FC<RelaysControllerProps> = ({ device }: RelaysCon
     setRelays(updatedRelays);
 
     if (device) {
-      const payload = {
-        setRelayState: {
-          pin: selectedRelay.pin,
-          state: newState,
-        },
+      const params = {
+        pin: selectedRelay.pin,
+        state: newState,
       };
-      rpcV2(device.id.id, 'setRelayState', payload);
+      rpcV2(device.id.id, 'setRelayState', params);
     }
   };
 
