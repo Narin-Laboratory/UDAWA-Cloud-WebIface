@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, Typography, Grid, Box, Divider } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Box, Divider, useTheme, useMediaQuery } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import type { Device } from '../services/deviceService';
 
@@ -9,6 +9,8 @@ const MAX_DATA_POINTS = 720;
 const PowerSensor: React.FC<{ device: Device | null }> = ({ device }) => {
   const { t } = useTranslation();
   const [chartData, setChartData] = useState<any[]>([]);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (device?.attributesClientScope) {
@@ -57,21 +59,12 @@ const PowerSensor: React.FC<{ device: Device | null }> = ({ device }) => {
     return 'N/A';
   };
 
-  const renderChart = (dataKey: string, label: string, color: string) => (
-    <Grid item xs={12} sm={6} key={dataKey}>
-      <Typography variant="subtitle1" align="center">{label}</Typography>
-      <ResponsiveContainer width="100%" height={200}>
-        <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey={dataKey} name={label} stroke={color} dot={false} isAnimationActive={false} />
-        </LineChart>
-      </ResponsiveContainer>
-    </Grid>
-  );
+  const charts = [
+    { dataKey: '_amp', label: t('powerSensor._amp'), color: '#8884d8' },
+    { dataKey: '_volt', label: t('powerSensor._volt'), color: '#82ca9d' },
+    { dataKey: '_watt', label: t('powerSensor._watt'), color: '#ffc658' },
+    { dataKey: '_pf', label: t('powerSensor._pf'), color: '#ff7300' },
+  ];
 
   return (
     <Box>
@@ -119,52 +112,23 @@ const PowerSensor: React.FC<{ device: Device | null }> = ({ device }) => {
         </CardContent>
       </Card>
 
-      <Grid container spacing={3} sx={{ mt: 1 }}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="subtitle1" align="center">{t('powerSensor._amp')}</Typography>
-          <LineChart width={400} height={200} data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="_amp" name={t('powerSensor._amp')} stroke="#8884d8" dot={false} isAnimationActive={false} />
-          </LineChart>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="subtitle1" align="center">{t('powerSensor._volt')}</Typography>
-          <LineChart width={400} height={200} data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="_volt" name={t('powerSensor._volt')} stroke="#82ca9d" dot={false} isAnimationActive={false} />
-          </LineChart>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="subtitle1" align="center">{t('powerSensor._watt')}</Typography>
-          <LineChart width={400} height={200} data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="_watt" name={t('powerSensor._watt')} stroke="#ffc658" dot={false} isAnimationActive={false} />
-          </LineChart>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="subtitle1" align="center">{t('powerSensor._pf')}</Typography>
-          <LineChart width={400} height={200} data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="_pf" name={t('powerSensor._pf')} stroke="#ff7300" dot={false} isAnimationActive={false} />
-          </LineChart>
-        </Grid>
-      </Grid>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', mt: 1, mx: -1.5 }}>
+        {charts.map(chart => (
+          <Box key={chart.dataKey} sx={{ width: { xs: '100%', sm: '50%' }, p: 1.5 }}>
+            <Typography variant="subtitle1" align="center">{chart.label}</Typography>
+            <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
+              <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey={chart.dataKey} name={chart.label} stroke={chart.color} dot={false} isAnimationActive={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </Box>
+        ))}
+      </Box>
     </Box>
   );
 };
