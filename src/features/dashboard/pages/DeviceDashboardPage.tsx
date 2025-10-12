@@ -30,7 +30,7 @@ const DeviceDashboardPage: React.FC = () => {
 
   const onWebSocketMessage = useCallback(
     (data: {
-      data?: { [key: string]: [number, any] };
+      data?: { [key: string]: [number, unknown] };
       subscriptionId?: number;
     }) => {
       if (data.data) {
@@ -70,7 +70,8 @@ const DeviceDashboardPage: React.FC = () => {
         });
       }
     },
-    [setDevice]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const onWebSocketError = useCallback((error: Error) => {
@@ -97,7 +98,8 @@ const DeviceDashboardPage: React.FC = () => {
     return () => {
       disconnectWebSocket();
     };
-  }, [deviceId, onWebSocketMessage, onWebSocketError, setDevice]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deviceId, onWebSocketMessage, onWebSocketError]);
 
   const DeviceDashboardComponent = useMemo(() => {
     if (!deviceType) return null;
