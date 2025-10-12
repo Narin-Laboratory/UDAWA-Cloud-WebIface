@@ -5,6 +5,7 @@ import DeviceDashboard from '../../components/DeviceDashboard';
 import DeviceGenericConfig from '../../components/DeviceGenericConfig';
 import { useDevice } from '../../contexts/DeviceContext';
 import RelaysController from '../../components/RelaysController';
+import PowerSensorCard from '../../components/PowerSensorCard';
 
 const GadadarDashboard: React.FC = () => {
   const { t } = useTranslation();
@@ -13,7 +14,7 @@ const GadadarDashboard: React.FC = () => {
   const tabs: TabInfo[] = [
     {
       label: t('device.dashboardTabs.monitor'),
-      content: t('device.dashboardTabs.monitorContent'),
+      content: <PowerSensorCard />,
     },
     {
       label: t('device.dashboardTabs.control'),
