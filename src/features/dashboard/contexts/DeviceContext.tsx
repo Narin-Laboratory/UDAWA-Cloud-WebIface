@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import type { DeviceInfo } from '../services/deviceService';
+import { createContext, useContext, useState } from 'react';
+import type { ReactNode } from 'react';
+import type { DeviceInfo } from '../types';
 
 interface DeviceContextType {
   device: DeviceInfo | null;

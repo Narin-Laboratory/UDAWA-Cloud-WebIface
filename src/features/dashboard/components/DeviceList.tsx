@@ -1,4 +1,4 @@
-import React, {
+import {
   useEffect,
   useState,
   useImperativeHandle,
@@ -16,11 +16,8 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import { Circle } from '@mui/icons-material';
 import { toast } from 'react-toastify';
-import {
-  getDevices,
-  getDeviceInfo,
-  type DeviceInfo,
-} from '../services/deviceService';
+import { getDevices, getDeviceInfo } from '../services/deviceService';
+import type { DeviceInfo } from '../types';
 import { useTranslation } from 'react-i18next';
 import slugify from '../../../utils/slugify';
 
@@ -28,7 +25,7 @@ export interface DeviceListHandle {
   reload: () => void;
 }
 
-const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
+const DeviceList = forwardRef<DeviceListHandle, {}>((_props, ref) => {
   const { t } = useTranslation();
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +41,7 @@ const DeviceList = forwardRef<DeviceListHandle, {}>((props, ref) => {
             return { ...device, active: deviceInfo.active };
           })
         );
-        setDevices(devicesWithInfo);
+        setDevices(devicesWithInfo as DeviceInfo[]);
       };
 
       toast.promise(fetchPromise(), {

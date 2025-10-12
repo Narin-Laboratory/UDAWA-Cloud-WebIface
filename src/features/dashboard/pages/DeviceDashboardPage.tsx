@@ -8,6 +8,7 @@ import {
   connectWebSocket,
   disconnectWebSocket,
 } from '../services/websocketService';
+import type { DeviceInfo } from '../types';
 
 const GadadarDashboard = React.lazy(
   () => import('./device-dashboards/GadadarDashboard')
@@ -34,40 +35,38 @@ const DeviceDashboardPage: React.FC = () => {
       subscriptionId?: number;
     }) => {
       if (data.data) {
-        setDevice((prevDevice) => {
-          if (!prevDevice) return null;
-          const newDevice = { ...prevDevice };
-
+        if (device) {
+          const newDevice = { ...device };
           switch (data.subscriptionId) {
             case 1:
               newDevice.attributesServerScope = {
                 ...newDevice.attributesServerScope,
-                ...data.data,
+                ...(data.data as any),
               };
               break;
             case 2:
               newDevice.attributesClientScope = {
                 ...newDevice.attributesClientScope,
-                ...data.data,
+                ...(data.data as any),
               };
               break;
             case 3:
               newDevice.attributesSharedScope = {
                 ...newDevice.attributesSharedScope,
-                ...data.data,
+                ...(data.data as any),
               };
               break;
             case 4:
               newDevice.timeseries = {
                 ...newDevice.timeseries,
-                ...data.data,
+                ...(data.data as any),
               };
               break;
             default:
               break;
           }
-          return newDevice;
-        });
+          setDevice(newDevice);
+        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,7 +82,7 @@ const DeviceDashboardPage: React.FC = () => {
       setLoading(true);
       getDeviceInfo(deviceId)
         .then((data) => {
-          setDevice(data);
+          setDevice(data as DeviceInfo);
         })
         .catch(() => {
           setDevice(null);

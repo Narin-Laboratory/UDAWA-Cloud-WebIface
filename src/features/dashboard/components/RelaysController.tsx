@@ -18,7 +18,6 @@ import {
   FormControlLabel,
   Divider,
   Stack,
-  Grid,
   Slider,
 } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
@@ -69,6 +68,9 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
       if (Array.isArray(parsed) && parsed.length > 0) {
         return parsed;
       }
+      if (Array.isArray(parsed) && parsed.length === 0) {
+        return [];
+      }
     } catch {
       // ignore error
     }
@@ -80,7 +82,7 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
     }];
   };
 
-  const [relays, setRelays] = useState<Relay[]>(() => parseRelays(defaultRelays));
+  const [relays, setRelays] = useState<Relay[]>(() => parseRelays(defaultRelays as string | Relay[]));
   const [availableRelayMode] = useState<string[]>(['Manual', 'Auto', 'Timer', 'Schedule']);
   const [selectedRelayIndex, setSelectedRelayIndex] = useState<number>(0);
   const [isRelayAdjustModalVisible, setIsRelayAdjustModalVisible] = useState<boolean>(false);
@@ -88,8 +90,10 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
   const [adjustForm, setAdjustForm] = useState<Partial<Relay>>({});
 
   useEffect(() => {
-    const parsed = parseRelays(defaultRelays);
-    setRelays(parsed);
+    if (defaultRelays) {
+      const parsed = parseRelays(defaultRelays as string | Relay[]);
+      setRelays(parsed);
+    }
   }, [defaultRelays]);
 
 
@@ -174,9 +178,9 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
           {t('relays_controller')}
         </Typography>
 
-        <Grid container spacing={2}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
             {relays.map((relay, index) => (
-                <Grid item xs={3} sm={2} md={1.5} key={index}>
+                <Box key={index} sx={{ flex: '1 1 100px', minWidth: '100px' }}>
                     <Card sx={{
                         textAlign: 'center',
                         borderColor: relay.state ? 'success.main' : 'error.main',
@@ -190,9 +194,9 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
                         </CardContent>
                     </Card>
                     <Typography variant="body2" sx={{ textAlign: 'center' }}>{relay.mode === 0 ? t('relay_mode_manual') : t('relay_mode_auto')}</Typography>
-                </Grid>
+                </Box>
             ))}
-        </Grid>
+        </Box>
 
         <Divider sx={{ my: 2 }} />
 
@@ -347,12 +351,13 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
                     <Stack spacing={2}>
                         <Typography>{t('timer_configuration_label')}</Typography>
                         <Typography variant="caption">{t('timer_configuration_helper')}</Typography>
+                        {/* TODO: Fix this any cast */}
                         {(adjustForm.timers || []).map((timer, index) => (
                             <Stack direction="row" spacing={1} key={index}>
-                                <TextField name="h" type="number" value={timer.h} placeholder={t('hour_placeholder')} onChange={(e) => handleTimerChange(index, e)} size="small"/>
-                                <TextField name="i" type="number" value={timer.i} placeholder={t('minute_placeholder')} onChange={(e) => handleTimerChange(index, e)} size="small"/>
-                                <TextField name="s" type="number" value={timer.s} placeholder={t('second_placeholder')} onChange={(e) => handleTimerChange(index, e)} size="small"/>
-                                <TextField name="d" type="number" value={timer.d} placeholder={t('duration_placeholder')} onChange={(e) => handleTimerChange(index, e)} size="small"/>
+                                <TextField name="h" type="number" value={timer.h} placeholder={t('hour_placeholder')} onChange={(e: any) => handleTimerChange(index, e)} size="small"/>
+                                <TextField name="i" type="number" value={timer.i} placeholder={t('minute_placeholder')} onChange={(e: any) => handleTimerChange(index, e)} size="small"/>
+                                <TextField name="s" type="number" value={timer.s} placeholder={t('second_placeholder')} onChange={(e: any) => handleTimerChange(index, e)} size="small"/>
+                                <TextField name="d" type="number" value={timer.d} placeholder={t('duration_placeholder')} onChange={(e: any) => handleTimerChange(index, e)} size="small"/>
                             </Stack>
                         ))}
                     </Stack>
