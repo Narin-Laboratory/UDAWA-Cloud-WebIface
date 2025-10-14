@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, Typography, Grid, Box, useTheme, useMediaQuery, Stack } from '@mui/material';
+import { Card, CardContent, Typography, Grid, useTheme, useMediaQuery, Stack } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import type { DynamicObject } from "src/features/dashboard/services/deviceService.ts";
 
