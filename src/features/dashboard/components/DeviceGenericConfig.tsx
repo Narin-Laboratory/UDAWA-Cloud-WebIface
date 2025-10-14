@@ -15,10 +15,13 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { rpcV2, saveDeviceAttributes } from '@/features/dashboard/services/deviceService';
 
+type AttributeValue = [number, string | number | boolean];
+
+interface DeviceAttributes {
+  [key: string]: AttributeValue[];
+}
 interface DeviceGenericConfigProps {
-  attributes: {
-    [key: string]: [number, any][];
-  } | undefined;
+  attributes: DeviceAttributes | undefined;
   deviceId: string | undefined;
   entityType: string | undefined;
 }
@@ -34,15 +37,14 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
   const [tbAddr, setTbAddr] = useState('');
   const [tbPort, setTbPort] = useState('');
   const [hname, setHname] = useState('');
-  const attrs: any = attributes;
 
-  const defaultWssid = attrs?.wssid?.[0]?.[1] || '';
-  const defaultWpass = attrs?.wpass?.[0]?.[1] || '';
-  const defaultProvDK = attrs?.provDK?.[0]?.[1] || '';
-  const defaultProvDS = attrs?.provDS?.[0]?.[1] || '';
-  const defaultTbAddr = attrs?.tbAddr?.[0]?.[1] || '';
-  const defaultTbPort = attrs?.tbPort?.[0]?.[1] || '';
-  const defaultHname = attrs?.hname?.[0]?.[1] || '';
+  const defaultWssid = attributes?.wssid?.[0]?.[1] || '';
+  const defaultWpass = attributes?.wpass?.[0]?.[1] || '';
+  const defaultProvDK = attributes?.provDK?.[0]?.[1] || '';
+  const defaultProvDS = attributes?.provDS?.[0]?.[1] || '';
+  const defaultTbAddr = attributes?.tbAddr?.[0]?.[1] || '';
+  const defaultTbPort = attributes?.tbPort?.[0]?.[1] || '';
+  const defaultHname = attributes?.hname?.[0]?.[1] || '';
 
   const handleSave = async () => {
     if (!deviceId || !entityType) return;
@@ -108,7 +110,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
         },
       );
 
-    } catch (error) {
+    } catch {
       // Error is already handled by toast.promise
     }
   };
