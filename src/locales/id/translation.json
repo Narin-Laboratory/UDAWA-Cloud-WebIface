@@ -23,7 +23,7 @@
     "logoutSuccess": "Sukses. Menuju halaman login..."
   },
   "sidebar": {
-    "agents": "Daftar Agen"
+    "agents": "Agen saya"
   },
   "deviceList": {
     "fetchError": "Gagal mengambil data perangkat. Silakan coba lagi nanti.",

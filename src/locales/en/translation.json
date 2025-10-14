@@ -23,7 +23,7 @@
     "logoutSuccess": "Success. Redirecting to login page..."
   },
   "sidebar": {
-    "agents": "Agents List"
+    "agents": "My agent"
   },
   "deviceList": {
     "fetchError": "Failed to fetch devices. Please try again later.",
