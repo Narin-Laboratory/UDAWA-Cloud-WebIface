@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import type { TabInfo } from '../../components/DeviceDashboard';
 import DeviceDashboard from '../../components/DeviceDashboard';
 import DeviceGenericConfig from '../../components/DeviceGenericConfig';
-import { useDevice } from '../../contexts/DeviceContext';
+import { useDevice } from '../../hooks/useDevice';
 import RelaysController from '../../components/RelaysController';
 import PowerSensor from '../../components/PowerSensor';
 
