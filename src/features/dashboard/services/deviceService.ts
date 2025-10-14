@@ -2,6 +2,22 @@ import { getItem, setItem } from '../../../utils/storage';
 
 const DEVICES_CACHE_KEY = 'devices';
 
+const handleAuthFailure = () => {
+  try {
+    // Clear local auth-related storage
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    localStorage.removeItem('server');
+  } catch (e) {
+    // ignore
+  }
+  // Redirect to login page
+  if (typeof window !== 'undefined') {
+    window.location.href = '/login';
+  }
+};
+
 export interface Device {
   id: {
     entityType: string;
@@ -55,11 +71,17 @@ export const getDevices = async (force = false): Promise<Device[]> => {
     }),
   });
 
+  if (response.status === 401) {
+    handleAuthFailure();
+    throw new Error('Authentication failed');
+  }
+
   if (!response.ok) {
     throw new Error('Failed to fetch devices');
   }
 
   const devices = await response.json();
+  console.log(devices);
   setItem(DEVICES_CACHE_KEY, devices);
   return devices;
 };
@@ -79,6 +101,11 @@ export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {
       'X-Authorization': `Bearer ${token}`,
     },
   });
+
+  if (response.status === 401) {
+    handleAuthFailure();
+    throw new Error('Authentication failed');
+  }
 
   if (!response.ok) {
     throw new Error('Failed to fetch device info');
@@ -116,6 +143,11 @@ export const saveDeviceAttributes = async (
     },
   );
 
+  if (response.status === 401) {
+    handleAuthFailure();
+    throw new Error('Authentication failed');
+  }
+
   if (!response.ok) {
     throw new Error('Failed to save device attributes');
   }
@@ -151,6 +183,11 @@ export const rpcV2 = async (
       body: JSON.stringify(payload),
     },
   );
+
+  if (response.status === 401) {
+    handleAuthFailure();
+    throw new Error('Authentication failed');
+  }
 
   if (!response.ok) {
     console.log(`Failed to execute rpcv2 ${method}: ${JSON.stringify(response.statusText)} - ${JSON.stringify(payload)} - https://${server}/api/rpc/twoway/${entityId}`);
