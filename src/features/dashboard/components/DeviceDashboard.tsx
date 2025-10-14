@@ -42,7 +42,7 @@ const DeviceDashboard: React.FC<DeviceDashboardProps> = ({ tabs }) => {
   const { t } = useTranslation();
   const [tabValue, setTabValue] = React.useState(0);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 

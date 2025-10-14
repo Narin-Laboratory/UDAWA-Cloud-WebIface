@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, Typography, Grid, Box, Divider, useTheme, useMediaQuery } from '@mui/material';
+import { Card, CardContent, Typography, Box, Divider, useTheme, useMediaQuery } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-type AttributeValue = [number, string | number | boolean];
-
-interface PowerSensorAttributes {
-  [key: string]: AttributeValue[];
-}
+import type { PowerSensorAttributes } from '../types';
 
 interface PowerSensorProps {
   attributes: PowerSensorAttributes | undefined;
@@ -63,7 +59,7 @@ const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
   const getAttribute = (key: string, toFixed?: number) => {
     const value = attributes?.[key]?.[0]?.[1];
     if (value) {
-      const num = parseFloat(value);
+      const num = parseFloat(String(value));
       if (isNaN(num)) {
         return 'N/A';
       }
@@ -87,44 +83,44 @@ const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
       <Card>
         <CardContent>
           <Typography variant="h6" gutterBottom>{t('powerSensor.title')}</Typography>
-          <Grid container spacing={2} alignItems="center" justifyContent="space-around">
-            <Grid item container xs={12} sm="auto" spacing={2} justifyContent="center" alignItems="center">
-              <Grid item>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 1 }}>
+              <Box sx={{ p: 1 }}>
                 <Typography variant="subtitle1">{t('powerSensor._amp')}</Typography>
                 <Typography variant="h5">{getAttribute('_amp', 2)} A</Typography>
-              </Grid>
-              <Grid item>
+              </Box>
+              <Box sx={{ p: 1 }}>
                 <Typography variant="subtitle1">{t('powerSensor._volt')}</Typography>
                 <Typography variant="h5">{getAttribute('_volt', 0)} V</Typography>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
 
             <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' }, mx: 2 }} />
 
-            <Grid item container xs={12} sm="auto" spacing={2} justifyContent="center" alignItems="center">
-              <Grid item>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 1 }}>
+              <Box sx={{ p: 1 }}>
                 <Typography variant="subtitle1">{t('powerSensor._watt')}</Typography>
                 <Typography variant="h5">{getAttribute('_watt', 0)} W</Typography>
-              </Grid>
-              <Grid item>
+              </Box>
+              <Box sx={{ p: 1 }}>
                 <Typography variant="subtitle1">{t('powerSensor._ener')}</Typography>
                 <Typography variant="h5">{getAttribute('_ener', 2)} kWh</Typography>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
 
             <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' }, mx: 2 }} />
 
-            <Grid item container xs={12} sm="auto" spacing={2} justifyContent="center" alignItems="center">
-              <Grid item>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 1 }}>
+              <Box sx={{ p: 1 }}>
                 <Typography variant="subtitle1">{t('powerSensor._freq')}</Typography>
                 <Typography variant="h5">{getAttribute('_freq', 1)} Hz</Typography>
-              </Grid>
-              <Grid item>
+              </Box>
+              <Box sx={{ p: 1 }}>
                 <Typography variant="subtitle1">{t('powerSensor._pf')}</Typography>
                 <Typography variant="h5">{getAttribute('_pf', 2)}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
+              </Box>
+            </Box>
+          </Box>
         </CardContent>
       </Card>
 

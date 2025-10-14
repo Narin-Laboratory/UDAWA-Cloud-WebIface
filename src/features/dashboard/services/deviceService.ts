@@ -18,23 +18,7 @@ const handleAuthFailure = () => {
   }
 };
 
-export interface Device {
-  id: {
-    entityType: string;
-    id: string;
-  };
-  name: string;
-  type: string;
-  label: string;
-}
-
-export interface DeviceInfo extends Device {
-  active: boolean;
-  attributesServerScope: object;
-  attributesClientScope: object;
-  attributesSharedScope: object;
-  timeseries: object;
-}
+import type { Device, DeviceInfo } from '../types';
 
 export const getDevices = async (force = false): Promise<Device[]> => {
   const cachedDevices = getItem(DEVICES_CACHE_KEY);

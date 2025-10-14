@@ -1,5 +1,6 @@
-import React, { useState, ReactNode } from 'react';
-import type { DeviceInfo } from '../services/deviceService';
+import { useState } from 'react';
+import type { ReactNode } from 'react';
+import type { DeviceInfo } from '../types';
 import { DeviceContext } from './context';
 
 export const DeviceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {

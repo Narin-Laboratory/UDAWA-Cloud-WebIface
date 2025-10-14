@@ -50,25 +50,25 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
     if (!deviceId || !entityType) return;
 
     const attributes: { [key: string]: string } = {};
-    if (wssid && wssid !== defaultWssid) {
+    if (wssid && wssid !== String(defaultWssid)) {
       attributes.wssid = wssid;
     }
-    if (wpass && wpass !== defaultWpass) {
+    if (wpass && wpass !== String(defaultWpass)) {
       attributes.wpass = wpass;
     }
-    if (provDK && provDK !== defaultProvDK) {
+    if (provDK && provDK !== String(defaultProvDK)) {
       attributes.provDK = provDK;
     }
-    if (provDS && provDS !== defaultProvDS) {
+    if (provDS && provDS !== String(defaultProvDS)) {
       attributes.provDS = provDS;
     }
-    if (tbAddr && tbAddr !== defaultTbAddr) {
+    if (tbAddr && tbAddr !== String(defaultTbAddr)) {
       attributes.tbAddr = tbAddr;
     }
-    if (tbPort && tbPort !== defaultTbPort) {
+    if (tbPort && tbPort !== String(defaultTbPort)) {
       attributes.tbPort = tbPort;
     }
-    if (hname && hname !== defaultHname) {
+    if (hname && hname !== String(defaultHname)) {
       attributes.hname = hname;
     }
 
@@ -134,7 +134,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
         <TextField
           label={t('device.genericConfig.wifiSSID')}
           value={wssid}
-          placeholder={defaultWssid}
+          placeholder={String(defaultWssid)}
           onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setWssid(e.target.value)}
           fullWidth
           margin="normal"
@@ -142,7 +142,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
         <TextField
           label={t('device.genericConfig.wifiPassword')}
           value={wpass}
-          placeholder={defaultWpass}
+          placeholder={String(defaultWpass)}
           type={showWpass ? 'text' : 'password'}
           onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setWpass(e.target.value)}
           fullWidth
@@ -164,7 +164,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
         <TextField
           label={t('device.genericConfig.provDK')}
           value={provDK}
-          placeholder={defaultProvDK}
+          placeholder={String(defaultProvDK)}
           onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setProvDK(e.target.value)}
           fullWidth
           margin="normal"
@@ -173,7 +173,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
           label={t('device.genericConfig.provDS')}
           type={showProvDS ? 'text' : 'password'}
           value={provDS}
-          placeholder={defaultProvDS}
+          placeholder={String(defaultProvDS)}
           onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setProvDS(e.target.value)}
           fullWidth
           margin="normal"
@@ -194,7 +194,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
         <TextField
           label={t('device.genericConfig.tbAddr')}
           value={tbAddr}
-          placeholder={defaultTbAddr}
+          placeholder={String(defaultTbAddr)}
           onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTbAddr(e.target.value)}
           fullWidth
           margin="normal"
@@ -202,7 +202,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
         <TextField
           label={t('device.genericConfig.tbPort')}
           value={tbPort}
-          placeholder={defaultTbPort}
+          placeholder={String(defaultTbPort)}
           onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTbPort(e.target.value)}
           fullWidth
           margin="normal"
@@ -211,7 +211,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
         <TextField
           label={t('device.genericConfig.hostName')}
           value={hname}
-          placeholder={defaultHname}
+          placeholder={String(defaultHname)}
           onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setHname(e.target.value)}
           fullWidth
           margin="normal"

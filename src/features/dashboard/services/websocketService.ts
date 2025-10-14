@@ -20,7 +20,7 @@ export const connectWebSocket = (
   const server = getItem('server');
 
   if (!token || !server) {
-    onError(new Error('User not authenticated or server not set'));
+    onError(new ErrorEvent('error', { message: 'User not authenticated or server not set' }));
     return;
   }
 

@@ -10,7 +10,8 @@ import {
 import { Refresh } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { getDevices, getDeviceInfo, type DeviceInfo } from '../services/deviceService';
+import { getDevices, getDeviceInfo } from '../services/deviceService';
+import type { DeviceInfo } from '../types';
 import DeviceList, { type DeviceListHandle } from './DeviceList';
 
 interface SidebarProps {
@@ -38,10 +39,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       const devicesWithInfo = await Promise.all(
         deviceList.map(async (device) => {
           const deviceInfo = await getDeviceInfo(device.id.id);
-          return { ...device, active: deviceInfo.active };
+          return { ...device, ...deviceInfo };
         })
       );
-      setDevices(devicesWithInfo);
+      setDevices(devicesWithInfo as any);
     };
 
     toast.promise(fetchPromise(), {

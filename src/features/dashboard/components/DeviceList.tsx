@@ -1,4 +1,4 @@
-import React, {
+import {
   useImperativeHandle,
   forwardRef,
 } from 'react';
@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { Circle } from '@mui/icons-material';
-import type { DeviceInfo } from '../services/deviceService';
+import type { DeviceInfo } from '../types';
 import slugify from '../../../utils/slugify';
 
 export interface DeviceListHandle {

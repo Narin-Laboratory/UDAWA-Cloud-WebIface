@@ -4,11 +4,11 @@ import {
   connectWebSocket,
   disconnectWebSocket,
 } from '../services/websocketService';
-import type { Device } from '../types/device';
+import type { DeviceInfo } from '../types';
 
 export const useDeviceData = (
   deviceId: string | undefined,
-  setDevice: React.Dispatch<React.SetStateAction<Device | null>>,
+  setDevice: React.Dispatch<React.SetStateAction<DeviceInfo | null>>,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   const onWebSocketMessage = useCallback(
@@ -19,31 +19,32 @@ export const useDeviceData = (
       if (data.data) {
         setDevice((prevDevice) => {
           if (!prevDevice) return null;
-          const newDevice = { ...prevDevice };
+          const newDevice = { ...prevDevice } as DeviceInfo;
+          const a = data.data as { [key: string]: [number, string | number | boolean][] };
 
           switch (data.subscriptionId) {
             case 1:
               newDevice.attributesServerScope = {
                 ...newDevice.attributesServerScope,
-                ...data.data,
+                ...a,
               };
               break;
             case 2:
               newDevice.attributesClientScope = {
                 ...newDevice.attributesClientScope,
-                ...data.data,
+                ...a,
               };
               break;
             case 3:
               newDevice.attributesSharedScope = {
                 ...newDevice.attributesSharedScope,
-                ...data.data,
+                ...a,
               };
               break;
             case 4:
               newDevice.timeseries = {
                 ...newDevice.timeseries,
-                ...data.data,
+                ...a,
               };
               break;
             default:
@@ -56,7 +57,7 @@ export const useDeviceData = (
     [setDevice]
   );
 
-  const onWebSocketError = useCallback((error: Error) => {
+  const onWebSocketError = useCallback((error: Event) => {
     console.error(error);
   }, []);
 

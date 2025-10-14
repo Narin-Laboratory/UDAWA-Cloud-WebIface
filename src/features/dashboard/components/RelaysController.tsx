@@ -18,7 +18,6 @@ import {
   FormControlLabel,
   Divider,
   Stack,
-  Grid,
   Slider,
 } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
@@ -63,14 +62,14 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
 
   const defaultRelays = attrs?.relays?.[0]?.[1] || '[]';
 
-  const parseRelays = (input: string | Relay[]): Relay[] => {
+  const parseRelays = (input: string | Relay[] | {}): Relay[] => {
     try {
-      const parsed = typeof input === 'string' ? JSON.parse(input) : input;
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
-      }
+        const parsed = typeof input === 'string' ? JSON.parse(input) : input;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+        }
     } catch {
-      // ignore error
+        // ignore error
     }
     return [{
         pin: 0, mode: 0, wattage: 0, lastActive: 0, dutyCycle: 0, dutyRange: 0,
@@ -133,8 +132,8 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
     setDisableSubmitButton(false);
   };
 
-  const handleTimerChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+  const handleTimerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target as HTMLInputElement;
     const updatedTimers = [...(adjustForm.timers || [])];
     updatedTimers[index] = {
       ...updatedTimers[index],
@@ -174,9 +173,9 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
           {t('relays_controller')}
         </Typography>
 
-        <Grid container spacing={2}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
             {relays.map((relay, index) => (
-                <Grid item xs={3} sm={2} md={1.5} key={index}>
+                <Box key={index} sx={{ flex: '1 1 100px', minWidth: '100px' }}>
                     <Card sx={{
                         textAlign: 'center',
                         borderColor: relay.state ? 'success.main' : 'error.main',
@@ -190,9 +189,9 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
                         </CardContent>
                     </Card>
                     <Typography variant="body2" sx={{ textAlign: 'center' }}>{relay.mode === 0 ? t('relay_mode_manual') : t('relay_mode_auto')}</Typography>
-                </Grid>
+                </Box>
             ))}
-        </Grid>
+        </Box>
 
         <Divider sx={{ my: 2 }} />
 
