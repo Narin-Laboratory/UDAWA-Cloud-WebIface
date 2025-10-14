@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useDevice } from '../contexts/DeviceContext';
+import { useDevice } from '../hooks/useDevice';
 import { useDeviceData } from '../hooks/useDeviceData';
 
 const GadadarDashboard = React.lazy(
