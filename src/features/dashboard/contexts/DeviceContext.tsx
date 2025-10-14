@@ -1,12 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { useState, ReactNode } from 'react';
 import type { DeviceInfo } from '../services/deviceService';
-
-interface DeviceContextType {
-  device: DeviceInfo | null;
-  setDevice: (device: DeviceInfo | null) => void;
-}
-
-const DeviceContext = createContext<DeviceContextType | undefined>(undefined);
+import { DeviceContext } from './context';
 
 export const DeviceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [device, setDevice] = useState<DeviceInfo | null>(null);
@@ -16,12 +10,4 @@ export const DeviceProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       {children}
     </DeviceContext.Provider>
   );
-};
-
-export const useDevice = (): DeviceContextType => {
-  const context = useContext(DeviceContext);
-  if (!context) {
-    throw new Error('useDevice must be used within a DeviceProvider');
-  }
-  return context;
 };
