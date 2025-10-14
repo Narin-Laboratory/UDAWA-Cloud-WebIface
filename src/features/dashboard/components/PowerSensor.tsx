@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, Typography, Grid, Box, useTheme, useMediaQuery } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Box, useTheme, useMediaQuery, Stack } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import type { DynamicObject } from "src/features/dashboard/services/deviceService.ts"; // Import the shared type
+import type { DynamicObject } from "src/features/dashboard/services/deviceService.ts";
 
-// --- UPDATED PROPS INTERFACE ---
-// The 'attributes' prop now correctly uses the simple DynamicObject type.
 interface PowerSensorProps {
   attributes: DynamicObject | undefined;
 }
 
-const MAX_DATA_POINTS = 720; // Maximum data points to keep in the chart history
+const MAX_DATA_POINTS = 720;
 
-// Interface for the data structure used by the charts
 interface ChartData {
-  name: string; // Timestamp label for the X-axis
+  name: string;
   _amp: number;
   _volt: number;
   _watt: number;
@@ -29,8 +26,6 @@ const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
 
   useEffect(() => {
     if (attributes) {
-      // --- SIMPLIFIED DATA ACCESS ---
-      // Directly access properties and convert to number
       const amp = Number(attributes._amp || 0);
       const volt = Number(attributes._volt || 0);
       const watt = Number(attributes._watt || 0);
@@ -45,13 +40,11 @@ const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
       };
 
       setChartData((prevData) => {
-        // Prevent duplicate entries for the same second
         if (prevData.length > 0 && prevData[prevData.length - 1].name === newEntry.name) {
           return prevData;
         }
         
         const updatedData = [...prevData, newEntry];
-        // Trim the data array if it exceeds the max length
         return updatedData.length > MAX_DATA_POINTS
           ? updatedData.slice(updatedData.length - MAX_DATA_POINTS)
           : updatedData;
@@ -59,21 +52,20 @@ const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
     }
   }, [attributes]);
 
-  // --- SIMPLIFIED HELPER FUNCTION ---
-  // Helper to safely get and format attribute values
   const getAttribute = (key: string, toFixed?: number) => {
     const value = attributes?.[key];
-    if (value === null || value === undefined) {
-      return 'N/A';
-    }
-    
+    if (value === null || value === undefined) return 'N/A';
     const num = Number(value);
-    if (isNaN(num)) {
-      return 'N/A';
-    }
-
+    if (isNaN(num)) return 'N/A';
     return toFixed !== undefined ? num.toFixed(toFixed) : String(Math.round(num));
   };
+
+  const renderMetric = (label: string, value: string, unit: string) => (
+    <Grid size={{ xs: 6, sm: 4, md: 2 }} sx={{ textAlign: 'center' }}>
+      <Typography variant="subtitle1">{label}</Typography>
+      <Typography variant="h5">{value} {unit}</Typography>
+    </Grid>
+  );
 
   const charts = [
     { dataKey: '_amp', label: t('powerSensor._amp'), color: '#8884d8' },
@@ -83,63 +75,43 @@ const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
   ];
 
   return (
-    <Box>
+    <Stack spacing={2}>
       <Card>
         <CardContent>
           <Typography variant="h6" gutterBottom>{t('powerSensor.title')}</Typography>
-          <Grid container spacing={2} alignItems="center" justifyContent="space-around">
-            <Grid container={true} size={12} spacing={2} justifyContent="center" alignItems="center">
-              <div>
-                <Typography variant="subtitle1">{t('powerSensor._amp')}</Typography>
-                <Typography variant="h5">{getAttribute('_amp', 2)} A</Typography>
-              </div>
-              <div>
-                <Typography variant="subtitle1">{t('powerSensor._volt')}</Typography>
-                <Typography variant="h5">{getAttribute('_volt', 0)} V</Typography>
-              </div>
-            </Grid>
-            <Grid container={true} size={12} spacing={2} justifyContent="center" alignItems="center">
-              <div>
-                <Typography variant="subtitle1">{t('powerSensor._watt')}</Typography>
-                <Typography variant="h5">{getAttribute('_watt', 0)} W</Typography>
-              </div>
-              <div>
-                <Typography variant="subtitle1">{t('powerSensor._ener')}</Typography>
-                <Typography variant="h5">{getAttribute('_ener', 2)} kWh</Typography>
-              </div>
-            </Grid>
-            <Grid container={true} size={12} spacing={2} justifyContent="center" alignItems="center">
-              <div>
-                <Typography variant="subtitle1">{t('powerSensor._freq')}</Typography>
-                <Typography variant="h5">{getAttribute('_freq', 1)} Hz</Typography>
-              </div>
-              <div>
-                <Typography variant="subtitle1">{t('powerSensor._pf')}</Typography>
-                <Typography variant="h5">{getAttribute('_pf', 2)}</Typography>
-              </div>
-            </Grid>
+          <Grid container spacing={2} justifyContent="center" alignItems="center">
+            {renderMetric(t('powerSensor._amp'), getAttribute('_amp', 2), 'A')}
+            {renderMetric(t('powerSensor._volt'), getAttribute('_volt', 0), 'V')}
+            {renderMetric(t('powerSensor._watt'), getAttribute('_watt', 0), 'W')}
+            {renderMetric(t('powerSensor._ener'), getAttribute('_ener', 2), 'kWh')}
+            {renderMetric(t('powerSensor._freq'), getAttribute('_freq', 1), 'Hz')}
+            {renderMetric(t('powerSensor._pf'), getAttribute('_pf', 2), '')}
           </Grid>
         </CardContent>
       </Card>
 
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', mt: 1, mx: -1.5 }}>
+      <Grid container spacing={2}>
         {charts.map(chart => (
-          <Box key={chart.dataKey} sx={{ width: { xs: '100%', sm: '50%' }, p: 1.5 }}>
-            <Typography variant="subtitle1" align="center">{chart.label}</Typography>
-            <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
-              <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" interval="preserveStartEnd" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey={chart.dataKey} name={chart.label} stroke={chart.color} dot={false} isAnimationActive={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </Box>
+          <Grid size={{ xs: 12, md: 6 }} key={chart.dataKey}>
+            <Card>
+              <CardContent>
+                <Typography variant="subtitle1" align="center">{chart.label}</Typography>
+                <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
+                  <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" interval="preserveStartEnd" tick={{ fontSize: 12 }} />
+                    <YAxis tick={{ fontSize: 12 }} />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey={chart.dataKey} name={chart.label} stroke={chart.color} dot={false} isAnimationActive={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </Grid>
         ))}
-      </Box>
-    </Box>
+      </Grid>
+    </Stack>
   );
 });
 

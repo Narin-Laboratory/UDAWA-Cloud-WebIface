@@ -172,7 +172,7 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
 
         <Grid container spacing={2}>
             {relays.map((relay, index) => (
-                <Grid size={6} key={index}>
+                <Grid size={{ xs: 6, sm: 4, md: 3 }} key={index}>
                     <Card sx={{
                         textAlign: 'center',
                         borderColor: relay.state ? 'success.main' : 'error.main',
