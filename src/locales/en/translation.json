@@ -19,7 +19,8 @@
     "unexpectedError": "An unexpected error occurred."
   },
   "logout": {
-    "loggingOut": "Logging out..."
+    "loggingOut": "Logging out...",
+    "logoutSuccess": "Success. Redirecting to login page..."
   },
   "sidebar": {
     "agents": "Agents List"

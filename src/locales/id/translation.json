@@ -19,7 +19,8 @@
     "unexpectedError": "Terjadi kesalahan tak terduga."
   },
   "logout": {
-    "loggingOut": "Keluar..."
+    "loggingOut": "Keluar...",
+    "logoutSuccess": "Sukses. Menuju halaman login..."
   },
   "sidebar": {
     "agents": "Daftar Agen"
