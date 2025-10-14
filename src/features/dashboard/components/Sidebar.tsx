@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import {
   Drawer,
   Box,
@@ -9,6 +9,8 @@ import {
 } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { getDevices, getDeviceInfo, type DeviceInfo } from '../services/deviceService';
 import DeviceList, { type DeviceListHandle } from './DeviceList';
 
 interface SidebarProps {
@@ -26,11 +28,40 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const { t } = useTranslation();
   const deviceListRef = useRef<DeviceListHandle>(null);
+  const [devices, setDevices] = useState<DeviceInfo[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchDevices = useCallback(async (force = false) => {
+    const fetchPromise = async () => {
+      setError(null);
+      const deviceList = await getDevices(force);
+      const devicesWithInfo = await Promise.all(
+        deviceList.map(async (device) => {
+          const deviceInfo = await getDeviceInfo(device.id.id);
+          return { ...device, active: deviceInfo.active };
+        })
+      );
+      setDevices(devicesWithInfo);
+    };
+
+    toast.promise(fetchPromise(), {
+      pending: t('deviceList.loading'),
+      success: t('deviceList.loadSuccess'),
+      error: {
+        render() {
+          setError(t('deviceList.fetchError'));
+          return t('deviceList.fetchError');
+        },
+      },
+    });
+  }, [t]);
+
+  useEffect(() => {
+    fetchDevices();
+  }, [fetchDevices]);
 
   const handleReload = () => {
-    if (deviceListRef.current) {
-      deviceListRef.current.reload();
-    }
+    fetchDevices(true);
   };
 
   const drawerContent = (
@@ -44,7 +75,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         </IconButton>
       </Toolbar>
       <List>
-        <DeviceList ref={deviceListRef} />
+        <DeviceList
+          ref={deviceListRef}
+          devices={devices}
+          error={error}
+          onReload={handleReload}
+        />
       </List>
     </div>
   );

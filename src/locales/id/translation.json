@@ -19,10 +19,11 @@
     "unexpectedError": "Terjadi kesalahan tak terduga."
   },
   "logout": {
-    "loggingOut": "Keluar..."
+    "loggingOut": "Keluar...",
+    "logoutSuccess": "Sukses. Menuju halaman login..."
   },
   "sidebar": {
-    "agents": "Daftar Agen"
+    "agents": "Agen saya"
   },
   "deviceList": {
     "fetchError": "Gagal mengambil data perangkat. Silakan coba lagi nanti.",
@@ -91,7 +92,7 @@
   },
   "userProfile": {
     "title": "Profil Pengguna",
-    "placeholder": "Ini adalah halaman placeholder untuk profil pengguna."
+    "placeholder": "Pengguna ini dikelola oleh masing-masing organisasi. Hubungi setiap administrator jika ada perubahan."
   },
   "relays_controller": "Pengontrol Relay",
   "relay_state_on": "NYALA",
