@@ -1,9 +1,9 @@
-import { createContext } from 'react';
+import { createContext, type Dispatch, type SetStateAction } from 'react';
 import type { DeviceInfo } from '../services/deviceService';
 
 export interface DeviceContextType {
   device: DeviceInfo | null;
-  setDevice: (device: DeviceInfo | null) => void;
+  setDevice: Dispatch<SetStateAction<DeviceInfo | null>>;
 }
 
 export const DeviceContext = createContext<DeviceContextType | undefined>(undefined);

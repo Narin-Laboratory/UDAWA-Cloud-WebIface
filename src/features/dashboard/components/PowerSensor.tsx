@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, Typography, Grid, Box, Divider, useTheme, useMediaQuery } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Box, useTheme, useMediaQuery } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-type AttributeValue = [number, string | number | boolean];
+import type { DynamicObject } from "src/features/dashboard/services/deviceService.ts"; // Import the shared type
 
-interface PowerSensorAttributes {
-  [key: string]: AttributeValue[];
-}
-
+// --- UPDATED PROPS INTERFACE ---
+// The 'attributes' prop now correctly uses the simple DynamicObject type.
 interface PowerSensorProps {
-  attributes: PowerSensorAttributes | undefined;
+  attributes: DynamicObject | undefined;
 }
 
-const MAX_DATA_POINTS = 720;
+const MAX_DATA_POINTS = 720; // Maximum data points to keep in the chart history
 
+// Interface for the data structure used by the charts
 interface ChartData {
-  name: string;
+  name: string; // Timestamp label for the X-axis
   _amp: number;
   _volt: number;
   _watt: number;
@@ -30,49 +29,50 @@ const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
 
   useEffect(() => {
     if (attributes) {
-      const amp = parseFloat(String(attributes['_amp']?.[0]?.[1] || '0'));
-      const volt = parseFloat(String(attributes['_volt']?.[0]?.[1] || '0'));
-      const watt = parseFloat(String(attributes['_watt']?.[0]?.[1] || '0'));
-      const pf = parseFloat(String(attributes['_pf']?.[0]?.[1] || '0'));
+      // --- SIMPLIFIED DATA ACCESS ---
+      // Directly access properties and convert to number
+      const amp = Number(attributes._amp || 0);
+      const volt = Number(attributes._volt || 0);
+      const watt = Number(attributes._watt || 0);
+      const pf = Number(attributes._pf || 0);
 
-      if (amp !== undefined || volt !== undefined || watt !== undefined || pf !== undefined) {
-        const newEntry: ChartData = {
-          name: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-          _amp: amp,
-          _volt: volt,
-          _watt: watt,
-          _pf: pf,
-        };
+      const newEntry: ChartData = {
+        name: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        _amp: amp,
+        _volt: volt,
+        _watt: watt,
+        _pf: pf,
+      };
 
-        setChartData((prevData: ChartData[]) => {
-          const lastEntry = prevData[prevData.length - 1];
-          if (lastEntry && lastEntry.name === newEntry.name) {
-            return prevData;
-          }
-
-          const updatedData = [...prevData, newEntry];
-          if (updatedData.length > MAX_DATA_POINTS) {
-            return updatedData.slice(updatedData.length - MAX_DATA_POINTS);
-          }
-          return updatedData;
-        });
-      }
+      setChartData((prevData) => {
+        // Prevent duplicate entries for the same second
+        if (prevData.length > 0 && prevData[prevData.length - 1].name === newEntry.name) {
+          return prevData;
+        }
+        
+        const updatedData = [...prevData, newEntry];
+        // Trim the data array if it exceeds the max length
+        return updatedData.length > MAX_DATA_POINTS
+          ? updatedData.slice(updatedData.length - MAX_DATA_POINTS)
+          : updatedData;
+      });
     }
   }, [attributes]);
 
+  // --- SIMPLIFIED HELPER FUNCTION ---
+  // Helper to safely get and format attribute values
   const getAttribute = (key: string, toFixed?: number) => {
-    const value = attributes?.[key]?.[0]?.[1];
-    if (value) {
-      const num = parseFloat(value);
-      if (isNaN(num)) {
-        return 'N/A';
-      }
-      if (toFixed !== undefined) {
-        return num.toFixed(toFixed);
-      }
-      return String(Math.round(num));
+    const value = attributes?.[key];
+    if (value === null || value === undefined) {
+      return 'N/A';
     }
-    return 'N/A';
+    
+    const num = Number(value);
+    if (isNaN(num)) {
+      return 'N/A';
+    }
+
+    return toFixed !== undefined ? num.toFixed(toFixed) : String(Math.round(num));
   };
 
   const charts = [
@@ -88,41 +88,35 @@ const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
         <CardContent>
           <Typography variant="h6" gutterBottom>{t('powerSensor.title')}</Typography>
           <Grid container spacing={2} alignItems="center" justifyContent="space-around">
-            <Grid item container xs={12} sm="auto" spacing={2} justifyContent="center" alignItems="center">
-              <Grid item>
+            <Grid container={true} size={12} spacing={2} justifyContent="center" alignItems="center">
+              <div>
                 <Typography variant="subtitle1">{t('powerSensor._amp')}</Typography>
                 <Typography variant="h5">{getAttribute('_amp', 2)} A</Typography>
-              </Grid>
-              <Grid item>
+              </div>
+              <div>
                 <Typography variant="subtitle1">{t('powerSensor._volt')}</Typography>
                 <Typography variant="h5">{getAttribute('_volt', 0)} V</Typography>
-              </Grid>
+              </div>
             </Grid>
-
-            <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' }, mx: 2 }} />
-
-            <Grid item container xs={12} sm="auto" spacing={2} justifyContent="center" alignItems="center">
-              <Grid item>
+            <Grid container={true} size={12} spacing={2} justifyContent="center" alignItems="center">
+              <div>
                 <Typography variant="subtitle1">{t('powerSensor._watt')}</Typography>
                 <Typography variant="h5">{getAttribute('_watt', 0)} W</Typography>
-              </Grid>
-              <Grid item>
+              </div>
+              <div>
                 <Typography variant="subtitle1">{t('powerSensor._ener')}</Typography>
                 <Typography variant="h5">{getAttribute('_ener', 2)} kWh</Typography>
-              </Grid>
+              </div>
             </Grid>
-
-            <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' }, mx: 2 }} />
-
-            <Grid item container xs={12} sm="auto" spacing={2} justifyContent="center" alignItems="center">
-              <Grid item>
+            <Grid container={true} size={12} spacing={2} justifyContent="center" alignItems="center">
+              <div>
                 <Typography variant="subtitle1">{t('powerSensor._freq')}</Typography>
                 <Typography variant="h5">{getAttribute('_freq', 1)} Hz</Typography>
-              </Grid>
-              <Grid item>
+              </div>
+              <div>
                 <Typography variant="subtitle1">{t('powerSensor._pf')}</Typography>
                 <Typography variant="h5">{getAttribute('_pf', 2)}</Typography>
-              </Grid>
+              </div>
             </Grid>
           </Grid>
         </CardContent>
@@ -135,8 +129,8 @@ const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
             <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
               <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
+                <XAxis dataKey="name" interval="preserveStartEnd" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
                 <Tooltip />
                 <Legend />
                 <Line type="monotone" dataKey={chart.dataKey} name={chart.label} stroke={chart.color} dot={false} isAnimationActive={false} />

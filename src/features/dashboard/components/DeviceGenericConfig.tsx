@@ -14,14 +14,12 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { rpcV2, saveDeviceAttributes } from '@/features/dashboard/services/deviceService';
+import type { DynamicObject } from '@/features/dashboard/services/deviceService'; // Import the shared type
 
-type AttributeValue = [number, string | number | boolean];
-
-interface DeviceAttributes {
-  [key: string]: AttributeValue[];
-}
+// --- UPDATED PROPS INTERFACE ---
+// The 'attributes' prop now uses the simple DynamicObject type.
 interface DeviceGenericConfigProps {
-  attributes: DeviceAttributes | undefined;
+  attributes: DynamicObject | undefined;
   deviceId: string | undefined;
   entityType: string | undefined;
 }
@@ -38,41 +36,43 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
   const [tbPort, setTbPort] = useState('');
   const [hname, setHname] = useState('');
 
-  const defaultWssid = attributes?.wssid?.[0]?.[1] || '';
-  const defaultWpass = attributes?.wpass?.[0]?.[1] || '';
-  const defaultProvDK = attributes?.provDK?.[0]?.[1] || '';
-  const defaultProvDS = attributes?.provDS?.[0]?.[1] || '';
-  const defaultTbAddr = attributes?.tbAddr?.[0]?.[1] || '';
-  const defaultTbPort = attributes?.tbPort?.[0]?.[1] || '';
-  const defaultHname = attributes?.hname?.[0]?.[1] || '';
+  // --- SIMPLIFIED DATA ACCESS ---
+  // We now access properties directly. The `|| ''` handles cases where the attribute might be null or undefined.
+  const defaultWssid = attributes?.wssid || '';
+  const defaultWpass = attributes?.wpass || '';
+  const defaultProvDK = attributes?.provDK || '';
+  const defaultProvDS = attributes?.provDS || '';
+  const defaultTbAddr = attributes?.tbAddr || '';
+  const defaultTbPort = attributes?.tbPort || '';
+  const defaultHname = attributes?.hname || '';
 
   const handleSave = async () => {
     if (!deviceId || !entityType) return;
 
-    const attributes: { [key: string]: string } = {};
+    const attributesToSave: { [key: string]: string } = {};
     if (wssid && wssid !== defaultWssid) {
-      attributes.wssid = wssid;
+      attributesToSave.wssid = wssid;
     }
     if (wpass && wpass !== defaultWpass) {
-      attributes.wpass = wpass;
+      attributesToSave.wpass = wpass;
     }
     if (provDK && provDK !== defaultProvDK) {
-      attributes.provDK = provDK;
+      attributesToSave.provDK = provDK;
     }
     if (provDS && provDS !== defaultProvDS) {
-      attributes.provDS = provDS;
+      attributesToSave.provDS = provDS;
     }
     if (tbAddr && tbAddr !== defaultTbAddr) {
-      attributes.tbAddr = tbAddr;
+      attributesToSave.tbAddr = tbAddr;
     }
     if (tbPort && tbPort !== defaultTbPort) {
-      attributes.tbPort = tbPort;
+      attributesToSave.tbPort = tbPort;
     }
     if (hname && hname !== defaultHname) {
-      attributes.hname = hname;
+      attributesToSave.hname = hname;
     }
 
-    if (Object.keys(attributes).length === 0) {
+    if (Object.keys(attributesToSave).length === 0) {
       toast.info(t('device.genericConfig.noChanges'));
       return;
     }
@@ -83,7 +83,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
           entityType,
           deviceId,
           'SHARED_SCOPE',
-          attributes,
+          attributesToSave,
         ),
         {
           pending: t('device.genericConfig.saving'),
@@ -134,17 +134,17 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
         <TextField
           label={t('device.genericConfig.wifiSSID')}
           value={wssid}
-          placeholder={defaultWssid}
-          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setWssid(e.target.value)}
+          placeholder={String(defaultWssid)}
+          onChange={(e) => setWssid(e.target.value)}
           fullWidth
           margin="normal"
         />
         <TextField
           label={t('device.genericConfig.wifiPassword')}
           value={wpass}
-          placeholder={defaultWpass}
+          placeholder={String(defaultWpass)}
           type={showWpass ? 'text' : 'password'}
-          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setWpass(e.target.value)}
+          onChange={(e) => setWpass(e.target.value)}
           fullWidth
           margin="normal"
           InputProps={{
@@ -152,7 +152,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
               <InputAdornment position="end">
                 <IconButton
                   aria-label={showWpass ? 'Hide password' : 'Show password'}
-                  onClick={() => setShowWpass((s: boolean) => !s)}
+                  onClick={() => setShowWpass(!showWpass)}
                   edge="end"
                 >
                   {showWpass ? <VisibilityOff /> : <Visibility />}
@@ -164,8 +164,8 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
         <TextField
           label={t('device.genericConfig.provDK')}
           value={provDK}
-          placeholder={defaultProvDK}
-          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setProvDK(e.target.value)}
+          placeholder={String(defaultProvDK)}
+          onChange={(e) => setProvDK(e.target.value)}
           fullWidth
           margin="normal"
         />
@@ -173,8 +173,8 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
           label={t('device.genericConfig.provDS')}
           type={showProvDS ? 'text' : 'password'}
           value={provDS}
-          placeholder={defaultProvDS}
-          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setProvDS(e.target.value)}
+          placeholder={String(defaultProvDS)}
+          onChange={(e) => setProvDS(e.target.value)}
           fullWidth
           margin="normal"
           InputProps={{
@@ -182,7 +182,7 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
               <InputAdornment position="end">
                 <IconButton
                   aria-label={showProvDS ? 'Hide provisioning secret' : 'Show provisioning secret'}
-                  onClick={() => setShowProvDS((s: boolean) => !s)}
+                  onClick={() => setShowProvDS(!showProvDS)}
                   edge="end"
                 >
                   {showProvDS ? <VisibilityOff /> : <Visibility />}
@@ -194,16 +194,16 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
         <TextField
           label={t('device.genericConfig.tbAddr')}
           value={tbAddr}
-          placeholder={defaultTbAddr}
-          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTbAddr(e.target.value)}
+          placeholder={String(defaultTbAddr)}
+          onChange={(e) => setTbAddr(e.target.value)}
           fullWidth
           margin="normal"
         />
         <TextField
           label={t('device.genericConfig.tbPort')}
           value={tbPort}
-          placeholder={defaultTbPort}
-          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTbPort(e.target.value)}
+          placeholder={String(defaultTbPort)}
+          onChange={(e) => setTbPort(e.target.value)}
           fullWidth
           margin="normal"
           type="number"
@@ -211,8 +211,8 @@ const DeviceGenericConfig: React.FC<DeviceGenericConfigProps> = React.memo(({ at
         <TextField
           label={t('device.genericConfig.hostName')}
           value={hname}
-          placeholder={defaultHname}
-          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setHname(e.target.value)}
+          placeholder={String(defaultHname)}
+          onChange={(e) => setHname(e.target.value)}
           fullWidth
           margin="normal"
         />

@@ -14,7 +14,7 @@ const DeviceDetailsCard: React.FC = () => {
     <Card variant="outlined" sx={{ width: '100%', mb: 2 }} data-testid="device-details-card">
       <CardContent>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} sm={4}>
+          <Grid size={6}>
             <Typography variant="h5" component="div">
               {device.label}
             </Typography>
@@ -31,58 +31,58 @@ const DeviceDetailsCard: React.FC = () => {
               sx={{ mt: 1 }}
             />
           </Grid>
-          <Grid item sm={1} sx={{ display: { xs: 'none', sm: 'block' } }}>
+          <Grid size={1}>
             <Divider orientation="vertical" flexItem />
           </Grid>
-            <Grid item xs={12} sm={7}>
+            <Grid size={7}>
             <Grid container spacing={1}>
-              <Grid item xs={6} sm={4}>
+              <Grid size={6}>
               <Typography variant="body2"><strong>{t('device.properties.ipAddress')}:</strong></Typography>
               <Typography variant="body2">
-                {device?.attributesClientScope?.ipad?.[0]?.[1] ?? 'N/A'}
+                {(device?.attributesClientScope as any)?.ipad ?? 'N/A'}
               </Typography>
               </Grid>
-              <Grid item xs={6} sm={4}>
+              <Grid size={6}>
               <Typography variant="body2"><strong>{t('device.properties.ssid')}:</strong></Typography>
               <Typography variant="body2">
-                {device?.attributesClientScope?.wssid?.[0]?.[1] ?? 'N/A'}
+                {device?.attributesClientScope?.wssid ?? 'N/A'}
               </Typography>
               </Grid>
-              <Grid item xs={6} sm={4}>
+              <Grid size={6}>
               <Typography variant="body2"><strong>{t('device.properties.signal')}:</strong></Typography>
               <Typography variant="body2">
-                {device?.attributesClientScope?.rssi?.[0]?.[1] ?? 'N/A'}%
+                {device?.attributesClientScope?.rssi ?? 'N/A'}%
               </Typography>
               </Grid>
-              <Grid item xs={6} sm={4}>
+              <Grid size={6}>
               <Typography variant="body2"><strong>{t('device.properties.battery')}:</strong></Typography>
               <Typography variant="body2">
-                {device?.attributesClientScope?.batt?.[0]?.[1] ?? 'N/A'}%
+                {device?.attributesClientScope?.batt ?? 'N/A'}%
               </Typography>
               </Grid>
-              <Grid item xs={6} sm={4}>
+              <Grid size={6}>
               <Typography variant="body2"><strong>{t('device.properties.firmware')}:</strong></Typography>
               <Typography variant="body2">
-                {device?.timeseries?.current_fw_version?.[0]?.[1] ?? 'N/A'}
+                {device?.timeseries?.current_fw_version ?? 'N/A'}
               </Typography>
               </Grid>
-              <Grid item xs={6} sm={4}>
+              <Grid size={6}>
               <Typography variant="body2"><strong>{t('device.properties.fwState')}:</strong></Typography>
               <Typography variant="body2">
-                {device?.timeseries?.fw_state?.[0]?.[1] ?? 'N/A'}
+                {device?.timeseries?.fw_state ?? 'N/A'}
               </Typography>
               </Grid>
-              <Grid item xs={6} sm={4}>
+              <Grid size={6}>
                 <Typography variant="body2"><strong>{t('device.properties.heap')}:</strong></Typography>
                 <Typography variant="body2">
-                  {device?.attributesClientScope?.heap?.[0]?.[1] ?? 'N/A'}
+                  {device?.attributesClientScope?.heap ?? 'N/A'}
                 </Typography>
               </Grid>
-              <Grid item xs={6} sm={4}>
+              <Grid size={6}>
                 <Typography variant="body2"><strong>{t('device.properties.lastSeen')}:</strong></Typography>
                 <Typography variant="body2">
-                  {device?.attributesServerScope?.lastActivityTime?.[0]?.[1]
-                  ? new Date(Number(device.attributesServerScope.lastActivityTime[0][1])).toLocaleString()
+                  {device?.attributesServerScope?.lastActivityTime
+                  ? new Date(Number(device.attributesServerScope.lastActivityTime)).toLocaleString()
                   : 'N/A'}
                 </Typography>
               </Grid>

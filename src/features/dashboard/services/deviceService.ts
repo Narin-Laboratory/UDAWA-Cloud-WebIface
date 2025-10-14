@@ -28,15 +28,22 @@ export interface Device {
   label: string;
 }
 
+// This type is the correct way to define an object with dynamic keys.
+export type DynamicObject = {
+  [key: string]: any; // Using 'any' is common and flexible for this pattern.
+};
+
+// --- CORRECTED INTERFACE ---
+// All dynamic scopes now correctly use DynamicObject.
 export interface DeviceInfo extends Device {
   active: boolean;
-  attributesServerScope: object;
-  attributesClientScope: object;
-  attributesSharedScope: object;
-  timeseries: object;
+  attributesServerScope: DynamicObject;
+  attributesClientScope: DynamicObject;
+  attributesSharedScope: DynamicObject;
+  timeseries: DynamicObject;
 }
 
-export const getDevices = async (force = false): Promise<Device[]> => {
+export const getDevices = async (force = false): Promise<DeviceInfo[]> => {
   const cachedDevices = getItem(DEVICES_CACHE_KEY);
 
   if (cachedDevices && !force) {
@@ -80,10 +87,14 @@ export const getDevices = async (force = false): Promise<Device[]> => {
     throw new Error('Failed to fetch devices');
   }
 
-  const devices = await response.json();
-  console.log(devices);
-  setItem(DEVICES_CACHE_KEY, devices);
-  return devices;
+  const devices: Device[] = await response.json();
+
+  const devicesWithInfo = await Promise.all(
+    devices.map(device => getDeviceInfo(device.id.id))
+  );
+
+  setItem(DEVICES_CACHE_KEY, devicesWithInfo);
+  return devicesWithInfo;
 };
 
 export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {
@@ -113,8 +124,13 @@ export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {
 
   const deviceInfo = await response.json();
 
+  // Initialize scopes if they don't exist in the initial fetch
   return {
-    ...deviceInfo
+    ...deviceInfo,
+    attributesServerScope: deviceInfo.attributesServerScope || {},
+    attributesClientScope: deviceInfo.attributesClientScope || {},
+    attributesSharedScope: deviceInfo.attributesSharedScope || {},
+    timeseries: deviceInfo.timeseries || {},
   };
 };
 
@@ -122,7 +138,7 @@ export const saveDeviceAttributes = async (
   entityType: string,
   entityId: string,
   scope: string,
-  attributes: object,
+  attributes: object
 ): Promise<void> => {
   const token = getItem('token');
   const server = getItem('server');
@@ -140,8 +156,9 @@ export const saveDeviceAttributes = async (
         'X-Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(attributes),
-    },
+    }
   );
+  console.log(attributes);
 
   if (response.status === 401) {
     handleAuthFailure();
@@ -154,10 +171,10 @@ export const saveDeviceAttributes = async (
 };
 
 export const rpcV2 = async (
-    entityId: string,
-    method: string,
-    params: object,
-  ): Promise<void> => {
+  entityId: string,
+  method: string,
+  params: object
+): Promise<void> => {
   const token = getItem('token');
   const server = getItem('server');
 
@@ -166,23 +183,20 @@ export const rpcV2 = async (
   }
 
   const payload = {
-    "method": method,
-    "params": params,
-    "persistent": false,
-    "timeout": 15000
+    method: method,
+    params: params,
+    persistent: false,
+    timeout: 15000,
   };
 
-  const response = await fetch(
-    `https://${server}/api/rpc/twoway/${entityId}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
+  const response = await fetch(`https://${server}/api/rpc/twoway/${entityId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Authorization': `Bearer ${token}`,
     },
-  );
+    body: JSON.stringify(payload),
+  });
 
   if (response.status === 401) {
     handleAuthFailure();
@@ -190,7 +204,6 @@ export const rpcV2 = async (
   }
 
   if (!response.ok) {
-    console.log(`Failed to execute rpcv2 ${method}: ${JSON.stringify(response.statusText)} - ${JSON.stringify(payload)} - https://${server}/api/rpc/twoway/${entityId}`);
     throw new Error('Failed to execute rpcv2');
   }
 };
