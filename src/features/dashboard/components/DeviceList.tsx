@@ -1,4 +1,4 @@
-import React, {
+import {
   useImperativeHandle,
   forwardRef,
 } from 'react';

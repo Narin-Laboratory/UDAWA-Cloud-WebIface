@@ -43,7 +43,7 @@ export interface DeviceInfo extends Device {
   timeseries: DynamicObject;
 }
 
-export const getDevices = async (force = false): Promise<Device[]> => {
+export const getDevices = async (force = false): Promise<DeviceInfo[]> => {
   const cachedDevices = getItem(DEVICES_CACHE_KEY);
 
   if (cachedDevices && !force) {
@@ -87,9 +87,14 @@ export const getDevices = async (force = false): Promise<Device[]> => {
     throw new Error('Failed to fetch devices');
   }
 
-  const devices = await response.json();
-  setItem(DEVICES_CACHE_KEY, devices);
-  return devices;
+  const devices: Device[] = await response.json();
+
+  const devicesWithInfo = await Promise.all(
+    devices.map(device => getDeviceInfo(device.id.id))
+  );
+
+  setItem(DEVICES_CACHE_KEY, devicesWithInfo);
+  return devicesWithInfo;
 };
 
 export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {

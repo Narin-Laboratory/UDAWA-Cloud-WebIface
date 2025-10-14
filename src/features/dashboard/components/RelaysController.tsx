@@ -28,7 +28,7 @@ import { rpcV2, saveDeviceAttributes } from '@/features/dashboard/services/devic
 
 interface RelaysControllerProps {
   attributes: {
-    [key: string]: [number, unknown][];
+    [key: string]: string;
   } | undefined;
   deviceId: string | undefined;
   entityType: string | undefined;
@@ -63,21 +63,17 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
 
   const defaultRelays = attrs?.relays || '[]';
 
-  const parseRelays = (input: string | Relay[]): Relay[] => {
+  const parseRelays = (input: string | undefined): Relay[] => {
+    if (!input) return [];
     try {
-      const parsed = typeof input === 'string' ? JSON.parse(input) : input;
+      const parsed = JSON.parse(input);
       if (Array.isArray(parsed) && parsed.length > 0) {
         return parsed;
       }
-    } catch {
-      // ignore error
+    } catch (e) {
+      console.error('Failed to parse relays:', e);
     }
-    return [{
-        pin: 0, mode: 0, wattage: 0, lastActive: 0, dutyCycle: 0, dutyRange: 0,
-        autoOff: 0, state: false, label: 'No label', overrunInSec: 0,
-        timers: Array(10).fill({ h: 0, i: 0, s: 0, d: 0 }),
-        datetime: 0, duration: 0
-    }];
+    return [];
   };
 
   const [relays, setRelays] = useState<Relay[]>(() => parseRelays(defaultRelays));
@@ -116,7 +112,7 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
     }
   };
 
-  const handleRelayAdjustFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleRelayAdjustFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = event.target;
     let processedValue: string | number = value;
 
@@ -133,7 +129,7 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
     setDisableSubmitButton(false);
   };
 
-  const handleTimerChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTimerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     const updatedTimers = [...(adjustForm.timers || [])];
     updatedTimers[index] = {
