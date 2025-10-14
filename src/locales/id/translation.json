@@ -92,7 +92,7 @@
   },
   "userProfile": {
     "title": "Profil Pengguna",
-    "placeholder": "Ini adalah halaman placeholder untuk profil pengguna."
+    "placeholder": "Pengguna ini dikelola oleh masing-masing organisasi. Hubungi setiap administrator jika ada perubahan."
   },
   "relays_controller": "Pengontrol Relay",
   "relay_state_on": "NYALA",

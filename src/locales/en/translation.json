@@ -92,7 +92,7 @@
   },
   "userProfile": {
     "title": "User Profile",
-    "placeholder": "This is a placeholder page for the user profile."
+    "placeholder": "This user is managed by respective organization. Contact each administrator of change is necessary."
   },
   "relays_controller": "Relays Controller",
   "relay_state_on": "ON",
