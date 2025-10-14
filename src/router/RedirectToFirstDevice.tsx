@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CircularProgress, Box } from '@mui/material';
 import { getDevices } from '../features/dashboard/services/deviceService';
-import type { Device } from '../features/dashboard/types/device';
+import type { Device } from '../features/dashboard/services/deviceService';
 
 const RedirectToFirstDevice: React.FC = () => {
   const navigate = useNavigate();

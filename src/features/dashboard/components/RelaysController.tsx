@@ -61,7 +61,7 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
   const { t } = useTranslation();
   const attrs = attributes;
 
-  const defaultRelays = attrs?.relays?.[0]?.[1] || '[]';
+  const defaultRelays = attrs?.relays || '[]';
 
   const parseRelays = (input: string | Relay[]): Relay[] => {
     try {
@@ -156,7 +156,7 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
     setDisableSubmitButton(true);
 
     toast.promise(
-      saveDeviceAttributes(entityType, deviceId, 'CLIENT_SCOPE', { relays: updatedRelays }),
+      saveDeviceAttributes(entityType, deviceId, 'SHARED_SCOPE', { relays: updatedRelays }),
       {
         pending: t('device.genericConfig.saving'),
         success: t('device.genericConfig.saveSuccess'),
@@ -176,7 +176,7 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
 
         <Grid container spacing={2}>
             {relays.map((relay, index) => (
-                <Grid item xs={3} sm={2} md={1.5} key={index}>
+                <Grid size={6} key={index}>
                     <Card sx={{
                         textAlign: 'center',
                         borderColor: relay.state ? 'success.main' : 'error.main',

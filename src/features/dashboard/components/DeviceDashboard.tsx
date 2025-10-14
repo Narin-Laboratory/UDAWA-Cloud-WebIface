@@ -43,6 +43,7 @@ const DeviceDashboard: React.FC<DeviceDashboardProps> = ({ tabs }) => {
   const [tabValue, setTabValue] = React.useState(0);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    void event;
     setTabValue(newValue);
   };
 
