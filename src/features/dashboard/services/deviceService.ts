@@ -9,7 +9,7 @@ const handleAuthFailure = () => {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     localStorage.removeItem('server');
-  } catch (e) {
+  } catch {
     // ignore
   }
   // Redirect to login page

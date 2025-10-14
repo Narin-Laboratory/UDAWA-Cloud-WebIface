@@ -5,8 +5,8 @@ let lastDeviceId: string | null = null;
 
 export const connectWebSocket = (
   deviceId: string,
-  onMessage: (data: any) => void,
-  onError: (error: any) => void
+  onMessage: (data: MessageEvent) => void,
+  onError: (error: Event) => void
 ) => {
   if (websocket && lastDeviceId === deviceId) {
     return;
@@ -72,13 +72,12 @@ export const connectWebSocket = (
 
   websocket.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    //console.log('Received message:', data);
     onMessage(data);
   };
 
-  websocket.onerror = (error) => {
-    console.error('WebSocket error:', error);
-    onError(error);
+  websocket.onerror = (event) => {
+    console.error('WebSocket error:', event);
+    onError(event);
   };
 
   websocket.onclose = (event) => {

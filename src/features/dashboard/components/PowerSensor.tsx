@@ -2,37 +2,49 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, Typography, Grid, Box, Divider, useTheme, useMediaQuery } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+type AttributeValue = [number, string | number | boolean];
+
+interface PowerSensorAttributes {
+  [key: string]: AttributeValue[];
+}
+
 interface PowerSensorProps {
-  attributes: {
-    [key: string]: [number, any][];
-  } | undefined;
+  attributes: PowerSensorAttributes | undefined;
 }
 
 const MAX_DATA_POINTS = 720;
 
+interface ChartData {
+  name: string;
+  _amp: number;
+  _volt: number;
+  _watt: number;
+  _pf: number;
+}
+
 const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
   const { t } = useTranslation();
-  const [chartData, setChartData] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<ChartData[]>([]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (attributes) {
-      const amp = attributes['_amp']?.[0]?.[1];
-      const volt = attributes['_volt']?.[0]?.[1];
-      const watt = attributes['_watt']?.[0]?.[1];
-      const pf = attributes['_pf']?.[0]?.[1];
+      const amp = parseFloat(String(attributes['_amp']?.[0]?.[1] || '0'));
+      const volt = parseFloat(String(attributes['_volt']?.[0]?.[1] || '0'));
+      const watt = parseFloat(String(attributes['_watt']?.[0]?.[1] || '0'));
+      const pf = parseFloat(String(attributes['_pf']?.[0]?.[1] || '0'));
 
       if (amp !== undefined || volt !== undefined || watt !== undefined || pf !== undefined) {
-        const newEntry = {
+        const newEntry: ChartData = {
           name: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-          _amp: parseFloat(amp || '0'),
-          _volt: parseFloat(volt || '0'),
-          _watt: parseFloat(watt || '0'),
-          _pf: parseFloat(pf || '0'),
+          _amp: amp,
+          _volt: volt,
+          _watt: watt,
+          _pf: pf,
         };
 
-        setChartData(prevData => {
+        setChartData((prevData: ChartData[]) => {
           const lastEntry = prevData[prevData.length - 1];
           if (lastEntry && lastEntry.name === newEntry.name) {
             return prevData;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, Typography, Grid, Divider, Chip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useDevice } from '../contexts/DeviceContext';
+import { useDevice } from '../hooks/useDevice';
 
 const DeviceDetailsCard: React.FC = () => {
   const { device } = useDevice();
