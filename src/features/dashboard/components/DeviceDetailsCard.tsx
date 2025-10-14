@@ -12,7 +12,7 @@ const DeviceDetailsCard: React.FC = () => {
   }
 
   const renderDetail = (label: string, value: any) => (
-    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+    <Grid size={{ xs: 6, sm: 6, md: 4 }}>
       <Typography variant="body2"><strong>{label}:</strong></Typography>
       <Typography variant="body2">{value ?? 'N/A'}</Typography>
     </Grid>
