@@ -49,13 +49,20 @@ const LoginPage: React.FC = () => {
       setItem('server', server);
     };
 
+interface ErrorData {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
     toast.promise(
       loginPromise(),
       {
         pending: t('login.loggingIn'),
         success: t('login.loginSuccess'),
         error: {
-          render({ data }: any) {
+          render({ data }: { data: ErrorData }) {
             const errorMessage =
               data.response?.data?.message || t('login.unexpectedError');
             return `${t('login.failed')}: ${errorMessage}`;
