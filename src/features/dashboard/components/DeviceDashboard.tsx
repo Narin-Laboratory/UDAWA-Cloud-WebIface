@@ -20,11 +20,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography component="div">{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box>{children}</Box>}
     </div>
   );
 }
@@ -55,6 +51,8 @@ const DeviceDashboard: React.FC<DeviceDashboardProps> = ({ tabs }) => {
           value={tabValue}
           onChange={handleTabChange}
           aria-label={t('device.dashboardTabs.ariaLabel')}
+          variant="scrollable"
+          scrollButtons="auto"
         >
           {tabs.map((tab, index) => (
             <Tab key={index} label={tab.label} />
