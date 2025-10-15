@@ -11,7 +11,11 @@ import { removeItem } from '../../../utils/storage';
 
 const drawerWidth = 240;
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
@@ -32,7 +36,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   const handleLogout = () => {
-    const logoutPromise = new Promise<void>((resolve) => {
+    const logoutPromise = new Promise<void>(resolve => {
       setTimeout(() => {
         removeItem('token');
         removeItem('refreshToken');
@@ -73,14 +77,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           component="main"
           sx={{
             flexGrow: 1,
-            p: 3,
             width: { sm: `calc(100% - ${drawerWidth}px)` },
             display: 'flex',
             flexDirection: 'column',
           }}
         >
           <Toolbar />
-          <Box sx={{ flexGrow: 1 }}>{children}</Box>
+          <Box sx={{ flexGrow: 1, p: 3 }}>{children}</Box>
           <Footer />
         </Box>
       </Box>
