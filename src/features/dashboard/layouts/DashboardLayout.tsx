@@ -60,7 +60,7 @@ export default function DashboardLayout({
 
   return (
     <>
-      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <Header
           drawerWidth={drawerWidth}

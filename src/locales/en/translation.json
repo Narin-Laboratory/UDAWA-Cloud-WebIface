@@ -45,7 +45,7 @@
       "lastSeen": "Last Seen",
       "fwState": "Fw State"
     },
-    "notFound": "Device not found",
+    "notFound": "Device not found, make sure to select the device from the device list on the left sidebar.",
     "dashboardTabs": {
       "ariaLabel": "device dashboard tabs",
       "monitor": "Monitor",
@@ -73,7 +73,7 @@
       "save": "Save",
       "noChanges": "No changes to save"
     },
-    "unsupported": "Unsupported device type"
+    "unsupported": "Unsupported device type. Choose a supported device from the device list on the left sidebar."
   },
   "footer": {
     "copyright": "© {{year}} PSTI Undiknas - Narin Laboratory. All Rights Reserved."

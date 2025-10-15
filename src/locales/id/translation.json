@@ -45,7 +45,7 @@
       "lastSeen": "Terakhir Dilihat",
       "fwState": "Status Fw"
     },
-    "notFound": "Perangkat tidak ditemukan",
+    "notFound": "Perangkat tidak ditemukan. Pastikan memilih perangkat dari daftar perangkat di sidebar kiri.",
     "dashboardTabs": {
       "ariaLabel": "tab dasbor perangkat",
       "monitor": "Monitor",
@@ -73,7 +73,7 @@
       "save": "Simpan",
       "noChanges": "Tidak ada perubahan untuk disimpan"
     },
-    "unsupported": "Tipe perangkat tidak didukung"
+    "unsupported": "Tipe perangkat tidak didukung. Pilih perangkat lain dari daftar perangkat di menu sidebar sebelah kiri."
   },
   "footer": {
     "copyright": "© {{year}} PSTI Undiknas - Narin Laboratory. Hak Cipta Dilindungi."
