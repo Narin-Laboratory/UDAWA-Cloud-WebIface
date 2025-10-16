@@ -1,6 +1,5 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import AuthLayout from '../features/auth/layouts/AuthLayout';
 import LoginPage from '../features/auth/pages/LoginPage';
 import DashboardLayout from '../features/dashboard/layouts/DashboardLayout';
 import DeviceDashboardPage from '../features/dashboard/pages/DeviceDashboardPage';

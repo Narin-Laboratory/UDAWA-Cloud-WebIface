@@ -35,8 +35,8 @@ const NeuralNetwork: React.FC = () => {
       vector: { x: number; y: number };
 
       constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
+        this.x = Math.random() * canvas!.width;
+        this.y = Math.random() * canvas!.height;
         this.radius = options.defaultRadius + Math.random() * options.variantRadius;
         this.speed = options.defaultSpeed + Math.random() * options.variantSpeed;
         this.directionAngle = Math.floor(Math.random() * 360);
@@ -62,14 +62,14 @@ const NeuralNetwork: React.FC = () => {
       }
 
       border() {
-        if (this.x >= canvas.width || this.x <= 0) {
+        if (this.x >= canvas!.width || this.x <= 0) {
           this.vector.x *= -1;
         }
-        if (this.y >= canvas.height || this.y <= 0) {
+        if (this.y >= canvas!.height || this.y <= 0) {
           this.vector.y *= -1;
         }
-        if (this.x > canvas.width) this.x = canvas.width;
-        if (this.y > canvas.height) this.y = canvas.height;
+        if (this.x > canvas!.width) this.x = canvas!.width;
+        if (this.y > canvas!.height) this.y = canvas!.height;
         if (this.x < 0) this.x = 0;
         if (this.y < 0) this.y = 0;
       }
