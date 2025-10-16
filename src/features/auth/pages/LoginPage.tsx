@@ -187,6 +187,24 @@ interface ErrorData {
           </Box>
         </Box>
       </Container>
+      <Box
+        component="footer"
+        sx={{
+          py: 3,
+          px: 2,
+          mt: 'auto',
+          backgroundColor: 'transparent',
+          position: 'absolute',
+          bottom: 0,
+          width: '100%',
+        }}
+      >
+        <Container maxWidth="sm">
+          <Typography variant="body2" color="text.secondary" align="center">
+            {t('footer.copyright', { year: 2025 })}
+          </Typography>
+        </Container>
+      </Box>
     </>
   );
 };
