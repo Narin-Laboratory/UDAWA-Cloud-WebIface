@@ -1,6 +1,5 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import AuthLayout from '../features/auth/layouts/AuthLayout';
 import LoginPage from '../features/auth/pages/LoginPage';
 import DashboardLayout from '../features/dashboard/layouts/DashboardLayout';
 import DeviceDashboardPage from '../features/dashboard/pages/DeviceDashboardPage';
@@ -12,14 +11,7 @@ import RedirectToFirstDevice from './RedirectToFirstDevice';
 const AppRouter: React.FC = () => {
   return (
     <Routes>
-      <Route
-        path="/login"
-        element={
-          <AuthLayout>
-            <LoginPage />
-          </AuthLayout>
-        }
-      />
+      <Route path="/login" element={<LoginPage />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<RedirectToFirstDevice />} />
         <Route
