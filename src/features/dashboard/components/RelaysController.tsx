@@ -18,18 +18,22 @@ import {
   FormControlLabel,
   Divider,
   Stack,
-  Grid,
   Slider,
 } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { rpcV2, saveDeviceAttributes } from '@/features/dashboard/services/deviceService';
+import {
+  rpcV2,
+  saveDeviceAttributes,
+} from '@/features/dashboard/services/deviceService';
 
 interface RelaysControllerProps {
-  attributes: {
-    [key: string]: string;
-  } | undefined;
+  attributes:
+    | {
+        [key: string]: string;
+      }
+    | undefined;
   deviceId: string | undefined;
   entityType: string | undefined;
 }
@@ -57,165 +61,217 @@ interface Relay {
   duration: number;
 }
 
-const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attributes, deviceId, entityType }) => {
-  const { t } = useTranslation();
-  const attrs = attributes;
+const RelaysController: React.FC<RelaysControllerProps> = React.memo(
+  ({ attributes, deviceId, entityType }) => {
+    const { t } = useTranslation();
+    const attrs = attributes;
 
-  const defaultRelays = attrs?.relays || '[]';
+    const defaultRelays = attrs?.relays || '[]';
 
-  const parseRelays = (input: string | undefined): Relay[] => {
-    if (!input) return [];
-    try {
-      const parsed = JSON.parse(input);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+    const parseRelays = (input: string | undefined): Relay[] => {
+      if (!input) return [];
+      try {
+        const parsed = JSON.parse(input);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        console.error('Failed to parse relays:', e);
       }
-    } catch (e) {
-      console.error('Failed to parse relays:', e);
-    }
-    return [];
-  };
-
-  const [relays, setRelays] = useState<Relay[]>(() => parseRelays(defaultRelays));
-  const [availableRelayMode] = useState<string[]>(['Manual', 'Auto', 'Timer', 'Schedule']);
-  const [selectedRelayIndex, setSelectedRelayIndex] = useState<number>(0);
-  const [isRelayAdjustModalVisible, setIsRelayAdjustModalVisible] = useState<boolean>(false);
-  const [disableSubmitButton, setDisableSubmitButton] = useState<boolean>(true);
-  const [adjustForm, setAdjustForm] = useState<Partial<Relay>>({});
-
-  useEffect(() => {
-    const parsed = parseRelays(defaultRelays);
-    setRelays(parsed);
-  }, [defaultRelays]);
-
-
-  useEffect(() => {
-    if (isRelayAdjustModalVisible) {
-      setAdjustForm({ ...relays[selectedRelayIndex] });
-    }
-  }, [isRelayAdjustModalVisible, selectedRelayIndex, relays]);
-
-  const handleToggleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newState = event.target.checked;
-    const selectedRelay = relays[selectedRelayIndex];
-
-    const updatedRelays = [...relays];
-    updatedRelays[selectedRelayIndex].state = newState;
-    setRelays(updatedRelays);
-
-    if (deviceId) {
-      const params = {
-        pin: selectedRelay.pin,
-        state: newState,
-      };
-      rpcV2(deviceId, 'setRelayState', params);
-    }
-  };
-
-  const handleRelayAdjustFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type } = event.target;
-    let processedValue: string | number = value;
-
-    if (type === 'number') {
-      processedValue = parseInt(value, 10);
-      if (isNaN(processedValue)) {
-        processedValue = 0;
-      }
-    } else if (name === 'datetime') {
-      processedValue = new Date(value).getTime() / 1000;
-    }
-
-    setAdjustForm(prev => ({...prev, [name]: processedValue}));
-    setDisableSubmitButton(false);
-  };
-
-  const handleTimerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = event.target;
-    const updatedTimers = [...(adjustForm.timers || [])];
-    updatedTimers[index] = {
-      ...updatedTimers[index],
-      [name]: parseInt(value)
+      return [];
     };
 
-    setAdjustForm(prev => ({...prev, timers: updatedTimers}));
-    setDisableSubmitButton(false);
-  };
-
-
-
-  const handleRelayAdjustFormSubmit = async () => {
-    if (!deviceId || !entityType) return;
-
-    const updatedRelays = [...relays];
-    updatedRelays[selectedRelayIndex] = { ...updatedRelays[selectedRelayIndex], ...adjustForm };
-    setRelays(updatedRelays);
-    setDisableSubmitButton(true);
-
-    toast.promise(
-      saveDeviceAttributes(entityType, deviceId, 'SHARED_SCOPE', { relays: updatedRelays }),
-      {
-        pending: t('device.genericConfig.saving'),
-        success: t('device.genericConfig.saveSuccess'),
-        error: t('device.genericConfig.saveError'),
-      },
+    const [relays, setRelays] = useState<Relay[]>(() =>
+      parseRelays(defaultRelays)
     );
-    setIsRelayAdjustModalVisible(false);
-  };
+    const [availableRelayMode] = useState<string[]>([
+      'Manual',
+      'Auto',
+      'Timer',
+      'Schedule',
+    ]);
+    const [selectedRelayIndex, setSelectedRelayIndex] = useState<number>(0);
+    const [isRelayAdjustModalVisible, setIsRelayAdjustModalVisible] =
+      useState<boolean>(false);
+    const [disableSubmitButton, setDisableSubmitButton] =
+      useState<boolean>(true);
+    const [adjustForm, setAdjustForm] = useState<Partial<Relay>>({});
 
+    useEffect(() => {
+      const parsed = parseRelays(defaultRelays);
+      setRelays(parsed);
+    }, [defaultRelays]);
 
-  return (
-    <Card>
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          {t('relays_controller')}
-        </Typography>
+    useEffect(() => {
+      if (isRelayAdjustModalVisible) {
+        setAdjustForm({ ...relays[selectedRelayIndex] });
+      }
+    }, [isRelayAdjustModalVisible, selectedRelayIndex, relays]);
 
-        <Grid container spacing={2}>
+    const handleToggleSwitchChange = (
+      event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+      const newState = event.target.checked;
+      const selectedRelay = relays[selectedRelayIndex];
+
+      const updatedRelays = [...relays];
+      updatedRelays[selectedRelayIndex].state = newState;
+      setRelays(updatedRelays);
+
+      if (deviceId) {
+        const params = {
+          pin: selectedRelay.pin,
+          state: newState,
+        };
+        rpcV2(deviceId, 'setRelayState', params);
+      }
+    };
+
+    const handleRelayAdjustFormChange = (
+      event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+      const { name, value, type } = event.target;
+      let processedValue: string | number = value;
+
+      if (type === 'number') {
+        processedValue = parseInt(value, 10);
+        if (isNaN(processedValue)) {
+          processedValue = 0;
+        }
+      } else if (name === 'datetime') {
+        processedValue = new Date(value).getTime() / 1000;
+      }
+
+      setAdjustForm(prev => ({ ...prev, [name]: processedValue }));
+      setDisableSubmitButton(false);
+    };
+
+    const handleTimerChange = (
+      index: number,
+      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+      const { name, value } = event.target;
+      const updatedTimers = [...(adjustForm.timers || [])];
+      updatedTimers[index] = {
+        ...updatedTimers[index],
+        [name]: parseInt(value),
+      };
+
+      setAdjustForm(prev => ({ ...prev, timers: updatedTimers }));
+      setDisableSubmitButton(false);
+    };
+
+    const handleRelayAdjustFormSubmit = async () => {
+      if (!deviceId || !entityType) return;
+
+      const updatedRelays = [...relays];
+      updatedRelays[selectedRelayIndex] = {
+        ...updatedRelays[selectedRelayIndex],
+        ...adjustForm,
+      };
+      setRelays(updatedRelays);
+      setDisableSubmitButton(true);
+
+      toast.promise(
+        saveDeviceAttributes(entityType, deviceId, 'SHARED_SCOPE', {
+          relays: updatedRelays,
+        }),
+        {
+          pending: t('device.genericConfig.saving'),
+          success: t('device.genericConfig.saveSuccess'),
+          error: t('device.genericConfig.saveError'),
+        }
+      );
+      setIsRelayAdjustModalVisible(false);
+    };
+
+    return (
+      <Card>
+        <CardContent>
+          <Typography variant="h6" gutterBottom>
+            {t('relays_controller')}
+          </Typography>
+
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
             {relays.map((relay, index) => (
-                <Grid size={{ xs: 6, sm: 4, md: 3 }} key={index}>
-                    <Card sx={{
-                        textAlign: 'center',
-                        borderColor: relay.state ? 'success.main' : 'error.main',
-                        borderWidth: 1,
-                        borderStyle: 'solid',
-                        bgcolor: relay.state ? 'success.light' : 'error.light'
-                    }}>
-                        <CardContent>
-                            <Typography variant="h6">{`${index + 1}`}</Typography>
-                            <Typography variant="caption"><strong>{t(relay.state ? 'relay_state_on' : 'relay_state_off')}</strong></Typography>
-                        </CardContent>
-                    </Card>
-                    <Typography variant="body2" sx={{ textAlign: 'center' }}>{relay.mode === 0 ? t('relay_mode_manual') : t('relay_mode_auto')}</Typography>
-                </Grid>
-            ))}
-        </Grid>
-
-        <Divider sx={{ my: 2 }} />
-
-        <Stack direction="row" spacing={1} alignItems="center">
-            <FormControl fullWidth variant="outlined" size="small">
-                <InputLabel id="relay-select-label">{t('select_relay_to_control')}</InputLabel>
-                <Select
-                  labelId="relay-select-label"
-                  value={selectedRelayIndex}
-                  label={t('select_relay_to_control') as string}
-                  onChange={(e) => setSelectedRelayIndex(Number(e.target.value))}
+              <Box
+                key={index}
+                sx={{
+                  flex: '1 1 calc(50% - 1rem)',
+                  '@media (min-width:600px)': {
+                    flex: '1 1 calc(33.333% - 1rem)',
+                  },
+                  '@media (min-width:900px)': {
+                    flex: '1 1 calc(25% - 1rem)',
+                  },
+                }}
+              >
+                <Card
+                  sx={{
+                    textAlign: 'center',
+                    borderColor: relay.state ? 'success.main' : 'error.main',
+                    borderWidth: 1,
+                    borderStyle: 'solid',
+                    bgcolor: relay.state ? 'success.light' : 'error.light',
+                  }}
                 >
-                  {relays.map((relay, index) => (
-                    <MenuItem key={relay.pin} value={index}>
-                      {`Relay ${relay.pin + 1} - ${relay.label === 'No label' ? t('relay_label_no_label') : relay.label}`}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  <CardContent>
+                    <Typography variant="h6">{`${index + 1}`}</Typography>
+                    <Typography variant="caption">
+                      <strong>
+                        {t(
+                          relay.state ? 'relay_state_on' : 'relay_state_off'
+                        )}
+                      </strong>
+                    </Typography>
+                  </CardContent>
+                </Card>
+                <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                  {relay.mode === 0
+                    ? t('relay_mode_manual')
+                    : t('relay_mode_auto')}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+
+          <Divider sx={{ my: 2 }} />
+
+          <Stack direction="row" spacing={1} alignItems="center">
+            <FormControl fullWidth variant="outlined" size="small">
+              <InputLabel id="relay-select-label">
+                {t('select_relay_to_control')}
+              </InputLabel>
+              <Select
+                labelId="relay-select-label"
+                value={selectedRelayIndex}
+                label={t('select_relay_to_control') as string}
+                onChange={e => setSelectedRelayIndex(Number(e.target.value))}
+              >
+                {relays.map((relay, index) => (
+                  <MenuItem key={relay.pin} value={index}>
+                    {`Relay ${relay.pin + 1} - ${
+                      relay.label === 'No label'
+                        ? t('relay_label_no_label')
+                        : relay.label
+                    }`}
+                  </MenuItem>
+                ))}
+              </Select>
             </FormControl>
-            <Button startIcon={<TuneIcon />} variant="outlined" size="small" onClick={() => setIsRelayAdjustModalVisible(true)}>
-                {t('relay_adjust_button')}
+            <Button
+              startIcon={<TuneIcon />}
+              variant="outlined"
+              size="small"
+              onClick={() => setIsRelayAdjustModalVisible(true)}
+            >
+              {t('relay_adjust_button')}
             </Button>
-        </Stack>
+          </Stack>
 
-        <Divider sx={{ my: 2 }} />
+          <Divider sx={{ my: 2 }} />
 
-        <Box>
+          <Box>
             <FormControlLabel
               control={
                 <Switch
@@ -224,33 +280,96 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
                   disabled={relays[selectedRelayIndex]?.mode !== 0}
                 />
               }
-              label={t('relay_status', { status: relays[selectedRelayIndex]?.state ? t('relay_state_on') : t('relay_state_off') })}
+              label={t('relay_status', {
+                status: relays[selectedRelayIndex]?.state
+                  ? t('relay_state_on')
+                  : t('relay_state_off'),
+              })}
             />
             <Box>
-              <Typography variant="body2" dangerouslySetInnerHTML={{ __html: t('relay_operated_by', { mode: availableRelayMode[relays[selectedRelayIndex]?.mode] || availableRelayMode[0] }) }} />
-                {relays[selectedRelayIndex]?.mode === 0 && relays[selectedRelayIndex]?.autoOff > 0 && (
-                    <Typography variant="body2" dangerouslySetInnerHTML={{ __html: t('relay_auto_off', { seconds: relays[selectedRelayIndex].autoOff }) }} />
+              <Typography
+                variant="body2"
+                dangerouslySetInnerHTML={{
+                  __html: t('relay_operated_by', {
+                    mode:
+                      availableRelayMode[relays[selectedRelayIndex]?.mode] ||
+                      availableRelayMode[0],
+                  }),
+                }}
+              />
+              {relays[selectedRelayIndex]?.mode === 0 &&
+                relays[selectedRelayIndex]?.autoOff > 0 && (
+                  <Typography
+                    variant="body2"
+                    dangerouslySetInnerHTML={{
+                      __html: t('relay_auto_off', {
+                        seconds: relays[selectedRelayIndex].autoOff,
+                      }),
+                    }}
+                  />
                 )}
-                {relays[selectedRelayIndex]?.mode === 1 && (
-                    <Typography variant="body2" dangerouslySetInnerHTML={{ __html: t('relay_duty_cycle', { dutyCycle: relays[selectedRelayIndex].dutyCycle, seconds: relays[selectedRelayIndex].dutyRange }) }} />
-                )}
-                {relays[selectedRelayIndex]?.mode === 2 && (
-                    relays[selectedRelayIndex].timers.map((timer, index) => (
+              {relays[selectedRelayIndex]?.mode === 1 && (
+                <Typography
+                  variant="body2"
+                  dangerouslySetInnerHTML={{
+                    __html: t('relay_duty_cycle', {
+                      dutyCycle: relays[selectedRelayIndex].dutyCycle,
+                      seconds: relays[selectedRelayIndex].dutyRange,
+                    }),
+                  }}
+                />
+              )}
+              {relays[selectedRelayIndex]?.mode === 2 &&
+                relays[selectedRelayIndex].timers.map(
+                  (timer, index) =>
                     timer.d > 0 && (
-                        <Typography key={index} variant="body2" dangerouslySetInnerHTML={{ __html: t('relay_timer_operation', { index: index + 1, h: timer.h, i: timer.i, s: timer.s, d: timer.d }) }} />
+                      <Typography
+                        key={index}
+                        variant="body2"
+                        dangerouslySetInnerHTML={{
+                          __html: t('relay_timer_operation', {
+                            index: index + 1,
+                            h: timer.h,
+                            i: timer.i,
+                            s: timer.s,
+                            d: timer.d,
+                          }),
+                        }}
+                      />
                     )
-                    ))
                 )}
-                {relays[selectedRelayIndex]?.mode === 3 && (
-                    <Typography variant="body2" dangerouslySetInnerHTML={{ __html: t('relay_specific_datetime', { datetime: relays[selectedRelayIndex].datetime ? new Date(relays[selectedRelayIndex].datetime * 1000).toISOString().slice(0, 16) : '', duration: relays[selectedRelayIndex].duration }) }} />
-                )}
+              {relays[selectedRelayIndex]?.mode === 3 && (
+                <Typography
+                  variant="body2"
+                  dangerouslySetInnerHTML={{
+                    __html: t('relay_specific_datetime', {
+                      datetime: relays[selectedRelayIndex].datetime
+                        ? new Date(relays[selectedRelayIndex].datetime * 1000)
+                            .toISOString()
+                            .slice(0, 16)
+                        : '',
+                      duration: relays[selectedRelayIndex].duration,
+                    }),
+                  }}
+                />
+              )}
             </Box>
-        </Box>
+          </Box>
 
-        <Dialog open={isRelayAdjustModalVisible} onClose={() => setIsRelayAdjustModalVisible(false)} fullWidth maxWidth="sm">
-          <DialogTitle>{t('adjust_relay_title', { index: selectedRelayIndex + 1, label: relays[selectedRelayIndex]?.label })}</DialogTitle>
-          <DialogContent>
-            <Stack spacing={2} sx={{ mt: 1 }}>
+          <Dialog
+            open={isRelayAdjustModalVisible}
+            onClose={() => setIsRelayAdjustModalVisible(false)}
+            fullWidth
+            maxWidth="sm"
+          >
+            <DialogTitle>
+              {t('adjust_relay_title', {
+                index: selectedRelayIndex + 1,
+                label: relays[selectedRelayIndex]?.label,
+              })}
+            </DialogTitle>
+            <DialogContent>
+              <Stack spacing={2} sx={{ mt: 1 }}>
                 <TextField
                   label={t('relay_label_label')}
                   name="label"
@@ -258,7 +377,9 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
                   onChange={handleRelayAdjustFormChange}
                   fullWidth
                   size="small"
-                  helperText={t('relay_label_helper', { index: selectedRelayIndex + 1 })}
+                  helperText={t('relay_label_helper', {
+                    index: selectedRelayIndex + 1,
+                  })}
                 />
                 <TextField
                   label={t('overrun_threshold_label')}
@@ -281,115 +402,169 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(({ attribut
                   helperText={t('wattage_helper')}
                 />
                 <FormControl fullWidth size="small">
-                    <InputLabel>{t('select_relay_mode')}</InputLabel>
-                    <Select
-                        name="mode"
-                        value={adjustForm.mode ?? 0}
-                        onChange={(e) => {
-                            setAdjustForm(prev => ({...prev, mode: Number(e.target.value)}));
-                            setDisableSubmitButton(false);
-                        }}
-                        label={t('select_relay_mode')}
-                    >
-                        {availableRelayMode.map((mode, index) => (
-                            <MenuItem key={index} value={index}>{mode}</MenuItem>
-                        ))}
-                    </Select>
+                  <InputLabel>{t('select_relay_mode')}</InputLabel>
+                  <Select
+                    name="mode"
+                    value={adjustForm.mode ?? 0}
+                    onChange={e => {
+                      setAdjustForm(prev => ({
+                        ...prev,
+                        mode: Number(e.target.value),
+                      }));
+                      setDisableSubmitButton(false);
+                    }}
+                    label={t('select_relay_mode')}
+                  >
+                    {availableRelayMode.map((mode, index) => (
+                      <MenuItem key={index} value={index}>
+                        {mode}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </FormControl>
 
                 {adjustForm.mode === 0 && (
-                    <TextField
-                      label={t('auto_off_label')}
-                      name="autoOff"
-                      type="number"
-                      value={adjustForm.autoOff || ''}
-                      onChange={handleRelayAdjustFormChange}
-                      fullWidth
-                      size="small"
-                      helperText={t('auto_off_helper')}
-                    />
+                  <TextField
+                    label={t('auto_off_label')}
+                    name="autoOff"
+                    type="number"
+                    value={adjustForm.autoOff || ''}
+                    onChange={handleRelayAdjustFormChange}
+                    fullWidth
+                    size="small"
+                    helperText={t('auto_off_helper')}
+                  />
                 )}
 
                 {adjustForm.mode === 1 && (
-                    <Stack spacing={2}>
-                        <Typography gutterBottom>{t('duty_cycle_label', { dutyCycle: adjustForm.dutyCycle })}</Typography>
-                        <Slider
-                            name="dutyCycle"
-                            value={adjustForm.dutyCycle || 0}
-                            onChange={(_event, value) => {
-                                setAdjustForm(prev => ({...prev, dutyCycle: value as number}));
-                                setDisableSubmitButton(false);
-                            }}
-                            valueLabelDisplay="auto"
-                            step={1}
-                            marks
-                            min={0}
-                            max={100}
-                        />
-                        <TextField
-                          label={t('duty_range_label')}
-                          name="dutyRange"
-                          type="number"
-                          value={adjustForm.dutyRange || ''}
-                          onChange={handleRelayAdjustFormChange}
-                          fullWidth
-                          size="small"
-                          helperText={t('duty_range_helper')}
-                        />
-                    </Stack>
+                  <Stack spacing={2}>
+                    <Typography gutterBottom>
+                      {t('duty_cycle_label', {
+                        dutyCycle: adjustForm.dutyCycle,
+                      })}
+                    </Typography>
+                    <Slider
+                      name="dutyCycle"
+                      value={adjustForm.dutyCycle || 0}
+                      onChange={(_event, value) => {
+                        setAdjustForm(prev => ({
+                          ...prev,
+                          dutyCycle: value as number,
+                        }));
+                        setDisableSubmitButton(false);
+                      }}
+                      valueLabelDisplay="auto"
+                      step={1}
+                      marks
+                      min={0}
+                      max={100}
+                    />
+                    <TextField
+                      label={t('duty_range_label')}
+                      name="dutyRange"
+                      type="number"
+                      value={adjustForm.dutyRange || ''}
+                      onChange={handleRelayAdjustFormChange}
+                      fullWidth
+                      size="small"
+                      helperText={t('duty_range_helper')}
+                    />
+                  </Stack>
                 )}
 
                 {adjustForm.mode === 2 && (
-                    <Stack spacing={2}>
-                        <Typography>{t('timer_configuration_label')}</Typography>
-                        <Typography variant="caption">{t('timer_configuration_helper')}</Typography>
-                        {(adjustForm.timers || []).map((timer, index) => (
-                            <Stack direction="row" spacing={1} key={index}>
-                                <TextField name="h" type="number" value={timer.h} placeholder={t('hour_placeholder')} onChange={(e) => handleTimerChange(index, e)} size="small"/>
-                                <TextField name="i" type="number" value={timer.i} placeholder={t('minute_placeholder')} onChange={(e) => handleTimerChange(index, e)} size="small"/>
-                                <TextField name="s" type="number" value={timer.s} placeholder={t('second_placeholder')} onChange={(e) => handleTimerChange(index, e)} size="small"/>
-                                <TextField name="d" type="number" value={timer.d} placeholder={t('duration_placeholder')} onChange={(e) => handleTimerChange(index, e)} size="small"/>
-                            </Stack>
-                        ))}
-                    </Stack>
+                  <Stack spacing={2}>
+                    <Typography>{t('timer_configuration_label')}</Typography>
+                    <Typography variant="caption">
+                      {t('timer_configuration_helper')}
+                    </Typography>
+                    {(adjustForm.timers || []).map((timer, index) => (
+                      <Stack direction="row" spacing={1} key={index}>
+                        <TextField
+                          name="h"
+                          type="number"
+                          value={timer.h}
+                          placeholder={t('hour_placeholder')}
+                          onChange={e => handleTimerChange(index, e)}
+                          size="small"
+                        />
+                        <TextField
+                          name="i"
+                          type="number"
+                          value={timer.i}
+                          placeholder={t('minute_placeholder')}
+                          onChange={e => handleTimerChange(index, e)}
+                          size="small"
+                        />
+                        <TextField
+                          name="s"
+                          type="number"
+                          value={timer.s}
+                          placeholder={t('second_placeholder')}
+                          onChange={e => handleTimerChange(index, e)}
+                          size="small"
+                        />
+                        <TextField
+                          name="d"
+                          type="number"
+                          value={timer.d}
+                          placeholder={t('duration_placeholder')}
+                          onChange={e => handleTimerChange(index, e)}
+                          size="small"
+                        />
+                      </Stack>
+                    ))}
+                  </Stack>
                 )}
 
                 {adjustForm.mode === 3 && (
-                    <Stack spacing={2}>
-                        <TextField
-                            type="datetime-local"
-                            name="datetime"
-                            value={adjustForm.datetime ? new Date(adjustForm.datetime * 1000).toISOString().slice(0, 16) : ''}
-                            onChange={handleRelayAdjustFormChange}
-                            fullWidth
-                            size="small"
-                            helperText={t('datetime_helper')}
-                        />
-                        <TextField
-                          label={t('duration_label')}
-                          name="duration"
-                          type="number"
-                          value={adjustForm.duration || ''}
-                          onChange={handleRelayAdjustFormChange}
-                          fullWidth
-                          size="small"
-                          helperText={t('duration_helper')}
-                        />
-                    </Stack>
+                  <Stack spacing={2}>
+                    <TextField
+                      type="datetime-local"
+                      name="datetime"
+                      value={
+                        adjustForm.datetime
+                          ? new Date(adjustForm.datetime * 1000)
+                              .toISOString()
+                              .slice(0, 16)
+                          : ''
+                      }
+                      onChange={handleRelayAdjustFormChange}
+                      fullWidth
+                      size="small"
+                      helperText={t('datetime_helper')}
+                    />
+                    <TextField
+                      label={t('duration_label')}
+                      name="duration"
+                      type="number"
+                      value={adjustForm.duration || ''}
+                      onChange={handleRelayAdjustFormChange}
+                      fullWidth
+                      size="small"
+                      helperText={t('duration_helper')}
+                    />
+                  </Stack>
                 )}
-            </Stack>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setIsRelayAdjustModalVisible(false)}>{t('cancel')}</Button>
-            <Button onClick={handleRelayAdjustFormSubmit} variant="contained" disabled={disableSubmitButton}>
-              {t('save_button')}
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-      </CardContent>
-    </Card>
-  );
-});
+              </Stack>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setIsRelayAdjustModalVisible(false)}>
+                {t('cancel')}
+              </Button>
+              <Button
+                onClick={handleRelayAdjustFormSubmit}
+                variant="contained"
+                disabled={disableSubmitButton}
+              >
+                {t('save_button')}
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </CardContent>
+      </Card>
+    );
+  }
+);
 
 export default RelaysController;
