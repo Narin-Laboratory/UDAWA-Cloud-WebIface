@@ -12,14 +12,7 @@ import RedirectToFirstDevice from './RedirectToFirstDevice';
 const AppRouter: React.FC = () => {
   return (
     <Routes>
-      <Route
-        path="/login"
-        element={
-          <AuthLayout>
-            <LoginPage />
-          </AuthLayout>
-        }
-      />
+      <Route path="/login" element={<LoginPage />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<RedirectToFirstDevice />} />
         <Route
