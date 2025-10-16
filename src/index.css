@@ -23,13 +23,13 @@ a:hover {
 }
 
 html,
-body,
-#root {
-  height: 100%;
-  width: 100%;
+body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+}
+
+#root {
+  width: 100%;
 }
 
 h1 {
