@@ -21,8 +21,8 @@ const NeuralNetwork: React.FC = () => {
       particleAmount: 50,
       defaultRadius: 2,
       variantRadius: 2,
-      defaultSpeed: 1,
-      variantSpeed: 1,
+      defaultSpeed: 0.2,
+      variantSpeed: 0.05,
       linkRadius: 200,
     };
 
