@@ -22,7 +22,7 @@ const NeuralNetwork: React.FC = () => {
       defaultRadius: 2,
       variantRadius: 2,
       defaultSpeed: 0.2,
-      variantSpeed: 0.05,
+      variantSpeed: 0.02,
       linkRadius: 200,
     };
 
