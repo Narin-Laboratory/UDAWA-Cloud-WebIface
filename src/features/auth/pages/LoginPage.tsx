@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { setItem } from '../../../utils/storage';
+import NeuralNetwork from '../../../components/NeuralNetwork';
 
 const LoginPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -76,86 +77,117 @@ interface ErrorData {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
+    <>
+      <NeuralNetwork />
+      <Container
+        component="main"
+        maxWidth={false}
         sx={{
-          marginTop: 8,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+          width: '100vw',
         }}
       >
-        <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 16,
+            right: 16,
+            zIndex: 1,
+          }}
+        >
           <Button
             onClick={handleLanguageChange}
             data-testid="language-switcher"
+            sx={{ color: 'text.primary' }}
           >
             {i18n.language.startsWith('en') ? 'ID' : 'EN'}
           </Button>
         </Box>
-        <Typography component="h1" variant="h5">
-          {t('login.title')}
-        </Typography>
-        <Typography component="h2" variant="subtitle1">
-          {t('login.subtitle')}
-        </Typography>
         <Box
-          component="form"
-          onSubmit={handleSubmit}
-          noValidate
-          sx={{ mt: 1 }}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            p: 4,
+            borderRadius: 2,
+            bgcolor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(0, 0, 0, 0.6)'
+                : 'rgba(255, 255, 255, 0.6)',
+            backdropFilter: 'blur(10px)',
+            maxWidth: '400px',
+            width: '100%',
+          }}
         >
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label={t('login.email')}
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label={t('login.password')}
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="server"
-            label={t('login.server')}
-            id="server"
-            value={server}
-            onChange={(e) => setServer(e.target.value)}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+          <Typography component="h1" variant="h5">
+            {t('login.title')}
+          </Typography>
+          <Typography component="h2" variant="subtitle1" sx={{ mb: 2 }}>
+            {t('login.subtitle')}
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ width: '100%' }}
           >
-            {t('login.signIn')}
-          </Button>
-          <Link
-            href="https://prita.undiknas.ac.id/login/resetPasswordRequest"
-            variant="body2"
-          >
-            {t('login.forgotPassword')}
-          </Link>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label={t('login.email')}
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label={t('login.password')}
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="server"
+              label={t('login.server')}
+              id="server"
+              value={server}
+              onChange={(e) => setServer(e.target.value)}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              {t('login.signIn')}
+            </Button>
+            <Link
+              href="https://prita.undiknas.ac.id/login/resetPasswordRequest"
+              variant="body2"
+              sx={{ color: 'text.primary' }}
+            >
+              {t('login.forgotPassword')}
+            </Link>
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </>
   );
 };
 
