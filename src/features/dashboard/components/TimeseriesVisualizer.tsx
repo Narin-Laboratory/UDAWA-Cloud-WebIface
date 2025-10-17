@@ -22,10 +22,14 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useTranslation } from 'react-i18next';
-import { useDevice } from '../hooks/useDevice';
 import { getTimeseriesKeys, getTimeseriesData } from '../services/deviceService';
 import { transformTimeseriesData } from '../utils/dataTransformer';
 import type { ChartDataPoint } from '../utils/dataTransformer';
+
+interface TimeseriesVisualizerProps {
+  deviceId: string;
+  entityType: string;
+}
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
@@ -41,9 +45,8 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-const TimeseriesVisualizer: React.FC = () => {
+const TimeseriesVisualizer: React.FC<TimeseriesVisualizerProps> = ({ deviceId, entityType }) => {
   const { t } = useTranslation();
-  const { device } = useDevice();
   const [keys, setKeys] = useState<string[]>([]);
   const [selectedKey, setSelectedKey] = useState<string>('');
   const [data, setData] = useState<ChartDataPoint[]>([]);
@@ -63,7 +66,6 @@ const TimeseriesVisualizer: React.FC = () => {
   const [limit, setLimit] = useState(1000);
 
   useEffect(() => {
-    const deviceId = device?.id?.id;
     if (deviceId) {
       // Reset state when the device changes
       setKeys([]);
@@ -72,7 +74,7 @@ const TimeseriesVisualizer: React.FC = () => {
       setError(null);
       setLoading(true);
 
-      getTimeseriesKeys(device.id.entityType, device.id.id)
+      getTimeseriesKeys(entityType, deviceId)
         .then(fetchedKeys => {
           setKeys(fetchedKeys);
           if (fetchedKeys.length > 0) {
@@ -85,10 +87,10 @@ const TimeseriesVisualizer: React.FC = () => {
     }
     // By depending on the deviceId, this effect will only run when the device
     // actually changes, not on every WebSocket data update.
-  }, [device?.id?.id, t]);
+  }, [deviceId, entityType, t]);
 
   const fetchData = () => {
-    if (!device || !selectedKey) return;
+    if (!deviceId || !selectedKey) return;
 
     setLoading(true);
     setError(null);
@@ -109,7 +111,7 @@ const TimeseriesVisualizer: React.FC = () => {
       params.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     }
 
-    getTimeseriesData(device.id.entityType, device.id.id, params)
+    getTimeseriesData(entityType, deviceId, params)
       .then(apiData => {
         const transformedData = transformTimeseriesData(apiData, selectedKey);
         setData(transformedData);
