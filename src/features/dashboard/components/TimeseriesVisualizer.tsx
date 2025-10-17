@@ -49,7 +49,7 @@ const TimeseriesVisualizer: React.FC = () => {
   const [data, setData] = useState<ChartDataPoint[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState<{ min: number; max: number; avg: number } | null>(null);
+  const [stats, setStats] = useState<{ min: number; max: number; avg: number; sum: number } | null>(null);
 
   // Default to the last 24 hours
   const now = useMemo(() => new Date(), []);
@@ -90,11 +90,14 @@ const TimeseriesVisualizer: React.FC = () => {
     setLoading(true);
     setError(null);
 
+    const interval = Math.max(Math.floor((endTs.getTime() - startTs.getTime()) / 100), 1000);
+
     getTimeseriesData(device.id.entityType, device.id.id, {
       keys: selectedKey,
       startTs: startTs.getTime(),
       endTs: endTs.getTime(),
       agg: aggregation,
+      interval: interval,
       limit: 1000,
     })
       .then(apiData => {
@@ -104,8 +107,9 @@ const TimeseriesVisualizer: React.FC = () => {
           const values = transformedData.map(d => d.value);
           const min = Math.min(...values);
           const max = Math.max(...values);
-          const avg = values.reduce((a, b) => a + b, 0) / values.length;
-          setStats({ min, max, avg });
+          const sum = values.reduce((a, b) => a + b, 0);
+          const avg = sum / values.length;
+          setStats({ min, max, avg, sum });
         } else {
           setStats(null);
         }
@@ -224,14 +228,17 @@ const TimeseriesVisualizer: React.FC = () => {
         <Box sx={{ mt: 2, p: 2, backgroundColor: 'background.paper', borderRadius: 1 }}>
           <Typography variant="h6">Statistics</Typography>
           <Grid container spacing={2}>
-            <Grid item xs={4}>
+            <Grid item xs={3}>
               <Typography>Min: {stats.min.toFixed(2)}</Typography>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={3}>
               <Typography>Max: {stats.max.toFixed(2)}</Typography>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={3}>
               <Typography>Avg: {stats.avg.toFixed(2)}</Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography>Sum: {stats.sum.toFixed(2)}</Typography>
             </Grid>
           </Grid>
         </Box>
