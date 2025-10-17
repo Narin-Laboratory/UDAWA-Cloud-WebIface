@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { getDeviceInfo, getTimeseriesKeys, getTimeseriesData } from '../services/deviceService';
+import { getDeviceInfo } from '../services/deviceService';
 import {
   connectWebSocket,
   disconnectWebSocket,

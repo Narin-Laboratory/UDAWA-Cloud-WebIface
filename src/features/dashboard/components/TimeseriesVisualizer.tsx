@@ -27,7 +27,7 @@ import { getTimeseriesKeys, getTimeseriesData } from '../services/deviceService'
 import { transformTimeseriesData } from '../utils/dataTransformer';
 import type { ChartDataPoint } from '../utils/dataTransformer';
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
@@ -139,7 +139,7 @@ const TimeseriesVisualizer: React.FC = () => {
         {t('timeseriesVisualizer.title')}
       </Typography>
       <Grid container spacing={2} alignItems="center" sx={{ mb: 2 }}>
-        <Grid item xs={12} sm={3}>
+        <Grid size={{ xs: 12, sm: 3 }}>
           <FormControl fullWidth>
             <InputLabel>{t('timeseriesVisualizer.keyLabel')}</InputLabel>
             <Select
@@ -155,7 +155,7 @@ const TimeseriesVisualizer: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={2}>
+        <Grid size={{ xs: 12, sm: 2 }}>
           <TextField
             label={t('timeseriesVisualizer.startDateLabel')}
             type="datetime-local"
@@ -164,7 +164,7 @@ const TimeseriesVisualizer: React.FC = () => {
             fullWidth
           />
         </Grid>
-        <Grid item xs={12} sm={2}>
+        <Grid size={{ xs: 12, sm: 2 }}>
           <TextField
             label={t('timeseriesVisualizer.endDateLabel')}
             type="datetime-local"
@@ -173,7 +173,7 @@ const TimeseriesVisualizer: React.FC = () => {
             fullWidth
           />
         </Grid>
-        <Grid item xs={12} sm={2}>
+        <Grid size={{ xs: 12, sm: 2 }}>
           <FormControl fullWidth>
             <InputLabel>{t('timeseriesVisualizer.aggregationLabel')}</InputLabel>
             <Select
@@ -191,7 +191,7 @@ const TimeseriesVisualizer: React.FC = () => {
           </FormControl>
         </Grid>
         {aggregation === 'NONE' ? (
-          <Grid item xs={12} sm={3}>
+          <Grid size={{ xs: 12, sm: 3 }}>
             <TextField
               label={t('timeseriesVisualizer.limitLabel')}
               type="number"
@@ -202,7 +202,7 @@ const TimeseriesVisualizer: React.FC = () => {
           </Grid>
         ) : (
           <>
-            <Grid item xs={12} sm={1}>
+            <Grid size={{ xs: 12, sm: 1 }}>
               <TextField
                 label={t('timeseriesVisualizer.intervalLabel')}
                 type="number"
@@ -211,7 +211,7 @@ const TimeseriesVisualizer: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid size={{ xs: 12, sm: 2 }}>
               <FormControl fullWidth>
                 <InputLabel>{t('timeseriesVisualizer.intervalTypeLabel')}</InputLabel>
                 <Select
@@ -229,7 +229,7 @@ const TimeseriesVisualizer: React.FC = () => {
             </Grid>
           </>
         )}
-        <Grid item xs={12} sm={1}>
+        <Grid size={{ xs: 12, sm: 1 }}>
           <Button variant="contained" onClick={fetchData} fullWidth>
             {t('timeseriesVisualizer.fetchButton')}
           </Button>
@@ -278,16 +278,16 @@ const TimeseriesVisualizer: React.FC = () => {
         <Box sx={{ mt: 2, p: 2, backgroundColor: 'background.paper', borderRadius: 1 }}>
           <Typography variant="h6">Statistics</Typography>
           <Grid container spacing={2}>
-            <Grid item xs={3}>
+            <Grid size={{ xs: 3 }}>
               <Typography>Min: {stats.min.toFixed(2)}</Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid size={{ xs: 3 }}>
               <Typography>Max: {stats.max.toFixed(2)}</Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid size={{ xs: 3 }}>
               <Typography>Avg: {stats.avg.toFixed(2)}</Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid size={{ xs: 3 }}>
               <Typography>Sum: {stats.sum.toFixed(2)}</Typography>
             </Grid>
           </Grid>
