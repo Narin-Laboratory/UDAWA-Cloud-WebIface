@@ -158,6 +158,7 @@
     "noData": "Tidak ada data yang tersedia untuk kunci dan rentang yang dipilih.",
     "fetchKeysError": "Gagal mengambil kunci runtun waktu.",
     "fetchDataError": "Gagal mengambil data untuk {{key}}.",
+    "intervalLabel": "Interval",
     "intervalTypeLabel": "Tipe Interval",
     "intervalTypeMilliseconds": "Milidetik",
     "intervalTypeSeconds": "Detik",

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TabInfo } from '../../components/DeviceDashboard';
 import DeviceDashboard from '../../components/DeviceDashboard';
@@ -12,6 +12,8 @@ const GadadarDashboard: React.FC = () => {
   const { t } = useTranslation();
   const { device } = useDevice();
 
+  const analyticTabContent = useMemo(() => <TimeseriesVisualizer />, []);
+
   const tabs: TabInfo[] = [
     {
       label: t('device.dashboardTabs.monitor'),
@@ -23,7 +25,7 @@ const GadadarDashboard: React.FC = () => {
     },
     {
       label: t('device.dashboardTabs.analytic'),
-      content: <TimeseriesVisualizer />,
+      content: analyticTabContent,
     },
     {
       label: t('device.dashboardTabs.config'),

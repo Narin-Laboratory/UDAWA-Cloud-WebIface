@@ -58,6 +58,7 @@ const TimeseriesVisualizer: React.FC = () => {
   const [startTs, setStartTs] = useState<Date>(yesterday);
   const [endTs, setEndTs] = useState<Date>(now);
   const [aggregation, setAggregation] = useState('AVG');
+  const [interval, setInterval] = useState(1);
   const [intervalType, setIntervalType] = useState('MILLISECONDS');
 
   useEffect(() => {
@@ -91,17 +92,20 @@ const TimeseriesVisualizer: React.FC = () => {
     setLoading(true);
     setError(null);
 
-    const interval = Math.max(Math.floor((endTs.getTime() - startTs.getTime()) / 100), 1000);
-
-    getTimeseriesData(device.id.entityType, device.id.id, {
+    const params: any = {
       keys: selectedKey,
       startTs: startTs.getTime(),
       endTs: endTs.getTime(),
-      agg: aggregation,
-      interval: interval,
-      intervalType: intervalType,
       limit: 1000,
-    })
+    };
+
+    if (aggregation !== 'NONE') {
+      params.agg = aggregation;
+      params.interval = interval;
+      params.intervalType = intervalType;
+    }
+
+    getTimeseriesData(device.id.entityType, device.id.id, params)
       .then(apiData => {
         const transformedData = transformTimeseriesData(apiData, selectedKey);
         setData(transformedData);
@@ -147,6 +151,31 @@ const TimeseriesVisualizer: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
+        <Grid item xs={12} sm={1}>
+          <TextField
+            label={t('timeseriesVisualizer.intervalLabel')}
+            type="number"
+            value={interval}
+            onChange={e => setInterval(parseInt(e.target.value))}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <FormControl fullWidth>
+            <InputLabel>{t('timeseriesVisualizer.intervalTypeLabel')}</InputLabel>
+            <Select
+              value={intervalType}
+              label={t('timeseriesVisualizer.intervalTypeLabel')}
+              onChange={e => setIntervalType(e.target.value as string)}
+            >
+              <MenuItem value="MILLISECONDS">{t('timeseriesVisualizer.intervalTypeMilliseconds')}</MenuItem>
+              <MenuItem value="SECONDS">{t('timeseriesVisualizer.intervalTypeSeconds')}</MenuItem>
+              <MenuItem value="MINUTES">{t('timeseriesVisualizer.intervalTypeMinutes')}</MenuItem>
+              <MenuItem value="HOURS">{t('timeseriesVisualizer.intervalTypeHours')}</MenuItem>
+              <MenuItem value="DAYS">{t('timeseriesVisualizer.intervalTypeDays')}</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
         <Grid item xs={12} sm={2}>
           <FormControl fullWidth>
             <InputLabel>{t('timeseriesVisualizer.intervalTypeLabel')}</InputLabel>
@@ -189,6 +218,7 @@ const TimeseriesVisualizer: React.FC = () => {
               label={t('timeseriesVisualizer.aggregationLabel')}
               onChange={e => setAggregation(e.target.value as string)}
             >
+              <MenuItem value="NONE">None</MenuItem>
               <MenuItem value="AVG">{t('timeseriesVisualizer.aggregationAvg')}</MenuItem>
               <MenuItem value="MIN">{t('timeseriesVisualizer.aggregationMin')}</MenuItem>
               <MenuItem value="MAX">{t('timeseriesVisualizer.aggregationMax')}</MenuItem>

@@ -158,6 +158,7 @@
     "noData": "No data available for the selected key and range.",
     "fetchKeysError": "Failed to fetch timeseries keys.",
     "fetchDataError": "Failed to fetch data for {{key}}.",
+    "intervalLabel": "Interval",
     "intervalTypeLabel": "Interval Type",
     "intervalTypeMilliseconds": "Milliseconds",
     "intervalTypeSeconds": "Seconds",
