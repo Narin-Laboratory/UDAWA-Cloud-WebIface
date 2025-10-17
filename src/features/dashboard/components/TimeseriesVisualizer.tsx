@@ -59,7 +59,8 @@ const TimeseriesVisualizer: React.FC = () => {
   const [endTs, setEndTs] = useState<Date>(now);
   const [aggregation, setAggregation] = useState('AVG');
   const [interval, setInterval] = useState(1);
-  const [intervalType, setIntervalType] = useState('MILLISECONDS');
+  const [intervalType, setIntervalType] = useState('WEEK');
+  const [limit, setLimit] = useState(1000);
 
   useEffect(() => {
     const deviceId = device?.id?.id;
@@ -99,10 +100,13 @@ const TimeseriesVisualizer: React.FC = () => {
       limit: 1000,
     };
 
-    if (aggregation !== 'NONE') {
+    if (aggregation === 'NONE') {
+      params.limit = limit;
+    } else {
       params.agg = aggregation;
       params.interval = interval;
       params.intervalType = intervalType;
+      params.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     }
 
     getTimeseriesData(device.id.entityType, device.id.id, params)
@@ -186,31 +190,44 @@ const TimeseriesVisualizer: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={1}>
-          <TextField
-            label={t('timeseriesVisualizer.intervalLabel')}
-            type="number"
-            value={interval}
-            onChange={e => setInterval(parseInt(e.target.value))}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={2}>
-          <FormControl fullWidth>
-            <InputLabel>{t('timeseriesVisualizer.intervalTypeLabel')}</InputLabel>
-            <Select
-              value={intervalType}
-              label={t('timeseriesVisualizer.intervalTypeLabel')}
-              onChange={e => setIntervalType(e.target.value as string)}
-            >
-              <MenuItem value="MILLISECONDS">{t('timeseriesVisualizer.intervalTypeMilliseconds')}</MenuItem>
-              <MenuItem value="SECONDS">{t('timeseriesVisualizer.intervalTypeSeconds')}</MenuItem>
-              <MenuItem value="MINUTES">{t('timeseriesVisualizer.intervalTypeMinutes')}</MenuItem>
-              <MenuItem value="HOURS">{t('timeseriesVisualizer.intervalTypeHours')}</MenuItem>
-              <MenuItem value="DAYS">{t('timeseriesVisualizer.intervalTypeDays')}</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
+        {aggregation === 'NONE' ? (
+          <Grid item xs={12} sm={3}>
+            <TextField
+              label={t('timeseriesVisualizer.limitLabel')}
+              type="number"
+              value={limit}
+              onChange={e => setLimit(parseInt(e.target.value))}
+              fullWidth
+            />
+          </Grid>
+        ) : (
+          <>
+            <Grid item xs={12} sm={1}>
+              <TextField
+                label={t('timeseriesVisualizer.intervalLabel')}
+                type="number"
+                value={interval}
+                onChange={e => setInterval(parseInt(e.target.value))}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <FormControl fullWidth>
+                <InputLabel>{t('timeseriesVisualizer.intervalTypeLabel')}</InputLabel>
+                <Select
+                  value={intervalType}
+                  label={t('timeseriesVisualizer.intervalTypeLabel')}
+                  onChange={e => setIntervalType(e.target.value as string)}
+                >
+                  <MenuItem value="WEEK">{t('timeseriesVisualizer.intervalTypeWeek')}</MenuItem>
+                  <MenuItem value="WEEK_ISO">{t('timeseriesVisualizer.intervalTypeWeekIso')}</MenuItem>
+                  <MenuItem value="MONTH">{t('timeseriesVisualizer.intervalTypeMonth')}</MenuItem>
+                  <MenuItem value="QUARTER">{t('timeseriesVisualizer.intervalTypeQuarter')}</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </>
+        )}
         <Grid item xs={12} sm={1}>
           <Button variant="contained" onClick={fetchData} fullWidth>
             {t('timeseriesVisualizer.fetchButton')}

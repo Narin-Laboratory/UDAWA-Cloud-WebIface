@@ -160,10 +160,10 @@
     "fetchDataError": "Gagal mengambil data untuk {{key}}.",
     "intervalLabel": "Interval",
     "intervalTypeLabel": "Tipe Interval",
-    "intervalTypeMilliseconds": "Milidetik",
-    "intervalTypeSeconds": "Detik",
-    "intervalTypeMinutes": "Menit",
-    "intervalTypeHours": "Jam",
-    "intervalTypeDays": "Hari"
+    "limitLabel": "Batas",
+    "intervalTypeWeek": "Minggu",
+    "intervalTypeWeekIso": "Minggu (ISO)",
+    "intervalTypeMonth": "Bulan",
+    "intervalTypeQuarter": "Kuartal"
   }
 }

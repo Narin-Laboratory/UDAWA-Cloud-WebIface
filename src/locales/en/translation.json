@@ -160,10 +160,10 @@
     "fetchDataError": "Failed to fetch data for {{key}}.",
     "intervalLabel": "Interval",
     "intervalTypeLabel": "Interval Type",
-    "intervalTypeMilliseconds": "Milliseconds",
-    "intervalTypeSeconds": "Seconds",
-    "intervalTypeMinutes": "Minutes",
-    "intervalTypeHours": "Hours",
-    "intervalTypeDays": "Days"
+    "limitLabel": "Limit",
+    "intervalTypeWeek": "Week",
+    "intervalTypeWeekIso": "Week (ISO)",
+    "intervalTypeMonth": "Month",
+    "intervalTypeQuarter": "Quarter"
   }
 }
