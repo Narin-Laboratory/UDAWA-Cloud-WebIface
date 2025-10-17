@@ -25,9 +25,8 @@ export const transformTimeseriesData = (
   // Map the data for the selected key to the ChartDataPoint format
   return apiData[key]
     .map(dataPoint => {
-      // Basic validation to ensure value is a number
-      const numericValue = parseFloat(dataPoint.value);
-      if (isNaN(numericValue)) {
+      // Ensure the value is a number and not a string like "true" or "false"
+      if (typeof dataPoint.value !== 'number' || isNaN(dataPoint.value)) {
         return null;
       }
 
@@ -37,7 +36,7 @@ export const transformTimeseriesData = (
         timestamp: dataPoint.ts,
         // Format time to HH:MM for display on the chart's X-axis
         time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        value: numericValue,
+        value: dataPoint.value,
       };
     })
     .filter((point): point is ChartDataPoint => point !== null) // Filter out any nulls from invalid data

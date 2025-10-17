@@ -45,19 +45,29 @@ const TimeseriesVisualizer: React.FC = () => {
   const [aggregation, setAggregation] = useState('AVG');
 
   useEffect(() => {
-    if (device) {
+    const deviceId = device?.id?.id;
+    if (deviceId) {
+      // Reset state when the device changes
+      setKeys([]);
+      setSelectedKey('');
+      setData([]);
+      setError(null);
       setLoading(true);
+
       getTimeseriesKeys(device.id.entityType, device.id.id)
         .then(fetchedKeys => {
           setKeys(fetchedKeys);
           if (fetchedKeys.length > 0) {
+            // Set the first key as the default selection
             setSelectedKey(fetchedKeys[0]);
           }
         })
         .catch(() => setError(t('timeseriesVisualizer.fetchKeysError')))
         .finally(() => setLoading(false));
     }
-  }, [device, t]);
+    // By depending on the deviceId, this effect will only run when the device
+    // actually changes, not on every WebSocket data update.
+  }, [device?.id?.id, t]);
 
   const fetchData = () => {
     if (!device || !selectedKey) return;
