@@ -58,6 +58,7 @@ const TimeseriesVisualizer: React.FC = () => {
   const [startTs, setStartTs] = useState<Date>(yesterday);
   const [endTs, setEndTs] = useState<Date>(now);
   const [aggregation, setAggregation] = useState('AVG');
+  const [intervalType, setIntervalType] = useState('MILLISECONDS');
 
   useEffect(() => {
     const deviceId = device?.id?.id;
@@ -98,6 +99,7 @@ const TimeseriesVisualizer: React.FC = () => {
       endTs: endTs.getTime(),
       agg: aggregation,
       interval: interval,
+      intervalType: intervalType,
       limit: 1000,
     })
       .then(apiData => {
@@ -145,7 +147,23 @@ const TimeseriesVisualizer: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
+          <FormControl fullWidth>
+            <InputLabel>{t('timeseriesVisualizer.intervalTypeLabel')}</InputLabel>
+            <Select
+              value={intervalType}
+              label={t('timeseriesVisualizer.intervalTypeLabel')}
+              onChange={e => setIntervalType(e.target.value as string)}
+            >
+              <MenuItem value="MILLISECONDS">{t('timeseriesVisualizer.intervalTypeMilliseconds')}</MenuItem>
+              <MenuItem value="SECONDS">{t('timeseriesVisualizer.intervalTypeSeconds')}</MenuItem>
+              <MenuItem value="MINUTES">{t('timeseriesVisualizer.intervalTypeMinutes')}</MenuItem>
+              <MenuItem value="HOURS">{t('timeseriesVisualizer.intervalTypeHours')}</MenuItem>
+              <MenuItem value="DAYS">{t('timeseriesVisualizer.intervalTypeDays')}</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={2}>
           <TextField
             label={t('timeseriesVisualizer.startDateLabel')}
             type="datetime-local"
@@ -247,4 +265,4 @@ const TimeseriesVisualizer: React.FC = () => {
   );
 };
 
-export default TimeseriesVisualizer;
+export default React.memo(TimeseriesVisualizer);

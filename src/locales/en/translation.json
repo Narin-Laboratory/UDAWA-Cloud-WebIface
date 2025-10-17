@@ -157,6 +157,12 @@
     "noDevice": "No device selected.",
     "noData": "No data available for the selected key and range.",
     "fetchKeysError": "Failed to fetch timeseries keys.",
-    "fetchDataError": "Failed to fetch data for {{key}}."
+    "fetchDataError": "Failed to fetch data for {{key}}.",
+    "intervalTypeLabel": "Interval Type",
+    "intervalTypeMilliseconds": "Milliseconds",
+    "intervalTypeSeconds": "Seconds",
+    "intervalTypeMinutes": "Minutes",
+    "intervalTypeHours": "Hours",
+    "intervalTypeDays": "Days"
   }
 }
