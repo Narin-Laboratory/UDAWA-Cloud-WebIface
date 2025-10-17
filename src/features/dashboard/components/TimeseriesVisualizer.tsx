@@ -21,17 +21,19 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
 import { useDevice } from '../hooks/useDevice';
 import { getTimeseriesKeys, getTimeseriesData } from '../services/deviceService';
 import { transformTimeseriesData } from '../utils/dataTransformer';
 import type { ChartDataPoint } from '../utils/dataTransformer';
 
 const TimeseriesVisualizer: React.FC = () => {
+  const { t } = useTranslation();
   const { device } = useDevice();
   const [keys, setKeys] = useState<string[]>([]);
   const [selectedKey, setSelectedKey] = useState<string>('');
   const [data, setData] = useState<ChartDataPoint[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   // Default to the last 24 hours
@@ -42,62 +44,60 @@ const TimeseriesVisualizer: React.FC = () => {
   const [endTs, setEndTs] = useState<Date>(now);
   const [aggregation, setAggregation] = useState('AVG');
 
-  useEffect(() => {
-    if (device) {
-      setLoading(true);
-      getTimeseriesKeys(device.id.entityType, device.id.id)
-        .then(setKeys)
-        .catch(() => setError('Failed to fetch timeseries keys.'))
-        .finally(() => setLoading(false));
-    }
-  }, [device]);
-
   const fetchData = () => {
-    if (!device || !selectedKey) return;
+    if (!device) return;
 
     setLoading(true);
     setError(null);
 
-    getTimeseriesData(device.id.entityType, device.id.id, {
-      keys: selectedKey,
-      startTs: startTs.getTime(),
-      endTs: endTs.getTime(),
-      agg: aggregation,
-      limit: 1000, // Add a reasonable limit
-    })
-      .then(apiData => {
-        const transformedData = transformTimeseriesData(apiData, selectedKey);
-        setData(transformedData);
-      })
-      .catch(() => setError(`Failed to fetch data for ${selectedKey}.`))
-      .finally(() => setLoading(false));
-  };
+    const fetchKeysAndData = async () => {
+      try {
+        if (keys.length === 0) {
+          const fetchedKeys = await getTimeseriesKeys(device.id.entityType, device.id.id);
+          setKeys(fetchedKeys);
+          if (fetchedKeys.length > 0 && !selectedKey) {
+            setSelectedKey(fetchedKeys[0]); // Select the first key by default
+          }
+        }
 
-  // Fetch data when the component loads or when the device/selected key changes
-  useEffect(() => {
-    if(selectedKey) {
-      fetchData();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedKey, device]);
+        if (selectedKey) {
+          const apiData = await getTimeseriesData(device.id.entityType, device.id.id, {
+            keys: selectedKey,
+            startTs: startTs.getTime(),
+            endTs: endTs.getTime(),
+            agg: aggregation,
+            limit: 1000,
+          });
+          const transformedData = transformTimeseriesData(apiData, selectedKey);
+          setData(transformedData);
+        }
+      } catch (e) {
+        setError(t('timeseriesVisualizer.fetchDataError', { key: selectedKey }));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    void fetchKeysAndData();
+  };
 
 
   if (!device) {
-    return <Typography>No device selected.</Typography>;
+    return <Typography>{t('timeseriesVisualizer.noDevice')}</Typography>;
   }
 
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h6" gutterBottom>
-        Timeseries Data Visualizer
+        {t('timeseriesVisualizer.title')}
       </Typography>
       <Grid container spacing={2} alignItems="center" sx={{ mb: 2 }}>
         <Grid item xs={12} sm={3}>
           <FormControl fullWidth>
-            <InputLabel>Timeseries Key</InputLabel>
+            <InputLabel>{t('timeseriesVisualizer.keyLabel')}</InputLabel>
             <Select
               value={selectedKey}
-              label="Timeseries Key"
+              label={t('timeseriesVisualizer.keyLabel')}
               onChange={e => setSelectedKey(e.target.value as string)}
             >
               {keys.map(key => (
@@ -110,7 +110,7 @@ const TimeseriesVisualizer: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={3}>
           <TextField
-            label="Start Date"
+            label={t('timeseriesVisualizer.startDateLabel')}
             type="datetime-local"
             value={startTs.toISOString().slice(0, 16)}
             onChange={e => setStartTs(new Date(e.target.value))}
@@ -119,7 +119,7 @@ const TimeseriesVisualizer: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={3}>
           <TextField
-            label="End Date"
+            label={t('timeseriesVisualizer.endDateLabel')}
             type="datetime-local"
             value={endTs.toISOString().slice(0, 16)}
             onChange={e => setEndTs(new Date(e.target.value))}
@@ -128,23 +128,23 @@ const TimeseriesVisualizer: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={2}>
           <FormControl fullWidth>
-            <InputLabel>Aggregation</InputLabel>
+            <InputLabel>{t('timeseriesVisualizer.aggregationLabel')}</InputLabel>
             <Select
               value={aggregation}
-              label="Aggregation"
+              label={t('timeseriesVisualizer.aggregationLabel')}
               onChange={e => setAggregation(e.target.value as string)}
             >
-              <MenuItem value="AVG">Average</MenuItem>
-              <MenuItem value="MIN">Minimum</MenuItem>
-              <MenuItem value="MAX">Maximum</MenuItem>
-              <MenuItem value="SUM">Sum</MenuItem>
-              <MenuItem value="COUNT">Count</MenuItem>
+              <MenuItem value="AVG">{t('timeseriesVisualizer.aggregationAvg')}</MenuItem>
+              <MenuItem value="MIN">{t('timeseriesVisualizer.aggregationMin')}</MenuItem>
+              <MenuItem value="MAX">{t('timeseriesVisualizer.aggregationMax')}</MenuItem>
+              <MenuItem value="SUM">{t('timeseriesVisualizer.aggregationSum')}</MenuItem>
+              <MenuItem value="COUNT">{t('timeseriesVisualizer.aggregationCount')}</MenuItem>
             </Select>
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={1}>
           <Button variant="contained" onClick={fetchData} fullWidth>
-            Fetch
+            {t('timeseriesVisualizer.fetchButton')}
           </Button>
         </Grid>
       </Grid>
@@ -181,7 +181,7 @@ const TimeseriesVisualizer: React.FC = () => {
               }}
             >
               <Typography>
-                No data available for the selected key and range.
+                {t('timeseriesVisualizer.noData')}
               </Typography>
             </Box>
           )
