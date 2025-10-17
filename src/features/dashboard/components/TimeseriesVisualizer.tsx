@@ -151,47 +151,6 @@ const TimeseriesVisualizer: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={1}>
-          <TextField
-            label={t('timeseriesVisualizer.intervalLabel')}
-            type="number"
-            value={interval}
-            onChange={e => setInterval(parseInt(e.target.value))}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={2}>
-          <FormControl fullWidth>
-            <InputLabel>{t('timeseriesVisualizer.intervalTypeLabel')}</InputLabel>
-            <Select
-              value={intervalType}
-              label={t('timeseriesVisualizer.intervalTypeLabel')}
-              onChange={e => setIntervalType(e.target.value as string)}
-            >
-              <MenuItem value="MILLISECONDS">{t('timeseriesVisualizer.intervalTypeMilliseconds')}</MenuItem>
-              <MenuItem value="SECONDS">{t('timeseriesVisualizer.intervalTypeSeconds')}</MenuItem>
-              <MenuItem value="MINUTES">{t('timeseriesVisualizer.intervalTypeMinutes')}</MenuItem>
-              <MenuItem value="HOURS">{t('timeseriesVisualizer.intervalTypeHours')}</MenuItem>
-              <MenuItem value="DAYS">{t('timeseriesVisualizer.intervalTypeDays')}</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={2}>
-          <FormControl fullWidth>
-            <InputLabel>{t('timeseriesVisualizer.intervalTypeLabel')}</InputLabel>
-            <Select
-              value={intervalType}
-              label={t('timeseriesVisualizer.intervalTypeLabel')}
-              onChange={e => setIntervalType(e.target.value as string)}
-            >
-              <MenuItem value="MILLISECONDS">{t('timeseriesVisualizer.intervalTypeMilliseconds')}</MenuItem>
-              <MenuItem value="SECONDS">{t('timeseriesVisualizer.intervalTypeSeconds')}</MenuItem>
-              <MenuItem value="MINUTES">{t('timeseriesVisualizer.intervalTypeMinutes')}</MenuItem>
-              <MenuItem value="HOURS">{t('timeseriesVisualizer.intervalTypeHours')}</MenuItem>
-              <MenuItem value="DAYS">{t('timeseriesVisualizer.intervalTypeDays')}</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
         <Grid item xs={12} sm={2}>
           <TextField
             label={t('timeseriesVisualizer.startDateLabel')}
@@ -201,7 +160,7 @@ const TimeseriesVisualizer: React.FC = () => {
             fullWidth
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <TextField
             label={t('timeseriesVisualizer.endDateLabel')}
             type="datetime-local"
@@ -224,6 +183,31 @@ const TimeseriesVisualizer: React.FC = () => {
               <MenuItem value="MAX">{t('timeseriesVisualizer.aggregationMax')}</MenuItem>
               <MenuItem value="SUM">{t('timeseriesVisualizer.aggregationSum')}</MenuItem>
               <MenuItem value="COUNT">{t('timeseriesVisualizer.aggregationCount')}</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={1}>
+          <TextField
+            label={t('timeseriesVisualizer.intervalLabel')}
+            type="number"
+            value={interval}
+            onChange={e => setInterval(parseInt(e.target.value))}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <FormControl fullWidth>
+            <InputLabel>{t('timeseriesVisualizer.intervalTypeLabel')}</InputLabel>
+            <Select
+              value={intervalType}
+              label={t('timeseriesVisualizer.intervalTypeLabel')}
+              onChange={e => setIntervalType(e.target.value as string)}
+            >
+              <MenuItem value="MILLISECONDS">{t('timeseriesVisualizer.intervalTypeMilliseconds')}</MenuItem>
+              <MenuItem value="SECONDS">{t('timeseriesVisualizer.intervalTypeSeconds')}</MenuItem>
+              <MenuItem value="MINUTES">{t('timeseriesVisualizer.intervalTypeMinutes')}</MenuItem>
+              <MenuItem value="HOURS">{t('timeseriesVisualizer.intervalTypeHours')}</MenuItem>
+              <MenuItem value="DAYS">{t('timeseriesVisualizer.intervalTypeDays')}</MenuItem>
             </Select>
           </FormControl>
         </Grid>
