@@ -25,10 +25,15 @@ export const transformTimeseriesData = (
   // Map the data for the selected key to the ChartDataPoint format
   return apiData[key]
     .map(dataPoint => {
-      // Basic validation to ensure value is a number
-      const numericValue = parseFloat(dataPoint.value);
-      if (isNaN(numericValue)) {
-        return null;
+      let numericValue: number;
+
+      if (typeof dataPoint.value === 'boolean') {
+        numericValue = dataPoint.value ? 1 : 0;
+      } else {
+        numericValue = parseFloat(dataPoint.value);
+        if (isNaN(numericValue)) {
+          return null;
+        }
       }
 
       const date = new Date(dataPoint.ts);

@@ -27,6 +27,20 @@ import { getTimeseriesKeys, getTimeseriesData } from '../services/deviceService'
 import { transformTimeseriesData } from '../utils/dataTransformer';
 import type { ChartDataPoint } from '../utils/dataTransformer';
 
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <Box sx={{ p: 1, backgroundColor: 'background.paper', border: '1px solid #ccc' }}>
+        <Typography>{`Time: ${new Date(data.timestamp).toLocaleString()}`}</Typography>
+        <Typography>{`Value: ${data.value}`}</Typography>
+      </Box>
+    );
+  }
+
+  return null;
+};
+
 const TimeseriesVisualizer: React.FC = () => {
   const { t } = useTranslation();
   const { device } = useDevice();
@@ -35,6 +49,7 @@ const TimeseriesVisualizer: React.FC = () => {
   const [data, setData] = useState<ChartDataPoint[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState<{ min: number; max: number; avg: number } | null>(null);
 
   // Default to the last 24 hours
   const now = useMemo(() => new Date(), []);
@@ -85,6 +100,15 @@ const TimeseriesVisualizer: React.FC = () => {
       .then(apiData => {
         const transformedData = transformTimeseriesData(apiData, selectedKey);
         setData(transformedData);
+        if (transformedData.length > 0) {
+          const values = transformedData.map(d => d.value);
+          const min = Math.min(...values);
+          const max = Math.max(...values);
+          const avg = values.reduce((a, b) => a + b, 0) / values.length;
+          setStats({ min, max, avg });
+        } else {
+          setStats(null);
+        }
       })
       .catch(() => setError(t('timeseriesVisualizer.fetchDataError', { key: selectedKey })))
       .finally(() => setLoading(false));
@@ -168,7 +192,7 @@ const TimeseriesVisualizer: React.FC = () => {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="time" />
               <YAxis />
-              <Tooltip />
+              <Tooltip content={<CustomTooltip />} />
               <Legend />
               <Line
                 type="monotone"
@@ -196,6 +220,22 @@ const TimeseriesVisualizer: React.FC = () => {
           )
         )}
       </Box>
+      {stats && (
+        <Box sx={{ mt: 2, p: 2, backgroundColor: 'background.paper', borderRadius: 1 }}>
+          <Typography variant="h6">Statistics</Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Typography>Min: {stats.min.toFixed(2)}</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography>Max: {stats.max.toFixed(2)}</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography>Avg: {stats.avg.toFixed(2)}</Typography>
+            </Grid>
+          </Grid>
+        </Box>
+      )}
     </Box>
   );
 };
