@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { getDeviceInfo } from '../services/deviceService';
+import { getDeviceInfo, getTimeseriesKeys, getTimeseriesData } from '../services/deviceService';
 import {
   connectWebSocket,
   disconnectWebSocket,
@@ -71,6 +71,7 @@ export const useDeviceData = (
           setDevice(data);
           // Establish WebSocket connection only after fetching initial data
           connectWebSocket(deviceId, onWebSocketMessage, onWebSocketError);
+
         })
         .catch((error) => {
           console.error("Failed to get device info:", error);
