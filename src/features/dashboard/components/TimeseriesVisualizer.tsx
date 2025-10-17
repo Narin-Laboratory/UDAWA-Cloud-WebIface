@@ -219,6 +219,7 @@ const TimeseriesVisualizer: React.FC = () => {
                   label={t('timeseriesVisualizer.intervalTypeLabel')}
                   onChange={e => setIntervalType(e.target.value as string)}
                 >
+                  <MenuItem value="MILLISECONDS">{t('timeseriesVisualizer.intervalTypeMilliseconds')}</MenuItem>
                   <MenuItem value="WEEK">{t('timeseriesVisualizer.intervalTypeWeek')}</MenuItem>
                   <MenuItem value="WEEK_ISO">{t('timeseriesVisualizer.intervalTypeWeekIso')}</MenuItem>
                   <MenuItem value="MONTH">{t('timeseriesVisualizer.intervalTypeMonth')}</MenuItem>

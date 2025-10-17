@@ -161,6 +161,7 @@
     "intervalLabel": "Interval",
     "intervalTypeLabel": "Interval Type",
     "limitLabel": "Limit",
+    "intervalTypeMilliseconds": "Milliseconds",
     "intervalTypeWeek": "Week",
     "intervalTypeWeekIso": "Week (ISO)",
     "intervalTypeMonth": "Month",
