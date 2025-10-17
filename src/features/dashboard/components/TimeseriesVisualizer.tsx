@@ -44,41 +44,40 @@ const TimeseriesVisualizer: React.FC = () => {
   const [endTs, setEndTs] = useState<Date>(now);
   const [aggregation, setAggregation] = useState('AVG');
 
+  useEffect(() => {
+    if (device) {
+      setLoading(true);
+      getTimeseriesKeys(device.id.entityType, device.id.id)
+        .then(fetchedKeys => {
+          setKeys(fetchedKeys);
+          if (fetchedKeys.length > 0) {
+            setSelectedKey(fetchedKeys[0]);
+          }
+        })
+        .catch(() => setError(t('timeseriesVisualizer.fetchKeysError')))
+        .finally(() => setLoading(false));
+    }
+  }, [device, t]);
+
   const fetchData = () => {
-    if (!device) return;
+    if (!device || !selectedKey) return;
 
     setLoading(true);
     setError(null);
 
-    const fetchKeysAndData = async () => {
-      try {
-        if (keys.length === 0) {
-          const fetchedKeys = await getTimeseriesKeys(device.id.entityType, device.id.id);
-          setKeys(fetchedKeys);
-          if (fetchedKeys.length > 0 && !selectedKey) {
-            setSelectedKey(fetchedKeys[0]); // Select the first key by default
-          }
-        }
-
-        if (selectedKey) {
-          const apiData = await getTimeseriesData(device.id.entityType, device.id.id, {
-            keys: selectedKey,
-            startTs: startTs.getTime(),
-            endTs: endTs.getTime(),
-            agg: aggregation,
-            limit: 1000,
-          });
-          const transformedData = transformTimeseriesData(apiData, selectedKey);
-          setData(transformedData);
-        }
-      } catch (e) {
-        setError(t('timeseriesVisualizer.fetchDataError', { key: selectedKey }));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void fetchKeysAndData();
+    getTimeseriesData(device.id.entityType, device.id.id, {
+      keys: selectedKey,
+      startTs: startTs.getTime(),
+      endTs: endTs.getTime(),
+      agg: aggregation,
+      limit: 1000,
+    })
+      .then(apiData => {
+        const transformedData = transformTimeseriesData(apiData, selectedKey);
+        setData(transformedData);
+      })
+      .catch(() => setError(t('timeseriesVisualizer.fetchDataError', { key: selectedKey })))
+      .finally(() => setLoading(false));
   };
 
 
