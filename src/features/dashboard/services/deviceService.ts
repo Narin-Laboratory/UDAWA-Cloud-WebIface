@@ -207,3 +207,76 @@ export const rpcV2 = async (
     throw new Error('Failed to execute rpcv2');
   }
 };
+
+export const getTimeseriesKeys = async (
+  entityType: string,
+  entityId: string
+): Promise<string[]> => {
+  const token = getItem('token');
+  const server = getItem('server');
+
+  if (!token || !server) {
+    throw new Error('User not authenticated or server not set');
+  }
+
+  const response = await fetch(
+    `https://${server}/api/plugins/telemetry/${entityType}/${entityId}/keys/timeseries`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (response.status === 401) {
+    handleAuthFailure();
+    throw new Error('Authentication failed');
+  }
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch timeseries keys');
+  }
+
+  return response.json();
+}
+
+export const getTimeseriesData = async (
+  entityType: string,
+  entityId: string,
+  keys: string,
+  startTs: number,
+  endTs: number,
+  agg: string,
+  interval: number
+): Promise<any> => {
+  const token = getItem('token');
+  const server = getItem('server');
+
+  if (!token || !server) {
+    throw new Error('User not authenticated or server not set');
+  }
+
+  const response = await fetch(
+    `https://${server}/api/plugins/telemetry/${entityType}/${entityId}/values/timeseries?keys=${keys}&startTs=${startTs}&endTs=${endTs}&agg=${agg}&interval=${interval}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (response.status === 401) {
+    handleAuthFailure();
+    throw new Error('Authentication failed');
+  }
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch timeseries data');
+  }
+
+  return response.json();
+}
