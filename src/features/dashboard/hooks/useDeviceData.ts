@@ -65,20 +65,24 @@ export const useDeviceData = (
 
   useEffect(() => {
     if (deviceId) {
-      setLoading(true);
-      getDeviceInfo(deviceId)
-        .then((data) => {
-          setDevice(data);
-          // Establish WebSocket connection only after fetching initial data
-          connectWebSocket(deviceId, onWebSocketMessage, onWebSocketError);
-        })
-        .catch((error) => {
-          console.error("Failed to get device info:", error);
-          setDevice(null);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      const token = localStorage.getItem('token');
+      const server = localStorage.getItem('server');
+      if (token && server) {
+        setLoading(true);
+        getDeviceInfo(deviceId)
+          .then((data) => {
+            setDevice(data);
+            // Establish WebSocket connection only after fetching initial data
+            connectWebSocket(deviceId, onWebSocketMessage, onWebSocketError);
+          })
+          .catch((error) => {
+            console.error("Failed to get device info:", error);
+            setDevice(null);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
     }
 
     // Cleanup function to disconnect WebSocket

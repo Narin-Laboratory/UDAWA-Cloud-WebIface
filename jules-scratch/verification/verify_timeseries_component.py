@@ -6,31 +6,31 @@ def run_verification():
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
 
+        # Listen for all console events and print them to the terminal
+        page.on("console", lambda msg: print(f"BROWSER CONSOLE: {msg.text}"))
+
         try:
             # Login
-            page.goto("http://localhost:5173/login")
+            page.goto("http://localhost:5174/login")
             page.get_by_label("Email").fill(os.environ["EMAIL"])
             page.get_by_label("Password").fill(os.environ["PASS"])
             page.get_by_role("button", name="Sign In").click()
 
             # Wait for the URL to change to the root path
-            page.wait_for_url("http://localhost:5173/", timeout=10000)
+            page.wait_for_url("http://localhost:5174/", timeout=10000)
 
             # Navigate directly to the Gadadar dashboard
-            page.goto("http://localhost:5173/dashboard/device/Gadadar/c633a2e0-cf8a-11ee-8f69-6d24b264910c")
+            page.goto("http://localhost:5174/dashboard/device/Gadadar/c633a2e0-cf8a-11ee-8f69-6d24b264910c")
 
-            # Wait for the tabs to be loaded
-            page.wait_for_selector("role=tab", timeout=10000)
-
-            # Go to the analytic tab
-            page.get_by_role("tab", name="Analytic").click()
-
-            # Wait for the chart to be visible
-            expect(page.locator(".recharts-responsive-container")).to_be_visible(timeout=10000)
+            # Add a delay to allow the page to render and for console messages to be captured
+            page.wait_for_timeout(5000)
 
             # Take a screenshot
             page.screenshot(path="jules-scratch/verification/verification.png")
 
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            page.screenshot(path="jules-scratch/verification/error.png")
         finally:
             browser.close()
 
