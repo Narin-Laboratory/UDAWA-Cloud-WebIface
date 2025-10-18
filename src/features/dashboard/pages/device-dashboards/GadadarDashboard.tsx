@@ -23,7 +23,7 @@ const GadadarDashboard: React.FC = () => {
     },
     {
       label: t('device.dashboardTabs.analytic'),
-      content: <TimeseriesVisualizer deviceId={device?.id.id} entityType={device?.id.entityType} />,
+      content: device ? <TimeseriesVisualizer deviceId={device.id.id} entityType={device.id.entityType} /> : null,
     },
     {
       label: t('device.dashboardTabs.config'),

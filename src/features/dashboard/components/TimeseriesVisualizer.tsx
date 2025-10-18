@@ -131,7 +131,7 @@ const TimeseriesVisualizer: React.FC<TimeseriesVisualizerProps> = ({ deviceId, e
   };
 
 
-  if (!device) {
+  if (!deviceId) {
     return <Typography>{t('timeseriesVisualizer.noDevice')}</Typography>;
   }
 
