@@ -71,6 +71,7 @@ export const useDeviceData = (
           setDevice(data);
           // Establish WebSocket connection only after fetching initial data
           connectWebSocket(deviceId, onWebSocketMessage, onWebSocketError);
+
         })
         .catch((error) => {
           console.error("Failed to get device info:", error);

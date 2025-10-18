@@ -141,5 +141,30 @@
     "_pf": "Faktor Daya",
     "_volt": "Tegangan",
     "_watt": "Daya"
+  },
+  "timeseriesVisualizer": {
+    "title": "Visualisasi Data Runtun Waktu",
+    "keyLabel": "Kunci Runtun Waktu",
+    "startDateLabel": "Tanggal Mulai",
+    "endDateLabel": "Tanggal Selesai",
+    "aggregationLabel": "Agregasi",
+    "aggregationAvg": "Rata-rata",
+    "aggregationMin": "Minimum",
+    "aggregationMax": "Maksimum",
+    "aggregationSum": "Jumlah",
+    "aggregationCount": "Hitung",
+    "fetchButton": "Ambil",
+    "noDevice": "Tidak ada perangkat yang dipilih.",
+    "noData": "Tidak ada data yang tersedia untuk kunci dan rentang yang dipilih.",
+    "fetchKeysError": "Gagal mengambil kunci runtun waktu.",
+    "fetchDataError": "Gagal mengambil data untuk {{key}}.",
+    "intervalLabel": "Interval",
+    "intervalTypeLabel": "Tipe Interval",
+    "limitLabel": "Batas",
+    "intervalTypeMilliseconds": "Milidetik",
+    "intervalTypeWeek": "Minggu",
+    "intervalTypeWeekIso": "Minggu (ISO)",
+    "intervalTypeMonth": "Bulan",
+    "intervalTypeQuarter": "Kuartal"
   }
 }

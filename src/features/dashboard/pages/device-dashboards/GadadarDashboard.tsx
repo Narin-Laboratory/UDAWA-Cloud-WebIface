@@ -6,6 +6,7 @@ import DeviceGenericConfig from '../../components/DeviceGenericConfig';
 import { useDevice } from '../../hooks/useDevice';
 import RelaysController from '../../components/RelaysController';
 import PowerSensor from '../../components/PowerSensor';
+import TimeseriesVisualizer from '../../components/TimeseriesVisualizer';
 
 const GadadarDashboard: React.FC = () => {
   const { t } = useTranslation();
@@ -22,7 +23,7 @@ const GadadarDashboard: React.FC = () => {
     },
     {
       label: t('device.dashboardTabs.analytic'),
-      content: t('device.dashboardTabs.analyticContent'),
+      content: device ? <TimeseriesVisualizer deviceId={device.id.id} entityType={device.id.entityType} /> : null,
     },
     {
       label: t('device.dashboardTabs.config'),

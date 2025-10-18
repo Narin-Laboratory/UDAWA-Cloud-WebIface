@@ -141,5 +141,30 @@
     "_pf": "Power Factor",
     "_volt": "Voltage",
     "_watt": "Power"
+  },
+  "timeseriesVisualizer": {
+    "title": "Timeseries Data Visualizer",
+    "keyLabel": "Timeseries Key",
+    "startDateLabel": "Start Date",
+    "endDateLabel": "End Date",
+    "aggregationLabel": "Aggregation",
+    "aggregationAvg": "Average",
+    "aggregationMin": "Minimum",
+    "aggregationMax": "Maximum",
+    "aggregationSum": "Sum",
+    "aggregationCount": "Count",
+    "fetchButton": "Fetch",
+    "noDevice": "No device selected.",
+    "noData": "No data available for the selected key and range.",
+    "fetchKeysError": "Failed to fetch timeseries keys.",
+    "fetchDataError": "Failed to fetch data for {{key}}.",
+    "intervalLabel": "Interval",
+    "intervalTypeLabel": "Interval Type",
+    "limitLabel": "Limit",
+    "intervalTypeMilliseconds": "Milliseconds",
+    "intervalTypeWeek": "Week",
+    "intervalTypeWeekIso": "Week (ISO)",
+    "intervalTypeMonth": "Month",
+    "intervalTypeQuarter": "Quarter"
   }
 }
