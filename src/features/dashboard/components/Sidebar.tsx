@@ -32,27 +32,25 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const fetchDevices = useCallback(async (force = false) => {
-    const fetchPromise = async () => {
+    try {
       setError(null);
       const deviceList = await getDevices(force);
       setDevices(deviceList);
-    };
-
-    toast.promise(fetchPromise(), {
-      pending: t('deviceList.loading'),
-      success: t('deviceList.loadSuccess'),
-      error: {
-        render() {
-          setError(t('deviceList.fetchError'));
-          return t('deviceList.fetchError');
-        },
-      },
-    });
+      toast.success(t('deviceList.loadSuccess'));
+    } catch (e) {
+      setError(t('deviceList.fetchError'));
+    }
   }, [t]);
 
   useEffect(() => {
     fetchDevices();
   }, [fetchDevices]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const handleReload = () => {
     fetchDevices(true);
