@@ -22,6 +22,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import { getTimeseriesKeys, getTimeseriesData } from '../services/deviceService';
 import { transformTimeseriesData } from '../utils/dataTransformer';
 import type { ChartDataPoint } from '../utils/dataTransformer';
@@ -51,7 +52,6 @@ const TimeseriesVisualizer: React.FC<TimeseriesVisualizerProps> = ({ deviceId, e
   const [selectedKey, setSelectedKey] = useState<string>('');
   const [data, setData] = useState<ChartDataPoint[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<{ min: number; max: number; avg: number; sum: number } | null>(null);
 
   // Default to the last 24 hours
@@ -71,7 +71,6 @@ const TimeseriesVisualizer: React.FC<TimeseriesVisualizerProps> = ({ deviceId, e
       setKeys([]);
       setSelectedKey('');
       setData([]);
-      setError(null);
       setLoading(true);
 
       getTimeseriesKeys(entityType, deviceId)
@@ -82,7 +81,7 @@ const TimeseriesVisualizer: React.FC<TimeseriesVisualizerProps> = ({ deviceId, e
             setSelectedKey(fetchedKeys[0]);
           }
         })
-        .catch(() => setError(t('timeseriesVisualizer.fetchKeysError')))
+        .catch(() => toast.error(t('timeseriesVisualizer.fetchKeysError')))
         .finally(() => setLoading(false));
     }
     // By depending on the deviceId, this effect will only run when the device
@@ -93,7 +92,6 @@ const TimeseriesVisualizer: React.FC<TimeseriesVisualizerProps> = ({ deviceId, e
     if (!deviceId || !selectedKey) return;
 
     setLoading(true);
-    setError(null);
 
     const params: any = {
       keys: selectedKey,
@@ -126,7 +124,7 @@ const TimeseriesVisualizer: React.FC<TimeseriesVisualizerProps> = ({ deviceId, e
           setStats(null);
         }
       })
-      .catch(() => setError(t('timeseriesVisualizer.fetchDataError', { key: selectedKey })))
+      .catch(() => toast.error(t('timeseriesVisualizer.fetchDataError', { key: selectedKey })))
       .finally(() => setLoading(false));
   };
 
@@ -239,7 +237,6 @@ const TimeseriesVisualizer: React.FC<TimeseriesVisualizerProps> = ({ deviceId, e
       </Grid>
 
       {loading && <CircularProgress />}
-      {error && <Typography color="error">{error}</Typography>}
 
       <Box sx={{ height: 400, width: '100%' }}>
         {data.length > 0 ? (
