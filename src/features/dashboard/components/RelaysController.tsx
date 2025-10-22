@@ -207,16 +207,25 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(
                 }}
               >
                 <Card
+                  onClick={() => setSelectedRelayIndex(index)}
                   sx={{
                     textAlign: 'center',
                     borderColor: relay.state ? 'success.main' : 'error.main',
                     borderWidth: 1,
                     borderStyle: 'solid',
                     bgcolor: relay.state ? 'success.light' : 'error.light',
+                    cursor: 'pointer',
                   }}
                 >
                   <CardContent>
                     <Typography variant="h6">{`${index + 1}`}</Typography>
+                    <Typography variant="caption">
+                      <strong>
+                        {relay.label.length > 10
+                          ? `${relay.label.substring(0, 10)}...`
+                          : relay.label}
+                      </strong>
+                    </Typography>
                     <Typography variant="caption">
                       <strong>
                         {t(
