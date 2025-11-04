@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i_18next';
+import { useTranslation } from 'react-i18next';
 import {
   Card,
   CardContent,
