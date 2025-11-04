@@ -2,26 +2,27 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TabInfo } from '../../components/DeviceDashboard';
 import DeviceDashboard from '../../components/DeviceDashboard';
+import DeviceGenericConfig from '../../components/DeviceGenericConfig';
+import { useDevice } from '../../hooks/useDevice';
+import TimeseriesVisualizer from '../../components/TimeseriesVisualizer';
+import MurariMonitor from '../../components/MurariMonitor';
 
 const MurariDashboard: React.FC = () => {
   const { t } = useTranslation();
+  const { device } = useDevice();
 
   const tabs: TabInfo[] = [
     {
       label: t('device.dashboardTabs.monitor'),
-      content: t('device.dashboardTabs.monitorContent'),
-    },
-    {
-      label: t('device.dashboardTabs.control'),
-      content: t('device.dashboardTabs.controlContent'),
+      content: <MurariMonitor attributes={device?.attributesClientScope} />,
     },
     {
       label: t('device.dashboardTabs.analytic'),
-      content: t('device.dashboardTabs.analyticContent'),
+      content: device ? <TimeseriesVisualizer deviceId={device.id.id} entityType={device.id.entityType} /> : null,
     },
     {
       label: t('device.dashboardTabs.config'),
-      content: t('device.dashboardTabs.configContent'),
+      content: <DeviceGenericConfig attributes={device?.attributesClientScope} deviceId={device?.id.id} entityType={device?.id.entityType} />,
     },
   ];
 
