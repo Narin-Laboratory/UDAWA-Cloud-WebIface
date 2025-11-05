@@ -20,6 +20,7 @@ import {
   Legend,
 } from 'recharts';
 import type { DynamicObject } from 'src/features/dashboard/services/deviceService.ts';
+import AlarmCard from './AlarmCard';
 
 interface DamodarMonitorProps {
   attributes: DynamicObject | undefined;
@@ -112,6 +113,7 @@ const DamodarMonitor: React.FC<DamodarMonitorProps> = React.memo(({ attributes }
 
   return (
     <Stack spacing={2}>
+      <AlarmCard />
       <Card>
         <CardContent>
           <Typography variant="h6" gutterBottom>

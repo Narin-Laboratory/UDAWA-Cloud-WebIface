@@ -133,7 +133,7 @@
   "cancel": "Batal",
   "saved_button": "Tersimpan",
   "save_button": "Simpan",
-  "powerSensor": {
+  "gadadarMonitor": {
     "title": "Sensor Daya",
     "_amp": "Arus",
     "_ener": "Energi",
@@ -178,5 +178,187 @@
     "intervalTypeWeekIso": "Minggu (ISO)",
     "intervalTypeMonth": "Bulan",
     "intervalTypeQuarter": "Kuartal"
+  },
+  "alarm": {
+    "110": {
+      "title": "Sensor cahaya",
+      "description": "Sensor cahaya gagal diinisialisasi; silakan periksa integrasi modul dan kabel."
+    },
+    "111": {
+      "title": "Sensor cahaya",
+      "description": "Pengukuran sensor cahaya tidak normal; silakan periksa integritas modul."
+    },
+    "112": {
+      "title": "Sensor cahaya",
+      "description": "Pengukuran sensor cahaya menunjukkan nilai ekstrem; silakan pantau operasi perangkat dengan cermat."
+    },
+    "120": {
+      "title": "Sensor cuaca",
+      "description": "Sensor cuaca gagal diinisialisasi; silakan periksa integrasi modul dan kabel."
+    },
+    "121": {
+      "title": "Sensor cuaca",
+      "description": "Pengukuran sensor cuaca tidak normal; Suhu lingkungan di luar rentang."
+    },
+    "122": {
+      "title": "Sensor cuaca",
+      "description": "Pengukuran sensor cuaca menunjukkan nilai ekstrem; Suhu lingkungan melebihi ambang batas aman; silakan pantau operasi perangkat dengan cermat."
+    },
+    "123": {
+      "title": "Sensor cuaca",
+      "description": "Pengukuran sensor cuaca menunjukkan nilai ekstrem; Suhu lingkungan kurang dari ambang batas aman; silakan pantau operasi perangkat dengan cermat."
+    },
+    "124": {
+      "title": "Sensor cuaca",
+      "description": "Pengukuran sensor cuaca tidak normal; Kelembaban lingkungan di luar rentang."
+    },
+    "125": {
+      "title": "Sensor cuaca",
+      "description": "Pengukuran sensor cuaca menunjukkan nilai ekstrem; Kelembaban lingkungan melebihi ambang batas aman; silakan pantau operasi perangkat dengan cermat."
+    },
+    "126": {
+      "title": "Sensor cuaca",
+      "description": "Pengukuran sensor cuaca menunjukkan nilai ekstrem; Kelembaban lingkungan di bawah ambang batas aman; silakan pantau operasi perangkat dengan cermat."
+    },
+    "127": {
+      "title": "Sensor cuaca",
+      "description": "Pengukuran sensor cuaca tidak normal; Tekanan barometrik di luar rentang."
+    },
+    "128": {
+      "title": "Sensor cuaca",
+      "description": "Pengukuran sensor cuaca menunjukkan nilai ekstrem; Tekanan barometrik lebih dari ambang batas aman; silakan pantau operasi perangkat dengan cermat."
+    },
+    "129": {
+      "title": "Sensor cuaca",
+      "description": "Pengukuran sensor cuaca menunjukkan nilai ekstrem; Tekanan barometrik kurang dari ambang batas aman; silakan pantau operasi perangkat dengan cermat."
+    },
+    "130": {
+      "title": "Kartu SD",
+      "description": "Kartu SD gagal diinisialisasi; silakan periksa integrasi modul dan kabel."
+    },
+    "131": {
+      "title": "Kartu SD",
+      "description": "Kartu SD gagal dipasang; silakan periksa apakah kartu dimasukkan dengan benar."
+    },
+    "132": {
+      "title": "Kartu SD",
+      "description": "Kartu SD gagal membuat file log; silakan periksa apakah kartu dalam kondisi baik."
+    },
+    "133": {
+      "title": "Kartu SD",
+      "description": "Kartu SD gagal menulis ke file log; silakan periksa apakah kartu dalam kondisi baik."
+    },
+    "140": {
+      "title": "Sensor Daya AC",
+      "description": "Sensor daya gagal diinisialisasi; silakan periksa integrasi modul dan kabel."
+    },
+    "141": {
+      "title": "Sensor Daya AC",
+      "description": "Pengukuran sensor daya tidak normal; Pembacaan tegangan di luar rentang."
+    },
+    "142": {
+      "title": "Sensor Daya AC",
+      "description": "Pengukuran sensor daya tidak normal; Pembacaan arus di luar rentang."
+    },
+    "143": {
+      "title": "Sensor Daya AC",
+      "description": "Pengukuran sensor daya tidak normal; Pembacaan daya di luar rentang."
+    },
+    "144": {
+      "title": "Sensor Daya AC",
+      "description": "Pengukuran sensor daya tidak normal; Faktor daya dan pembacaan frekuensi di luar rentang."
+    },
+    "145": {
+      "title": "Sensor Daya AC",
+      "description": "Pengukuran sensor daya menunjukkan kelebihan batas; Silakan periksa instrumen yang terhubung."
+    },
+    "150": {
+      "title": "Jam Waktu Nyata",
+      "description": "Informasi waktu perangkat salah; silakan perbarui waktu perangkat secara manual. Fungsi apa pun yang memerlukan waktu yang tepat akan mengalami kegagalan fungsi!"
+    },
+    "210": {
+      "title": "Sakelar Relay",
+      "description": "Sakelar nomor satu aktif, tetapi sensor daya tidak mendeteksi penggunaan daya. Silakan periksa instrumen yang terhubung untuk mencegah kegagalan."
+    },
+    "211": {
+      "title": "Sakelar Relay",
+      "description": "Sakelar nomor dua aktif, tetapi sensor daya tidak mendeteksi penggunaan daya. Silakan periksa instrumen yang terhubung untuk mencegah kegagalan."
+    },
+    "212": {
+      "title": "Sakelar Relay",
+      "description": "Sakelar nomor tiga aktif, tetapi sensor daya tidak mendeteksi penggunaan daya. Silakan periksa instrumen yang terhubung untuk mencegah kegagalan."
+    },
+    "213": {
+      "title": "Sakelar Relay",
+      "description": "Sakelar nomor empat aktif, tetapi sensor daya tidak mendeteksi penggunaan daya. Silakan periksa instrumen yang terhubung untuk mencegah kegagalan."
+    },
+    "214": {
+      "title": "Sakelar Relay",
+      "description": "Semua sakelar tidak aktif, tetapi sensor daya mendeteksi penggunaan daya yang besar. Silakan periksa modul relay perangkat untuk mencegah kerusakan relay."
+    },
+    "215": {
+      "title": "Sakelar Relay",
+      "description": "Sakelar nomor satu aktif lebih lama dari durasi aman!"
+    },
+    "216": {
+      "title": "Sakelar Relay",
+      "description": "Sakelar nomor dua aktif lebih lama dari durasi aman!"
+    },
+    "217": {
+      "title": "Sakelar Relay",
+      "description": "Sakelar nomor tiga aktif lebih lama dari durasi aman!"
+    },
+    "218": {
+      "title": "Sakelar Relay",
+      "description": "Sakelar nomor empat aktif lebih lama dari durasi aman!"
+    },
+    "220": {
+      "title": "IOExtender",
+      "description": "IOExtender gagal diinisialisasi; silakan periksa integrasi modul dan kabel."
+    },
+    "230": {
+      "title": "Sensor Kualitas Air (TDS/EC)",
+      "description": "Sensor TDS gagal diinisialisasi; silakan periksa integrasi modul ADS1115 dan kabel."
+    },
+    "231": {
+      "title": "Sensor Kualitas Air (TDS/EC)",
+      "description": "Pengukuran sensor TDS tidak normal; Pembacaan TDS di luar rentang."
+    },
+    "232": {
+      "title": "Sensor Kualitas Air (TDS/EC)",
+      "description": "Pengukuran sensor TDS menunjukkan nilai ekstrem; TDS melebihi ambang batas aman (kualitas air buruk)."
+    },
+    "233": {
+      "title": "Sensor Kualitas Air (TDS/EC)",
+      "description": "Pengukuran sensor TDS menunjukkan nilai ekstrem; TDS di bawah ambang batas aman (air terlalu murni/tidak stabil)."
+    },
+    "234": {
+      "title": "Sensor Kualitas Air (TDS/EC)",
+      "description": "Pengukuran sensor EC tidak normal; Pembacaan EC di luar rentang."
+    },
+    "235": {
+      "title": "Sensor Kualitas Air (TDS/EC)",
+      "description": "Pengukuran sensor EC menunjukkan nilai ekstrem; EC melebihi ambang batas aman."
+    },
+    "236": {
+      "title": "Sensor Kualitas Air (TDS/EC)",
+      "description": "Pengukuran sensor EC menunjukkan nilai ekstrem; EC di bawah ambang batas aman."
+    },
+    "240": {
+      "title": "Sensor Suhu Air (DS18B20)",
+      "description": "Sensor suhu air gagal diinisialisasi; silakan periksa kabel DS18B20 dan resistor pull-up."
+    },
+    "241": {
+      "title": "Sensor Suhu Air (DS18B20)",
+      "description": "Pengukuran suhu air tidak normal; Pembacaan suhu di luar rentang."
+    },
+    "242": {
+      "title": "Sensor Suhu Air (DS18B20)",
+      "description": "Suhu air melebihi ambang batas aman; Air mungkin terlalu panas untuk penggunaan yang dimaksud."
+    },
+    "243": {
+      "title": "Sensor Suhu Air (DS18B20)",
+      "description": "Suhu air di bawah ambang batas aman; Air mungkin terlalu dingin atau beku."
+    }
   }
 }

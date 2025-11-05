@@ -1,12 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Stack } from '@mui/material';
 import type { TabInfo } from '../../components/DeviceDashboard';
 import DeviceDashboard from '../../components/DeviceDashboard';
 import DeviceGenericConfig from '../../components/DeviceGenericConfig';
 import { useDevice } from '../../hooks/useDevice';
 import RelaysController from '../../components/RelaysController';
-import PowerSensor from '../../components/PowerSensor';
+import GadadarMonitor from '../../components/GadadarMonitor';
 import TimeseriesVisualizer from '../../components/TimeseriesVisualizer';
+import AlarmCard from '../../components/AlarmCard';
 
 const GadadarDashboard: React.FC = () => {
   const { t } = useTranslation();
@@ -15,7 +17,12 @@ const GadadarDashboard: React.FC = () => {
   const tabs: TabInfo[] = [
     {
       label: t('device.dashboardTabs.monitor'),
-      content: <PowerSensor attributes={device?.attributesClientScope} />,
+      content: (
+        <Stack spacing={2}>
+          <AlarmCard />
+          <GadadarMonitor attributes={device?.attributesClientScope} />
+        </Stack>
+      ),
     },
     {
       label: t('device.dashboardTabs.control'),

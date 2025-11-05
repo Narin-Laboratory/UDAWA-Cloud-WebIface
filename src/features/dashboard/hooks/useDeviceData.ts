@@ -21,37 +21,41 @@ export const useDeviceData = (
     (data: WebSocketData) => {
       if (!data.data) return;
 
-      // --- UNIFIED TRANSFORMATION LOGIC ---
-      // This logic now correctly handles the { key: [[ts, value]] } format for ALL scopes.
-      const transformedData = Object.fromEntries(
-        Object.entries(data.data).map(([key, valueArray]) => {
-          // Safely access the value: valueArray -> [0] -> [1]
-          const value = valueArray?.[0]?.[1];
-          return [key, value];
-        })
-      );
-
       setDevice((prevDevice) => {
         if (!prevDevice) return null;
 
         const newDevice = { ...prevDevice };
 
-        // The switch now only routes the already-transformed data
-        switch (data.subscriptionId) {
-          case 1: // SERVER_SCOPE
-            newDevice.attributesServerScope = { ...newDevice.attributesServerScope, ...transformedData };
-            break;
-          case 2: // CLIENT_SCOPE
-            newDevice.attributesClientScope = { ...newDevice.attributesClientScope, ...transformedData };
-            break;
-          case 3: // SHARED_SCOPE
-            newDevice.attributesSharedScope = { ...newDevice.attributesSharedScope, ...transformedData };
-            break;
-          case 4: // TIMESERIES
-            newDevice.timeseries = { ...newDevice.timeseries, ...transformedData };
-            break;
-          default:
-            break;
+        if (data.subscriptionId === 4) { // Handle TIMESERIES specifically
+          const transformedData = Object.fromEntries(
+            Object.entries(data.data || {}).map(([key, valueArray]) => {
+              const ts = valueArray?.[0]?.[0];
+              const value = valueArray?.[0]?.[1];
+              return [key, { value, ts }];
+            })
+          );
+          newDevice.timeseries = { ...newDevice.timeseries, ...transformedData };
+        } else { // Handle other scopes as before
+          const transformedData = Object.fromEntries(
+            Object.entries(data.data || {}).map(([key, valueArray]) => {
+              const value = valueArray?.[0]?.[1];
+              return [key, value];
+            })
+          );
+
+          switch (data.subscriptionId) {
+            case 1: // SERVER_SCOPE
+              newDevice.attributesServerScope = { ...newDevice.attributesServerScope, ...transformedData };
+              break;
+            case 2: // CLIENT_SCOPE
+              newDevice.attributesClientScope = { ...newDevice.attributesClientScope, ...transformedData };
+              break;
+            case 3: // SHARED_SCOPE
+              newDevice.attributesSharedScope = { ...newDevice.attributesSharedScope, ...transformedData };
+              break;
+            default:
+              break;
+          }
         }
         return newDevice;
       });

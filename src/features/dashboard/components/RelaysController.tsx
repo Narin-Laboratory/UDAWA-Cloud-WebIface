@@ -221,16 +221,15 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(
                     <Typography variant="h6">{`${index + 1}`}</Typography>
                     <Typography variant="caption">
                       <strong>
-                        {relay.label.length > 10
-                          ? `${relay.label.substring(0, 10)}...`
-                          : relay.label}
+                      {relay.label.length > 20
+                        ? `${relay.label.substring(0, 20)}...`
+                        : relay.label}
                       </strong>
                     </Typography>
                     <Typography variant="caption">
+                      <br />
                       <strong>
-                        {t(
-                          relay.state ? 'relay_state_on' : 'relay_state_off'
-                        )}
+                      ({t(relay.state ? 'relay_state_on' : 'relay_state_off')})
                       </strong>
                     </Typography>
                   </CardContent>
