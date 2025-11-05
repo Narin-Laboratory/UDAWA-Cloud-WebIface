@@ -14,29 +14,47 @@ import { useDevice } from '../hooks/useDevice';
 const AlarmCard: React.FC = () => {
   const { device } = useDevice();
   const { t } = useTranslation();
-  const [isVisible, setIsVisible] = useState(false);
-  const [lastSeenAlarmCode, setLastSeenAlarmCode] = useState<number | undefined>(
-    undefined
-  );
 
-  const alarmCode = device?.timeseries?.alarm as number | undefined;
+  const [currentAlarm, setCurrentAlarm] = useState<number | null>(null);
+  const [isDismissed, setIsDismissed] = useState(false);
+
+  const alarmData = device?.timeseries?.alarm;
 
   useEffect(() => {
-    if (alarmCode && alarmCode !== 0 && alarmCode !== lastSeenAlarmCode) {
-      setIsVisible(true);
-      setLastSeenAlarmCode(alarmCode);
+    // Safely extract the alarm code, whether it's a primitive or an object with a 'value' property
+    const rawCode =
+      alarmData && typeof alarmData === 'object' && 'value' in alarmData
+        ? (alarmData as { value: unknown }).value
+        : alarmData;
+
+    // Ensure the extracted code is a valid number, otherwise treat as null (no alarm)
+    const newAlarm =
+      rawCode !== undefined &&
+      !isNaN(Number(rawCode)) &&
+      Number(rawCode) !== 0
+        ? Number(rawCode)
+        : null;
+
+    // If the incoming alarm is different from the one we are currently tracking
+    if (newAlarm !== currentAlarm) {
+      // Start tracking the new alarm code
+      setCurrentAlarm(newAlarm);
+      // Reset the dismissal state, so the new alarm is always shown
+      setIsDismissed(false);
     }
-  }, [alarmCode, lastSeenAlarmCode]);
+  }, [alarmData, currentAlarm]);
 
   const handleClose = () => {
-    setIsVisible(false);
+    setIsDismissed(true);
   };
 
-  if (!isVisible || !alarmCode) {
+  const isVisible = currentAlarm !== null && !isDismissed;
+
+  if (!isVisible) {
     return null;
   }
 
-  const alarmDetails = getAlarmDetails(alarmCode);
+  const alarmDetails = getAlarmDetails(currentAlarm);
 
   if (!alarmDetails) {
     return null;
