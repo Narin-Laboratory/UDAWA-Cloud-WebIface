@@ -37,7 +37,7 @@ const AlarmCard: React.FC = () => {
         : null;
 
     if (newAlarmCode && newAlarmCode !== currentAlarm?.code) {
-      setCurrentAlarm({ code: newAlarmCode, ts: timestamp });
+      setCurrentAlarm({ code: newAlarmCode, ts: timestamp ?? Date.now() });
       setIsDismissed(false);
     } else if (!newAlarmCode) {
       setCurrentAlarm(null);

@@ -28,7 +28,7 @@ export const useDeviceData = (
 
         if (data.subscriptionId === 4) { // Handle TIMESERIES specifically
           const transformedData = Object.fromEntries(
-            Object.entries(data.data).map(([key, valueArray]) => {
+            Object.entries(data.data || {}).map(([key, valueArray]) => {
               const ts = valueArray?.[0]?.[0];
               const value = valueArray?.[0]?.[1];
               return [key, { value, ts }];
@@ -37,7 +37,7 @@ export const useDeviceData = (
           newDevice.timeseries = { ...newDevice.timeseries, ...transformedData };
         } else { // Handle other scopes as before
           const transformedData = Object.fromEntries(
-            Object.entries(data.data).map(([key, valueArray]) => {
+            Object.entries(data.data || {}).map(([key, valueArray]) => {
               const value = valueArray?.[0]?.[1];
               return [key, value];
             })
