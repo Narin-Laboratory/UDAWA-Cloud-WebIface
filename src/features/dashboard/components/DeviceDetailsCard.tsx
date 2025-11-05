@@ -97,11 +97,11 @@ const DeviceDetailsCard: React.FC = () => {
             )}
             {renderDetail(
               t('device.properties.firmware'),
-              device?.timeseries?.current_fw_version
+              (device?.timeseries?.current_fw_version as any)?.value
             )}
             {renderDetail(
               t('device.properties.fwState'),
-              device?.timeseries?.fw_state
+              (device?.timeseries?.fw_state as any)?.value
             )}
             {renderDetail(
               t('device.properties.heap'),

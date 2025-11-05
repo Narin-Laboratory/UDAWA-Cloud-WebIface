@@ -11,38 +11,38 @@ import { useTranslation } from 'react-i18next';
 import { getAlarmDetails } from '../utils/alarmUtils';
 import { useDevice } from '../hooks/useDevice';
 
+interface AlarmInfo {
+  code: number;
+  ts: number;
+}
+
 const AlarmCard: React.FC = () => {
   const { device } = useDevice();
   const { t } = useTranslation();
 
-  const [currentAlarm, setCurrentAlarm] = useState<number | null>(null);
+  const [currentAlarm, setCurrentAlarm] = useState<AlarmInfo | null>(null);
   const [isDismissed, setIsDismissed] = useState(false);
 
-  const alarmData = device?.timeseries?.alarm;
+  const alarmData = device?.timeseries?.alarm as { value: unknown; ts: number } | undefined;
 
   useEffect(() => {
-    // Safely extract the alarm code, whether it's a primitive or an object with a 'value' property
-    const rawCode =
-      alarmData && typeof alarmData === 'object' && 'value' in alarmData
-        ? (alarmData as { value: unknown }).value
-        : alarmData;
+    const rawCode = alarmData?.value;
+    const timestamp = alarmData?.ts;
 
-    // Ensure the extracted code is a valid number, otherwise treat as null (no alarm)
-    const newAlarm =
+    const newAlarmCode =
       rawCode !== undefined &&
       !isNaN(Number(rawCode)) &&
       Number(rawCode) !== 0
         ? Number(rawCode)
         : null;
 
-    // If the incoming alarm is different from the one we are currently tracking
-    if (newAlarm !== currentAlarm) {
-      // Start tracking the new alarm code
-      setCurrentAlarm(newAlarm);
-      // Reset the dismissal state, so the new alarm is always shown
+    if (newAlarmCode && newAlarmCode !== currentAlarm?.code) {
+      setCurrentAlarm({ code: newAlarmCode, ts: timestamp });
       setIsDismissed(false);
+    } else if (!newAlarmCode) {
+      setCurrentAlarm(null);
     }
-  }, [alarmData, currentAlarm]);
+  }, [alarmData, currentAlarm?.code]);
 
   const handleClose = () => {
     setIsDismissed(true);
@@ -54,7 +54,7 @@ const AlarmCard: React.FC = () => {
     return null;
   }
 
-  const alarmDetails = getAlarmDetails(currentAlarm);
+  const alarmDetails = getAlarmDetails(currentAlarm.code);
 
   if (!alarmDetails) {
     return null;
@@ -72,15 +72,22 @@ const AlarmCard: React.FC = () => {
       }}
     >
       <CardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Typography variant="h6" component="div">
-            {t(alarmDetails.title)}
-          </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <Box>
+            <Typography variant="h6" component="div">
+              {t(alarmDetails.title)}
+            </Typography>
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              {t(alarmDetails.description)}
+            </Typography>
+          </Box>
           <IconButton onClick={handleClose} size="small">
             <CloseIcon />
           </IconButton>
         </Box>
-        <Typography variant="body2">{t(alarmDetails.description)}</Typography>
+        <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
+          {new Date(currentAlarm.ts).toLocaleString()}
+        </Typography>
       </CardContent>
     </Card>
   );
