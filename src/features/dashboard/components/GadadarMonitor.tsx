@@ -21,7 +21,7 @@ import {
 } from 'recharts';
 import type { DynamicObject } from 'src/features/dashboard/services/deviceService.ts';
 
-interface PowerSensorProps {
+interface GadadarMonitorProps {
   attributes: DynamicObject | undefined;
 }
 
@@ -35,7 +35,7 @@ interface ChartData {
   _pf: number;
 }
 
-const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
+const GadadarMonitor: React.FC<GadadarMonitorProps> = React.memo(({ attributes }) => {
   const { t } = useTranslation();
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const theme = useTheme();
@@ -108,10 +108,10 @@ const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
   );
 
   const charts = [
-    { dataKey: '_amp', label: t('powerSensor._amp'), color: '#8884d8' },
-    { dataKey: '_volt', label: t('powerSensor._volt'), color: '#82ca9d' },
-    { dataKey: '_watt', label: t('powerSensor._watt'), color: '#ffc658' },
-    { dataKey: '_pf', label: t('powerSensor._pf'), color: '#ff7300' },
+    { dataKey: '_amp', label: t('gadadarMonitor._amp'), color: '#8884d8' },
+    { dataKey: '_volt', label: t('gadadarMonitor._volt'), color: '#82ca9d' },
+    { dataKey: '_watt', label: t('gadadarMonitor._watt'), color: '#ffc658' },
+    { dataKey: '_pf', label: t('gadadarMonitor._pf'), color: '#ff7300' },
   ];
 
   return (
@@ -119,15 +119,15 @@ const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
       <Card>
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            {t('powerSensor.title')}
+            {t('gadadarMonitor.title')}
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-            {renderMetric(t('powerSensor._amp'), getAttribute('_amp', 2), 'A')}
-            {renderMetric(t('powerSensor._volt'), getAttribute('_volt', 0), 'V')}
-            {renderMetric(t('powerSensor._watt'), getAttribute('_watt', 0), 'W')}
-            {renderMetric(t('powerSensor._ener'), getAttribute('_ener', 2), 'kWh')}
-            {renderMetric(t('powerSensor._freq'), getAttribute('_freq', 1), 'Hz')}
-            {renderMetric(t('powerSensor._pf'), getAttribute('_pf', 2), '')}
+            {renderMetric(t('gadadarMonitor._amp'), getAttribute('_amp', 2), 'A')}
+            {renderMetric(t('gadadarMonitor._volt'), getAttribute('_volt', 0), 'V')}
+            {renderMetric(t('gadadarMonitor._watt'), getAttribute('_watt', 0), 'W')}
+            {renderMetric(t('gadadarMonitor._ener'), getAttribute('_ener', 2), 'kWh')}
+            {renderMetric(t('gadadarMonitor._freq'), getAttribute('_freq', 1), 'Hz')}
+            {renderMetric(t('gadadarMonitor._pf'), getAttribute('_pf', 2), '')}
           </Box>
         </CardContent>
       </Card>
@@ -184,4 +184,4 @@ const PowerSensor: React.FC<PowerSensorProps> = React.memo(({ attributes }) => {
   );
 });
 
-export default PowerSensor;
+export default GadadarMonitor;

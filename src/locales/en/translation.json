@@ -133,7 +133,7 @@
   "cancel": "Cancel",
   "saved_button": "Saved",
   "save_button": "Save",
-  "powerSensor": {
+  "gadadarMonitor": {
     "title": "Power Sensor",
     "_amp": "Current",
     "_ener": "Energy",

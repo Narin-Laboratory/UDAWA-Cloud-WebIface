@@ -133,7 +133,7 @@
   "cancel": "Batal",
   "saved_button": "Tersimpan",
   "save_button": "Simpan",
-  "powerSensor": {
+  "gadadarMonitor": {
     "title": "Sensor Daya",
     "_amp": "Arus",
     "_ener": "Energi",
