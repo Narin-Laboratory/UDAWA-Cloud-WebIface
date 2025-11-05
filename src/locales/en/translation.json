@@ -178,5 +178,187 @@
     "intervalTypeWeekIso": "Week (ISO)",
     "intervalTypeMonth": "Month",
     "intervalTypeQuarter": "Quarter"
+  },
+  "alarm": {
+    "110": {
+      "title": "Light sensor",
+      "description": "The light sensor failed to initialize; please check the module integration and wiring."
+    },
+    "111": {
+      "title": "Light sensor",
+      "description": "The light sensor measurement is abnormal; please check the module integrity."
+    },
+    "112": {
+      "title": "Light sensor",
+      "description": "The light sensor measurement is showing an extreme value; please monitor the device's operation closely."
+    },
+    "120": {
+      "title": "Weather sensor",
+      "description": "The weather sensor failed to initialize; please check the module integration and wiring."
+    },
+    "121": {
+      "title": "Weather sensor",
+      "description": "The weather sensor measurement is abnormal; The ambient temperature is out of range."
+    },
+    "122": {
+      "title": "Weather sensor",
+      "description": "The weather sensor measurement is showing an extreme value; The ambient temperature is exceeding safe threshold; please monitor the device's operation closely."
+    },
+    "123": {
+      "title": "Weather sensor",
+      "description": "The weather sensor measurement is showing an extreme value; The ambient temperature is less than safe threshold; please monitor the device's operation closely."
+    },
+    "124": {
+      "title": "Weather sensor",
+      "description": "The weather sensor measurement is abnormal; The ambient humidity is out of range."
+    },
+    "125": {
+      "title": "Weather sensor",
+      "description": "The weather sensor measurement is showing an extreme value; The ambient humidity is exceeding safe threshold; please monitor the device's operation closely."
+    },
+    "126": {
+      "title": "Weather sensor",
+      "description": "The weather sensor measurement is showing an extreme value; The ambient humidity is below safe threshold; please monitor the device's operation closely."
+    },
+    "127": {
+      "title": "Weather sensor",
+      "description": "The weather sensor measurement is abnormal; The barometric pressure is out of range."
+    },
+    "128": {
+      "title": "Weather sensor",
+      "description": "The weather sensor measurement is showing an extreme value; The barometric pressure is more than safe threshold; please monitor the device's operation closely."
+    },
+    "129": {
+      "title": "Weather sensor",
+      "description": "The weather sensor measurement is showing an extreme value; The barometric pressure is less than safe threshold; please monitor the device's operation closely."
+    },
+    "130": {
+      "title": "SD Card",
+      "description": "The SD Card failed to initialize; please check the module integration and wiring."
+    },
+    "131": {
+      "title": "SD Card",
+      "description": "The SD Card failed to attatch; please check if the card is inserted properly."
+    },
+    "132": {
+      "title": "SD Card",
+      "description": "The SD Card failed to create log file; please check if the card is ok."
+    },
+    "133": {
+      "title": "SD Card",
+      "description": "The SD Card failed to write to the log file; please check if the card is ok."
+    },
+    "140": {
+      "title": "AC Power sensor",
+      "description": "The power sensor failed to initialize; please check the module integration and wiring."
+    },
+    "141": {
+      "title": "AC Power sensor",
+      "description": "The power sensor measurement is abnormal; The voltage reading is out of range."
+    },
+    "142": {
+      "title": "AC Power sensor",
+      "description": "The power sensor measurement is abnormal; The current reading is out of range."
+    },
+    "143": {
+      "title": "AC Power sensor",
+      "description": "The power sensor measurement is abnormal; The power reading is out of range."
+    },
+    "144": {
+      "title": "AC Power sensor",
+      "description": "The power sensor measurement is abnormal; The power factor and frequency reading is out of range."
+    },
+    "145": {
+      "title": "AC Power sensor",
+      "description": "The power sensor measurement is showing an overlimit; Please check the connected instruments."
+    },
+    "150": {
+      "title": "Real Time Clock",
+      "description": "The device timing information is incorrect; please update the device time manually. Any function that requires precise timing will malfunction!"
+    },
+    "210": {
+      "title": "Switch Relay",
+      "description": "Switch number one is active, but the power sensor detects no power utilization. Please check the connected instrument to prevent failures."
+    },
+    "211": {
+      "title": "Switch Relay",
+      "description": "Switch number two is active, but the power sensor detects no power utilization. Please check the connected instrument to prevent failures."
+    },
+    "212": {
+      "title": "Switch Relay",
+      "description": "Switch number three is active, but the power sensor detects no power utilization. Please check the connected instrument to prevent failures."
+    },
+    "213": {
+      "title": "Switch Relay",
+      "description": "Switch number four is active, but the power sensor detects no power utilization. Please check the connected instrument to prevent failures."
+    },
+    "214": {
+      "title": "Switch Relay",
+      "description": "All switches are inactive, but the power sensor detects large power utilization. Please check the device relay module to prevent relay malfunction."
+    },
+    "215": {
+      "title": "Switch Relay",
+      "description": "Switch numner one is active for more than safe duration!"
+    },
+    "216": {
+      "title": "Switch Relay",
+      "description": "Switch number two is active for more than safe duration!"
+    },
+    "217": {
+      "title": "Switch Relay",
+      "description": "Switch number three is active for more than safe duration!"
+    },
+    "218": {
+      "title": "Switch Relay",
+      "description": "Switch number four is active for more than safe duration!"
+    },
+    "220": {
+      "title": "IOExtender",
+      "description": "The IOExtender failed to initialize; please check the module integration and wiring."
+    },
+    "230": {
+      "title": "Water Quality Sensors (TDS/EC)",
+      "description": "The TDS sensor failed to initialize; please check the ADS1115 module integration and wiring."
+    },
+    "231": {
+      "title": "Water Quality Sensors (TDS/EC)",
+      "description": "The TDS sensor measurement is abnormal; The TDS reading is out of range."
+    },
+    "232": {
+      "title": "Water Quality Sensors (TDS/EC)",
+      "description": "The TDS sensor measurement is showing an extreme value; The TDS is exceeding safe threshold (water quality poor)."
+    },
+    "233": {
+      "title": "Water Quality Sensors (TDS/EC)",
+      "description": "The TDS sensor measurement is showing an extreme value; The TDS is below safe threshold (water too pure/unstable)."
+    },
+    "234": {
+      "title": "Water Quality Sensors (TDS/EC)",
+      "description": "The EC sensor measurement is abnormal; The EC reading is out of range."
+    },
+    "235": {
+      "title": "Water Quality Sensors (TDS/EC)",
+      "description": "The EC sensor measurement is showing an extreme value; The EC is exceeding safe threshold."
+    },
+    "236": {
+      "title": "Water Quality Sensors (TDS/EC)",
+      "description": "The EC sensor measurement is showing an extreme value; The EC is below safe threshold."
+    },
+    "240": {
+      "title": "Water Temperature Sensor (DS18B20)",
+      "description": "The water temperature sensor failed to initialize; please check the DS18B20 wiring and pull-up resistor."
+    },
+    "241": {
+      "title": "Water Temperature Sensor (DS18B20)",
+      "description": "The water temperature measurement is abnormal; The temperature reading is out of range."
+    },
+    "242": {
+      "title": "Water Temperature Sensor (DS18B20)",
+      "description": "The water temperature is exceeding safe threshold; Water may be too hot for intended use."
+    },
+    "243": {
+      "title": "Water Temperature Sensor (DS18B20)",
+      "description": "The water temperature is below safe threshold; Water may be too cold or frozen."
+    }
   }
 }
