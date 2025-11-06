@@ -57,7 +57,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const drawerContent = (
-    <div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Toolbar>
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
           {t('sidebar.agents')}
@@ -66,7 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <Refresh />
         </IconButton>
       </Toolbar>
-      <List>
+      <List sx={{ overflow: 'auto' }}>
         <DeviceList
           ref={deviceListRef}
           devices={devices}
@@ -74,7 +74,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           onReload={handleReload}
         />
       </List>
-    </div>
+    </Box>
   );
 
   return (
