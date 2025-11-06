@@ -5,7 +5,6 @@ import {
   CardContent,
   Typography,
   Button,
-  Box,
   Stack,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
