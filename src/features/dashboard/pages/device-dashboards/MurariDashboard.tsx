@@ -1,11 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Stack } from '@mui/material';
 import type { TabInfo } from '../../components/DeviceDashboard';
 import DeviceDashboard from '../../components/DeviceDashboard';
 import DeviceGenericConfig from '../../components/DeviceGenericConfig';
 import { useDevice } from '../../hooks/useDevice';
 import TimeseriesVisualizer from '../../components/TimeseriesVisualizer';
 import MurariMonitor from '../../components/MurariMonitor';
+import DeviceOperation from '../../components/DeviceOperation';
 
 const MurariDashboard: React.FC = () => {
   const { t } = useTranslation();
@@ -22,7 +24,12 @@ const MurariDashboard: React.FC = () => {
     },
     {
       label: t('device.dashboardTabs.config'),
-      content: <DeviceGenericConfig attributes={device?.attributesClientScope} deviceId={device?.id.id} entityType={device?.id.entityType} />,
+      content: (
+        <Stack spacing={2}>
+          <DeviceGenericConfig attributes={device?.attributesClientScope} deviceId={device?.id.id} entityType={device?.id.entityType} />
+          <DeviceOperation />
+        </Stack>
+      ),
     },
   ];
 

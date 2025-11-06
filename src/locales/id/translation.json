@@ -73,6 +73,13 @@
       "save": "Simpan",
       "noChanges": "Tidak ada perubahan untuk disimpan"
     },
+    "deviceOperation": {
+      "title": "Operasi Perangkat",
+      "syncAttribute": "Sinkronkan Atribut",
+      "stateSave": "Simpan State",
+      "fsUpdate": "Perbarui FS",
+      "reboot": "Mulai Ulang"
+    },
     "unsupported": "Tipe perangkat tidak didukung. Pilih perangkat lain dari daftar perangkat di menu sidebar sebelah kiri."
   },
   "footer": {

@@ -73,6 +73,13 @@
       "save": "Save",
       "noChanges": "No changes to save"
     },
+    "deviceOperation": {
+      "title": "Device Operation",
+      "syncAttribute": "Sync Attribute",
+      "stateSave": "Save State",
+      "fsUpdate": "FS Update",
+      "reboot": "Reboot"
+    },
     "unsupported": "Unsupported device type. Choose a supported device from the device list on the left sidebar."
   },
   "footer": {
