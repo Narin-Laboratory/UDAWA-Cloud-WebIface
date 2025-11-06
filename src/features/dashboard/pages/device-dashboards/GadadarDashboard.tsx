@@ -9,6 +9,7 @@ import RelaysController from '../../components/RelaysController';
 import GadadarMonitor from '../../components/GadadarMonitor';
 import TimeseriesVisualizer from '../../components/TimeseriesVisualizer';
 import AlarmCard from '../../components/AlarmCard';
+import DeviceOperation from '../../components/DeviceOperation';
 
 const GadadarDashboard: React.FC = () => {
   const { t } = useTranslation();
@@ -34,7 +35,12 @@ const GadadarDashboard: React.FC = () => {
     },
     {
       label: t('device.dashboardTabs.config'),
-      content: <DeviceGenericConfig attributes={device?.attributesClientScope} deviceId={device?.id.id} entityType={device?.id.entityType} />,
+      content: (
+        <Stack spacing={2}>
+          <DeviceGenericConfig attributes={device?.attributesClientScope} deviceId={device?.id.id} entityType={device?.id.entityType} />
+          <DeviceOperation />
+        </Stack>
+      ),
     },
   ];
 
