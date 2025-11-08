@@ -17,7 +17,8 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { toast } from 'react-toastify';
-import { getGreenhouses, Asset } from '../services/deviceService';
+import { getGreenhouses } from '../services/deviceService';
+import type { Asset } from '../services/deviceService';
 import DeviceList from './DeviceList';
 
 export interface GreenhouseListHandle {
