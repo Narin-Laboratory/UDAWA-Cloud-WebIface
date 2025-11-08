@@ -9,7 +9,8 @@ import {
 } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import GreenhouseList, { GreenhouseListHandle } from './GreenhouseList';
+import GreenhouseList from './GreenhouseList';
+import type { GreenhouseListHandle } from './GreenhouseList';
 
 interface SidebarProps {
   drawerWidth: number;
