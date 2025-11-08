@@ -95,7 +95,13 @@
   },
   "dashboard": {
     "welcome": "Selamat Datang di Dasbor",
-    "placeholder": "Ini adalah halaman dasbor kosong. Konten akan ditambahkan di sini nanti."
+    "placeholder": "Ini adalah halaman dasbor kosong. Konten akan ditambahkan di sini nanti.",
+    "tabs": {
+      "monitor": "Monitor",
+      "control": "Kontrol",
+      "analytic": "Analitik",
+      "config": "Konfigurasi"
+    }
   },
   "userProfile": {
     "title": "Profil Pengguna",

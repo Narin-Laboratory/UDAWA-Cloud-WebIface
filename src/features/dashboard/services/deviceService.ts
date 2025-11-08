@@ -28,6 +28,18 @@ export interface Device {
   label: string;
 }
 
+export interface EntityRelation {
+  from: {
+    entityType: string;
+    id: string;
+  };
+  to: {
+    entityType: string;
+    id: string;
+  };
+  type: string;
+}
+
 export interface Asset {
   id: {
     entityType: string;
@@ -199,10 +211,10 @@ export const getDevicesByAssetId = async (
     throw new Error('Failed to fetch devices for asset');
   }
 
-  const devices: Device[] = await response.json();
+  const relations: EntityRelation[] = await response.json();
 
   const devicesWithInfo = await Promise.all(
-    devices.map(device => getDeviceInfo(device.id.id))
+    relations.map(relation => getDeviceInfo(relation.to.id))
   );
 
   setItem(DEVICES_BY_ASSET_CACHE_KEY, devicesWithInfo);
