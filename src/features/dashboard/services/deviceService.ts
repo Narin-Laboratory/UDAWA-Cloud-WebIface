@@ -162,14 +162,7 @@ export const getGreenhouses = async (force = false): Promise<Asset[]> => {
 
 export const getDevicesByAssetId = async (
   assetId: string,
-  force = false
 ): Promise<DeviceInfo[]> => {
-  const DEVICES_BY_ASSET_CACHE_KEY = `devices_by_asset_${assetId}`;
-  const cachedDevices = getItem(DEVICES_BY_ASSET_CACHE_KEY);
-
-  if (cachedDevices && !force) {
-    return cachedDevices;
-  }
 
   const token = getItem('token');
   const server = getItem('server');
@@ -217,7 +210,6 @@ export const getDevicesByAssetId = async (
     relations.map(relation => getDeviceInfo(relation.to.id))
   );
 
-  setItem(DEVICES_BY_ASSET_CACHE_KEY, devicesWithInfo);
   return devicesWithInfo;
 };
 
