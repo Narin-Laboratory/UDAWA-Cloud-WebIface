@@ -16,7 +16,8 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import { Circle } from '@mui/icons-material';
 import { toast } from 'react-toastify';
-import { getDevicesByAssetId, DeviceInfo } from '../services/deviceService';
+import { getDevicesByAssetId } from '../services/deviceService';
+import type { DeviceInfo } from '../services/deviceService';
 import slugify from '../../../utils/slugify';
 
 export interface DeviceListHandle {
