@@ -25,7 +25,7 @@ export interface GreenhouseListHandle {
   reload: () => void;
 }
 
-const GreenhouseList = forwardRef<GreenhouseListHandle, {}>((props, ref) => {
+const GreenhouseList = forwardRef<GreenhouseListHandle, {}>((_props, ref) => {
   const [greenhouses, setGreenhouses] = useState<Asset[]>([]);
   const [openGreenhouse, setOpenGreenhouse] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);

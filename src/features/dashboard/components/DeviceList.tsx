@@ -33,10 +33,10 @@ const DeviceList = forwardRef<DeviceListHandle, DeviceListProps>(
     const [devices, setDevices] = useState<DeviceInfo[]>([]);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchDevices = useCallback(async (force = false) => {
+    const fetchDevices = useCallback(async () => {
       try {
         setError(null);
-        const deviceList = await getDevicesByAssetId(assetId, force);
+        const deviceList = await getDevicesByAssetId(assetId);
         setDevices(deviceList);
         toast.success('Device list loaded successfully');
       } catch (e) {
@@ -58,7 +58,7 @@ const DeviceList = forwardRef<DeviceListHandle, DeviceListProps>(
 
     useImperativeHandle(ref, () => ({
       reload: () => {
-        fetchDevices(true);
+        fetchDevices();
       },
     }));
 
