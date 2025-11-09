@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef } from 'react';
 import {
   Drawer,
   Box,
@@ -9,9 +9,8 @@ import {
 } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-import { getDevices, type DeviceInfo } from '../services/deviceService';
-import DeviceList, { type DeviceListHandle } from './DeviceList';
+import GreenhouseList from './GreenhouseList';
+import type { GreenhouseListHandle } from './GreenhouseList';
 
 interface SidebarProps {
   drawerWidth: number;
@@ -27,33 +26,12 @@ const Sidebar: React.FC<SidebarProps> = ({
   onDrawerTransitionEnd,
 }) => {
   const { t } = useTranslation();
-  const deviceListRef = useRef<DeviceListHandle>(null);
-  const [devices, setDevices] = useState<DeviceInfo[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchDevices = useCallback(async (force = false) => {
-    try {
-      setError(null);
-      const deviceList = await getDevices(force);
-      setDevices(deviceList);
-      toast.success(t('deviceList.loadSuccess'));
-    } catch (e) {
-      setError(t('deviceList.fetchError'));
-    }
-  }, [t]);
-
-  useEffect(() => {
-    fetchDevices();
-  }, [fetchDevices]);
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
-  }, [error]);
+  const greenhouseListRef = useRef<GreenhouseListHandle>(null);
 
   const handleReload = () => {
-    fetchDevices(true);
+    if (greenhouseListRef.current) {
+      greenhouseListRef.current.reload();
+    }
   };
 
   const drawerContent = (
@@ -67,12 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         </IconButton>
       </Toolbar>
       <List sx={{ overflow: 'auto' }}>
-        <DeviceList
-          ref={deviceListRef}
-          devices={devices}
-          error={error}
-          onReload={handleReload}
-        />
+        <GreenhouseList ref={greenhouseListRef} />
       </List>
     </Box>
   );

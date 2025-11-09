@@ -1,6 +1,9 @@
 import {
   useImperativeHandle,
   forwardRef,
+  useState,
+  useEffect,
+  useCallback,
 } from 'react';
 import {
   ListItem,
@@ -12,6 +15,8 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { Circle } from '@mui/icons-material';
+import { toast } from 'react-toastify';
+import { getDevicesByAssetId } from '../services/deviceService';
 import type { DeviceInfo } from '../services/deviceService';
 import slugify from '../../../utils/slugify';
 
@@ -20,16 +25,40 @@ export interface DeviceListHandle {
 }
 
 interface DeviceListProps {
-  devices: DeviceInfo[];
-  error: string | null;
-  onReload: () => void;
+  assetId: string;
 }
 
 const DeviceList = forwardRef<DeviceListHandle, DeviceListProps>(
-  ({ devices, error, onReload }, ref) => {
+  ({ assetId }, ref) => {
+    const [devices, setDevices] = useState<DeviceInfo[]>([]);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchDevices = useCallback(async () => {
+      try {
+        setError(null);
+        const deviceList = await getDevicesByAssetId(assetId);
+        setDevices(deviceList);
+        toast.success('Device list loaded successfully');
+      } catch (e) {
+        setError('Failed to fetch devices');
+      }
+    }, [assetId]);
+
+    useEffect(() => {
+      if (assetId) {
+        fetchDevices();
+      }
+    }, [fetchDevices, assetId]);
+
+    useEffect(() => {
+      if (error) {
+        toast.error(error);
+      }
+    }, [error]);
+
     useImperativeHandle(ref, () => ({
       reload: () => {
-        onReload();
+        fetchDevices();
       },
     }));
 
@@ -43,8 +72,8 @@ const DeviceList = forwardRef<DeviceListHandle, DeviceListProps>(
 
     return (
       <>
-        {devices.map((device) => (
-          <ListItem key={device.id.id} disablePadding>
+        {devices.map(device => (
+          <ListItem key={device.id.id} disablePadding sx={{ pl: 4 }}>
             <ListItemButton
               component={RouterLink}
               to={`/dashboard/device/${slugify(device.type)}/${device.id.id}`}

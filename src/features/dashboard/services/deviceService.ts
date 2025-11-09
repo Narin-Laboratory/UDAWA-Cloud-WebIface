@@ -28,6 +28,28 @@ export interface Device {
   label: string;
 }
 
+export interface EntityRelation {
+  from: {
+    entityType: string;
+    id: string;
+  };
+  to: {
+    entityType: string;
+    id: string;
+  };
+  type: string;
+}
+
+export interface Asset {
+  id: {
+    entityType: string;
+    id: string;
+  };
+  name: string;
+  type: string;
+  label: string;
+}
+
 // This type is the correct way to define an object with dynamic keys.
 export type DynamicObject = {
   [key: string]: any; // Using 'any' is common and flexible for this pattern.
@@ -94,6 +116,100 @@ export const getDevices = async (force = false): Promise<DeviceInfo[]> => {
   );
 
   setItem(DEVICES_CACHE_KEY, devicesWithInfo);
+  return devicesWithInfo;
+};
+
+export const getGreenhouses = async (force = false): Promise<Asset[]> => {
+  const GREENHOUSES_CACHE_KEY = 'greenhouses';
+  const cachedGreenhouses = getItem(GREENHOUSES_CACHE_KEY);
+
+  if (cachedGreenhouses && !force) {
+    return cachedGreenhouses;
+  }
+
+  const token = getItem('token');
+  const user = getItem('user');
+  const server = getItem('server');
+
+  if (!token || !user || !server) {
+    throw new Error('User not authenticated or server not set');
+  }
+
+  const response = await fetch(
+    `https://${server}/api/customer/${user.customerId.id}/assets?pageSize=100&page=0&type=Greenhouse&sortProperty=name&sortOrder=ASC`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (response.status === 401) {
+    handleAuthFailure();
+    throw new Error('Authentication failed');
+  }
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch greenhouses');
+  }
+
+  const greenhouses = await response.json();
+  setItem(GREENHOUSES_CACHE_KEY, greenhouses.data);
+  return greenhouses.data;
+};
+
+export const getDevicesByAssetId = async (
+  assetId: string,
+): Promise<DeviceInfo[]> => {
+
+  const token = getItem('token');
+  const server = getItem('server');
+
+  if (!token || !server) {
+    throw new Error('User not authenticated or server not set');
+  }
+
+  const response = await fetch(`https://${server}/api/relations`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      parameters: {
+        rootId: assetId,
+        rootType: 'ASSET',
+        direction: 'FROM',
+        relationTypeGroup: 'COMMON',
+        maxLevel: 1,
+        fetchLastLevelOnly: true,
+      },
+      filters: [
+        {
+          relationType: 'Contains',
+          entityTypes: ['DEVICE'],
+        },
+      ],
+    }),
+  });
+
+  if (response.status === 401) {
+    handleAuthFailure();
+    throw new Error('Authentication failed');
+  }
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch devices for asset');
+  }
+
+  const relations: EntityRelation[] = await response.json();
+
+  const devicesWithInfo = await Promise.all(
+    relations.map(relation => getDeviceInfo(relation.to.id))
+  );
+
   return devicesWithInfo;
 };
 

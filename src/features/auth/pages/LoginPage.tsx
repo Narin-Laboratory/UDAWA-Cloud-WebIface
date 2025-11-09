@@ -14,6 +14,14 @@ import { toast } from 'react-toastify';
 import { setItem } from '../../../utils/storage';
 import NeuralNetwork from '../../../components/NeuralNetwork';
 
+interface ErrorData {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 const LoginPage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -50,13 +58,6 @@ const LoginPage: React.FC = () => {
       setItem('server', server);
     };
 
-interface ErrorData {
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
-}
     toast.promise(
       loginPromise(),
       {
@@ -168,6 +169,7 @@ interface ErrorData {
               id="server"
               value={server}
               onChange={(e) => setServer(e.target.value)}
+              data-testid="server-input"
             />
             <Button
               type="submit"

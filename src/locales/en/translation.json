@@ -95,7 +95,13 @@
   },
   "dashboard": {
     "welcome": "Welcome to the Dashboard",
-    "placeholder": "This is a blank dashboard page. Content will be added here later."
+    "placeholder": "This is a blank dashboard page. Content will be added here later.",
+    "tabs": {
+      "monitor": "Monitor",
+      "control": "Control",
+      "analytic": "Analytic",
+      "config": "Config"
+    }
   },
   "userProfile": {
     "title": "User Profile",
