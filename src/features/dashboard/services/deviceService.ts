@@ -213,7 +213,17 @@ export const getDevicesByAssetId = async (
   return devicesWithInfo;
 };
 
-export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {
+export const getDeviceInfo = async (
+  deviceId: string,
+  force = false
+): Promise<DeviceInfo> => {
+  const DEVICE_INFO_CACHE_KEY = `device_info_${deviceId}`;
+  const cachedDeviceInfo = getItem(DEVICE_INFO_CACHE_KEY);
+
+  if (cachedDeviceInfo && !force) {
+    return cachedDeviceInfo;
+  }
+
   const token = getItem('token');
   const server = getItem('server');
 
@@ -240,14 +250,16 @@ export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {
 
   const deviceInfo = await response.json();
 
-  // Initialize scopes if they don't exist in the initial fetch
-  return {
+  const fullDeviceInfo = {
     ...deviceInfo,
     attributesServerScope: deviceInfo.attributesServerScope || {},
     attributesClientScope: deviceInfo.attributesClientScope || {},
     attributesSharedScope: deviceInfo.attributesSharedScope || {},
     timeseries: deviceInfo.timeseries || {},
   };
+
+  setItem(DEVICE_INFO_CACHE_KEY, fullDeviceInfo);
+  return fullDeviceInfo;
 };
 
 export const saveDeviceAttributes = async (

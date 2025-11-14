@@ -24,7 +24,7 @@ const DeviceDashboardPage: React.FC = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = React.useState(true);
 
-  useDeviceData(deviceId, setDevice, setLoading);
+  const { refetch } = useDeviceData(deviceId, setDevice, setLoading);
 
   const DeviceDashboardComponent = useMemo(() => {
     if (!deviceType) return null;
@@ -52,7 +52,7 @@ const DeviceDashboardPage: React.FC = () => {
     <Box sx={{ width: '100%' }}>
       <React.Suspense fallback={<CircularProgress />}>
         {DeviceDashboardComponent ? (
-          <DeviceDashboardComponent />
+          <DeviceDashboardComponent refetch={refetch} />
         ) : (
           <Typography>{t('device.unsupported')}</Typography>
         )}

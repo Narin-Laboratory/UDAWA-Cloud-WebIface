@@ -36,6 +36,7 @@ interface RelaysControllerProps {
     | undefined;
   deviceId: string | undefined;
   entityType: string | undefined;
+  refetch: () => void;
 }
 
 interface Timer {
@@ -62,7 +63,7 @@ interface Relay {
 }
 
 const RelaysController: React.FC<RelaysControllerProps> = React.memo(
-  ({ attributes, deviceId, entityType }) => {
+  ({ attributes, deviceId, entityType, refetch }) => {
     const { t } = useTranslation();
     const attrs = attributes;
 
@@ -172,16 +173,20 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(
       setRelays(updatedRelays);
       setDisableSubmitButton(true);
 
-      toast.promise(
-        saveDeviceAttributes(entityType, deviceId, 'SHARED_SCOPE', {
-          relays: updatedRelays,
-        }),
-        {
-          pending: t('device.genericConfig.saving'),
-          success: t('device.genericConfig.saveSuccess'),
-          error: t('device.genericConfig.saveError'),
-        }
-      );
+      toast
+        .promise(
+          saveDeviceAttributes(entityType, deviceId, 'SHARED_SCOPE', {
+            relays: JSON.stringify(updatedRelays),
+          }),
+          {
+            pending: t('device.genericConfig.saving'),
+            success: t('device.genericConfig.saveSuccess'),
+            error: t('device.genericConfig.saveError'),
+          }
+        )
+        .then(() => {
+          refetch();
+        });
       setIsRelayAdjustModalVisible(false);
     };
 
