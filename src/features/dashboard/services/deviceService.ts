@@ -213,7 +213,9 @@ export const getDevicesByAssetId = async (
   return devicesWithInfo;
 };
 
-export const getDeviceInfo = async (deviceId: string): Promise<DeviceInfo> => {
+export const getDeviceInfo = async (
+  deviceId: string
+): Promise<DeviceInfo> => {
   const token = getItem('token');
   const server = getItem('server');
 

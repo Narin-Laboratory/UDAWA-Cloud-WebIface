@@ -27,7 +27,14 @@ const GadadarDashboard: React.FC = () => {
     },
     {
       label: t('device.dashboardTabs.control'),
-      content: <RelaysController attributes={device?.attributesClientScope} deviceId={device?.id.id} entityType={device?.id.entityType} />,
+      content: (
+        <RelaysController
+          attributes={device?.attributesClientScope}
+          sharedAttributes={device?.attributesSharedScope}
+          deviceId={device?.id.id}
+          entityType={device?.id.entityType}
+        />
+      ),
     },
     {
       label: t('device.dashboardTabs.analytic'),

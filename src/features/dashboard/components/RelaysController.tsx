@@ -34,6 +34,11 @@ interface RelaysControllerProps {
         [key: string]: string;
       }
     | undefined;
+  sharedAttributes:
+    | {
+        [key: string]: string;
+      }
+    | undefined;
   deviceId: string | undefined;
   entityType: string | undefined;
 }
@@ -62,9 +67,10 @@ interface Relay {
 }
 
 const RelaysController: React.FC<RelaysControllerProps> = React.memo(
-  ({ attributes, deviceId, entityType }) => {
+  ({ attributes, sharedAttributes, deviceId, entityType }) => {
     const { t } = useTranslation();
     const attrs = attributes;
+    const sharedAttrs = sharedAttributes;
 
     const defaultRelays = attrs?.relays || '[]';
 
@@ -104,9 +110,19 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(
 
     useEffect(() => {
       if (isRelayAdjustModalVisible) {
-        setAdjustForm({ ...relays[selectedRelayIndex] });
+        const sharedRelays = parseRelays(sharedAttrs?.relays);
+        if (sharedRelays.length > selectedRelayIndex) {
+          setAdjustForm({ ...sharedRelays[selectedRelayIndex] });
+        } else {
+          setAdjustForm({ ...relays[selectedRelayIndex] });
+        }
       }
-    }, [isRelayAdjustModalVisible, selectedRelayIndex, relays]);
+    }, [
+      isRelayAdjustModalVisible,
+      selectedRelayIndex,
+      relays,
+      sharedAttrs?.relays,
+    ]);
 
     const handleToggleSwitchChange = (
       event: React.ChangeEvent<HTMLInputElement>
@@ -172,16 +188,31 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(
       setRelays(updatedRelays);
       setDisableSubmitButton(true);
 
-      toast.promise(
-        saveDeviceAttributes(entityType, deviceId, 'SHARED_SCOPE', {
-          relays: updatedRelays,
-        }),
-        {
-          pending: t('device.genericConfig.saving'),
-          success: t('device.genericConfig.saveSuccess'),
-          error: t('device.genericConfig.saveError'),
-        }
-      );
+      toast
+        .promise(
+          saveDeviceAttributes(entityType, deviceId, 'SHARED_SCOPE', {
+            relays: updatedRelays,
+          }),
+          {
+            pending: t('device.genericConfig.saving'),
+            success: t('device.genericConfig.saveSuccess'),
+            error: t('device.genericConfig.saveError'),
+          }
+        )
+        .then(() => {
+          toast.promise(rpcV2(deviceId, 'stateSave', {}), {
+            pending: 'Saving state...',
+            success: 'State saved!',
+            error: 'Failed to save state',
+          });
+        })
+        .then(() => {
+          toast.promise(rpcV2(deviceId, 'syncAttribute', {}), {
+            pending: 'Syncing attributes...',
+            success: 'Attributes synced!',
+            error: 'Failed to sync attributes',
+          });
+        });
       setIsRelayAdjustModalVisible(false);
     };
 

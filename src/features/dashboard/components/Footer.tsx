@@ -20,6 +20,9 @@ const Footer: React.FC = () => {
       <Typography variant="body2" color="text.secondary" align="center">
         {t('footer.copyright', { year: new Date().getFullYear() })}
       </Typography>
+      <Typography variant="caption" color="text.secondary" align="center" display="block">
+        Version: {import.meta.env.PACKAGE_VERSION} - Build Time: {import.meta.env.VITE_APP_BUILD_TIME}
+      </Typography>
     </Box>
   );
 };
