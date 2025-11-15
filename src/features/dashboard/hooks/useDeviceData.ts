@@ -16,7 +16,7 @@ export const useDeviceData = (
   deviceId: string | undefined,
   setDevice: React.Dispatch<React.SetStateAction<DeviceInfo | null>>,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
-): { refetch: () => void } => {
+) => {
   const onWebSocketMessage = useCallback(
     (data: WebSocketData) => {
       if (!data.data) return;
@@ -76,17 +76,14 @@ export const useDeviceData = (
     console.error('WebSocket Error:', error);
   }, []);
 
-  const fetchDeviceInfo = useCallback(
-    (force = false) => {
-      if (!deviceId) return;
-
+  useEffect(() => {
+    if (deviceId) {
       setLoading(true);
-      getDeviceInfo(deviceId, force)
+      getDeviceInfo(deviceId)
         .then(data => {
           setDevice(data);
-          if (!force) {
-            connectWebSocket(deviceId, onWebSocketMessage, onWebSocketError);
-          }
+          // Establish WebSocket connection only after fetching initial data
+          connectWebSocket(deviceId, onWebSocketMessage, onWebSocketError);
         })
         .catch(error => {
           console.error('Failed to get device info:', error);
@@ -95,21 +92,17 @@ export const useDeviceData = (
         .finally(() => {
           setLoading(false);
         });
-    },
-    [deviceId, setDevice, setLoading, onWebSocketMessage, onWebSocketError]
-  );
+    }
 
-  useEffect(() => {
-    fetchDeviceInfo();
-
+    // Cleanup function to disconnect WebSocket
     return () => {
       disconnectWebSocket();
     };
-  }, [fetchDeviceInfo]);
-
-  const refetch = useCallback(() => {
-    fetchDeviceInfo(true);
-  }, [fetchDeviceInfo]);
-
-  return { refetch };
+  }, [
+    deviceId,
+    onWebSocketMessage,
+    onWebSocketError,
+    setDevice,
+    setLoading,
+  ]);
 };

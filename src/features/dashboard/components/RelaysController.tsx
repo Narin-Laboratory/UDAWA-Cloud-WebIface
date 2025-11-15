@@ -34,9 +34,13 @@ interface RelaysControllerProps {
         [key: string]: string;
       }
     | undefined;
+  sharedAttributes:
+    | {
+        [key: string]: string;
+      }
+    | undefined;
   deviceId: string | undefined;
   entityType: string | undefined;
-  refetch: () => void;
 }
 
 interface Timer {
@@ -63,9 +67,10 @@ interface Relay {
 }
 
 const RelaysController: React.FC<RelaysControllerProps> = React.memo(
-  ({ attributes, deviceId, entityType, refetch }) => {
+  ({ attributes, sharedAttributes, deviceId, entityType }) => {
     const { t } = useTranslation();
     const attrs = attributes;
+    const sharedAttrs = sharedAttributes;
 
     const defaultRelays = attrs?.relays || '[]';
 
@@ -105,9 +110,19 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(
 
     useEffect(() => {
       if (isRelayAdjustModalVisible) {
-        setAdjustForm({ ...relays[selectedRelayIndex] });
+        const sharedRelays = parseRelays(sharedAttrs?.relays);
+        if (sharedRelays.length > selectedRelayIndex) {
+          setAdjustForm({ ...sharedRelays[selectedRelayIndex] });
+        } else {
+          setAdjustForm({ ...relays[selectedRelayIndex] });
+        }
       }
-    }, [isRelayAdjustModalVisible, selectedRelayIndex, relays]);
+    }, [
+      isRelayAdjustModalVisible,
+      selectedRelayIndex,
+      relays,
+      sharedAttrs?.relays,
+    ]);
 
     const handleToggleSwitchChange = (
       event: React.ChangeEvent<HTMLInputElement>
@@ -173,20 +188,16 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(
       setRelays(updatedRelays);
       setDisableSubmitButton(true);
 
-      toast
-        .promise(
-          saveDeviceAttributes(entityType, deviceId, 'SHARED_SCOPE', {
-            relays: JSON.stringify(updatedRelays),
-          }),
-          {
-            pending: t('device.genericConfig.saving'),
-            success: t('device.genericConfig.saveSuccess'),
-            error: t('device.genericConfig.saveError'),
-          }
-        )
-        .then(() => {
-          refetch();
-        });
+      toast.promise(
+        saveDeviceAttributes(entityType, deviceId, 'SHARED_SCOPE', {
+          relays: JSON.stringify(updatedRelays),
+        }),
+        {
+          pending: t('device.genericConfig.saving'),
+          success: t('device.genericConfig.saveSuccess'),
+          error: t('device.genericConfig.saveError'),
+        }
+      );
       setIsRelayAdjustModalVisible(false);
     };
 

@@ -11,11 +11,7 @@ import TimeseriesVisualizer from '../../components/TimeseriesVisualizer';
 import AlarmCard from '../../components/AlarmCard';
 import DeviceOperation from '../../components/DeviceOperation';
 
-interface GadadarDashboardProps {
-  refetch: () => void;
-}
-
-const GadadarDashboard: React.FC<GadadarDashboardProps> = ({ refetch }) => {
+const GadadarDashboard: React.FC = () => {
   const { t } = useTranslation();
   const { device } = useDevice();
 
@@ -33,10 +29,10 @@ const GadadarDashboard: React.FC<GadadarDashboardProps> = ({ refetch }) => {
       label: t('device.dashboardTabs.control'),
       content: (
         <RelaysController
-          attributes={device?.attributesSharedScope}
+          attributes={device?.attributesClientScope}
+          sharedAttributes={device?.attributesSharedScope}
           deviceId={device?.id.id}
           entityType={device?.id.entityType}
-          refetch={refetch}
         />
       ),
     },
