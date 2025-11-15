@@ -188,16 +188,31 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(
       setRelays(updatedRelays);
       setDisableSubmitButton(true);
 
-      toast.promise(
-        saveDeviceAttributes(entityType, deviceId, 'SHARED_SCOPE', {
-          relays: updatedRelays,
-        }),
-        {
-          pending: t('device.genericConfig.saving'),
-          success: t('device.genericConfig.saveSuccess'),
-          error: t('device.genericConfig.saveError'),
-        }
-      );
+      toast
+        .promise(
+          saveDeviceAttributes(entityType, deviceId, 'SHARED_SCOPE', {
+            relays: updatedRelays,
+          }),
+          {
+            pending: t('device.genericConfig.saving'),
+            success: t('device.genericConfig.saveSuccess'),
+            error: t('device.genericConfig.saveError'),
+          }
+        )
+        .then(() => {
+          toast.promise(rpcV2(deviceId, 'stateSave', {}), {
+            pending: 'Saving state...',
+            success: 'State saved!',
+            error: 'Failed to save state',
+          });
+        })
+        .then(() => {
+          toast.promise(rpcV2(deviceId, 'syncAttribute', {}), {
+            pending: 'Syncing attributes...',
+            success: 'Attributes synced!',
+            error: 'Failed to sync attributes',
+          });
+        });
       setIsRelayAdjustModalVisible(false);
     };
 
