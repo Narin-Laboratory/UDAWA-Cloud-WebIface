@@ -190,7 +190,7 @@ const RelaysController: React.FC<RelaysControllerProps> = React.memo(
 
       toast.promise(
         saveDeviceAttributes(entityType, deviceId, 'SHARED_SCOPE', {
-          relays: JSON.stringify(updatedRelays),
+          relays: updatedRelays,
         }),
         {
           pending: t('device.genericConfig.saving'),
